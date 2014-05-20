@@ -1,0 +1,14 @@
+export(
+	"CreateGrammar",
+	"GrammarGenotypeToPhenotype",
+	"GeneticAlg.int",
+	"GrammaticalEvolution",
+	"print.grammar",
+    "GetGrammarDepth",
+    "GetGrammarMaxRuleSize",
+    "GetGrammarMaxSequenceLen",
+    "GetGrammarNumOfExpressions",
+    "EvalExpressions"
+    )
+
+S3method(print, grammar)
