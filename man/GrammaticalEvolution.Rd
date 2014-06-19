@@ -10,7 +10,7 @@ to minimize a given fitness function.
 \usage{
 GrammaticalEvolution(grammarDef, fitnessFunction, 
   seqLen = GetGrammarMaxSequenceLen(grammarDef), 
-  wrappings = 3, elitism = 2, popSize = 25, iterations = 20, 
+  wrappings = 3, elitism = 2, popSize = 50, iterations = 100, 
   terminationFitness = NA, mutationChance = NA, numExpr = 1,
   suggestions = NULL, monitorFunc=NULL, plapply = lapply, ...)
 }

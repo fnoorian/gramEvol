@@ -2,7 +2,7 @@ GeneticAlg.int <-
 function(vars, var.min, var.max,
                  stringMin=rep.int(var.min, vars), stringMax=rep.int(var.max, vars),
                  suggestions=NULL,
-                 popSize=200, 
+                 popSize=50, 
                  iterations=100, terminationFitness=NA,
                  mutationChance=NA,
                  elitism=NA,
@@ -123,11 +123,18 @@ function(vars, var.min, var.max,
         verbose("Calucating evaluation values... ");
 
         to.eval.Ids = which(is.na(evalVals))
-        #evalVals[to.eval.Ids] = unlist(plapply(to.eval.Ids, function(i) evalFunc(population[i, ])))
         evalVals[to.eval.Ids] = unlist(plapply(to.eval.Ids, 
             function(i, population, evalFunc) evalFunc(population[i, ]),
             population, evalFunc))
 
+        # check for invalid items
+        if ((!all(is.numeric(evalVals))) |
+            any(is.na(evalVals)) |
+            any(is.nan(evalVals))) {
+            stop("Invalid fitness function return value (NA or NaN).")
+        }
+
+        # extract statistics about generation
         bestEvals[iter] = min(evalVals);
         meanEvals[iter] = mean(evalVals);
         verbose(" done.\n");

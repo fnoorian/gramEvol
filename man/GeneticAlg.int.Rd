@@ -10,7 +10,7 @@ It evolves chromosomes with limited-range integers as codons.
 \usage{
 GeneticAlg.int(vars, var.min, var.max, 
     stringMin = rep.int(var.min, vars), stringMax = rep.int(var.max, vars), 
-    suggestions = NULL, popSize = 200, 
+    suggestions = NULL, popSize = 50, 
     iterations = 100, terminationFitness = NA, mutationChance = NA, elitism = NA, 
     monitorFunc = NULL, evalFunc = NULL, allowrepeat = TRUE, 
     showSettings = FALSE, verbose = FALSE, plapply = lapply)
