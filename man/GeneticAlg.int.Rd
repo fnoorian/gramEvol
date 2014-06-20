@@ -18,30 +18,30 @@ GeneticAlg.int(vars, var.min, var.max,
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{vars}{
-  Number of integers in chromosome
+  Number of integers in chromosome.
 }
   \item{var.min}{
-  Minimum of integer values range for all codons
+  Minimum of integer values range for all codons.
 }
   \item{var.max}{
-  Maximum of integer values range for all codons
+  Maximum of integer values range for all codons.
 }
   \item{stringMin}{
   A vector of length \code{vars} containing fine-grained control
-  over individual codon's minimum
+  over individual codon's minimum.
 }
   \item{stringMax}{
   A vector of length \code{vars} containing fine-grained control
-  over individual codon's  maximum
+  over individual codon's  maximum.
 }
   \item{suggestions}{
-  A list of suggested chromosomes to be used in initial population
+  A list of suggested chromosomes to be used in initial population.
 }
   \item{popSize}{
-  Size of population
+  Size of the population.
 }
   \item{iterations}{
-  Number of generations to evolve the population
+  Number of generations to evolve the population.
 }
   \item{terminationFitness}{
   Target fitness. If the best chromosome's fitness reaches this value
@@ -58,16 +58,16 @@ GeneticAlg.int(vars, var.min, var.max,
   A function that is called at each generation. Can be used to monitor evolution of population.
 }
   \item{evalFunc}{
-  Fitness function
+  Fitness function.
 }
   \item{allowrepeat}{
-  Allows or forbids repeated values in the chromosome
+  Allows or forbids repeated values in the chromosome.
 }
   \item{showSettings}{
-  Enables printing GA settings
+  Enables printing GA settings.
 }
   \item{verbose}{
-  Enables verbose debugging info
+  Enables verbose debugging info.
 }
   \item{plapply}{
   \code{lapply} function used for mapping chromosomes to fitness function.
@@ -165,8 +165,8 @@ by Egon Willighagen. See \url{http://cran.r-project.org/web/packages/genalg/}.
 evalfunc <- function(l) {
     # maximize the odd indices and minimize the even indices
     # no repeated values are allowed
-    odd <- seq(1,20,2)
-    even <- seq(2,20,2)
+    odd <- seq(1, 20, 2)
+    even <- seq(2, 20, 2)
     err <- sum(l[even]) - sum(l[odd]);
 
     stopifnot(!any(duplicated(l))) # no duplication allowed
@@ -180,15 +180,15 @@ monitorFunc <- function(result) {
 
 x <- GeneticAlg.int(vars = 20, var.min = 0, var.max = 20,
                 allowrepeat = FALSE, terminationFitness = -109,
-                monitorFunc=monitorFunc, evalFunc=evalfunc)
+                monitorFunc = monitorFunc, evalFunc = evalfunc)
 
 best.result <- x$bestChrom
 
 print(best.result)
 print('Odds:')
-print(sort(best.result[seq(1,20,2)]))
+print(sort(best.result[seq(1, 20, 2)]))
 print('Evens:')
-print(sort(best.result[seq(2,20,2)]))
+print(sort(best.result[seq(2, 20, 2)]))
 }
 
 % Add one or more standard keywords, see file 'KEYWORDS' in the

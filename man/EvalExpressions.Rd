@@ -65,7 +65,7 @@ B <- 1
 EvalExpressions("A - B")
 
 exprs <- c("A + B", "A - B")
-EvalExpressions(exprs, data.frame(A=A, B=B))
+EvalExpressions(exprs, data.frame(A = A, B = B))
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

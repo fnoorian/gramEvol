@@ -29,17 +29,17 @@ GetGrammarNumOfExpressions(grammar, max.depth = length(grammar$def),
   \item{ruleDef}{
     Grammatical rule definition, as a collection of symbols and sequences 
     with syntax similar to Backus-Naur Form. 
-    See Details. 
+    See details. 
   }
   \item{startSymb}{
-    The symbol where generation of a new expression should begin
+    The symbol where generation of a new expression should begin.
   }
 
   \item{grammar}{
-    The grammar object 
+    The grammar object .
   }
   \item{max.depth}{
-    Maximum depth of search in case of recursive grammar
+    Maximum depth of search in case of recursive grammar.
   }
 }
 \details{
@@ -88,16 +88,16 @@ GetGrammarNumOfExpressions(grammar, max.depth = length(grammar$def),
 # <expr> := <var><op><var>
 # <op> := "+" | "-" | "*"
 # <var> := "A" | "B"
-ruleDef <- list(list('expr',     list('<var><op><var>')),
-                list('op',       list('+', '-', '*')),
-                list('var',      list('A', 'B')))
-			   
+ruleDef <- list(list('expr', list('<var><op><var>')),
+                list('op',   list('+', '-', '*')),
+                list('var',  list('A', 'B')))
+
 # Create a grammar object
 grammarDef <- CreateGrammar(ruleDef, startSymb = '<expr>')			   
-			
+
 # print grammar object
 print(grammarDef)
- 
+
 # print information about the grammar
 print(paste('Depth:', GetGrammarDepth(grammarDef))) 
 print(paste('Max Rule Size:', GetGrammarMaxRuleSize(grammarDef)))

@@ -17,7 +17,7 @@ GrammaticalEvolution(grammarDef, fitnessFunction,
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{grammarDef}{
-    \code{grammar} object, created by \code{\link{CreateGrammar}}
+    \code{grammar} object, created by \code{\link{CreateGrammar}}.
 }
   \item{fitnessFunction}{
     The fitness function, taking a string or a collection of strings
@@ -25,41 +25,41 @@ GrammaticalEvolution(grammarDef, fitnessFunction,
     and returning the fitness of the expression(s).
 }
   \item{seqLen}{
-    Length of integer vector used to create the expression
+    Length of integer vector used to create the expression.
 }
  \item{wrappings}{
-    Number of wrappings in case length of chromosome is not enough for conversion to an expression
+    Number of wrappings in case length of chromosome is not enough for conversion to an expression.
 }
   \item{elitism}{
-    Number of elite individuals in Genetic Algorithm
+    Number of elite individuals in genetic algorithm.
 }
   \item{popSize}{
-    Population size in genetic algorithm
+    Population size in genetic algorithm.
 }
   \item{iterations}{
-    Number of maximum iterations in genetic algorithm
+    Number of maximum iterations in genetic algorithm.
 }
   \item{terminationFitness}{
-    Target fitness in genetic algorithm
+    Target fitness in genetic algorithm.
 }
   \item{mutationChance}{
-    Mutation chance in genetic algorithm
+    Mutation chance in genetic algorithm.
 }
   \item{numExpr}{
-    Number of expressions generated and given to \code{fitnessFunction}
+    Number of expressions generated and given to \code{fitnessFunction}.
 }
   \item{suggestions}{
-    List of suggested chromosomes to be added to initial population pool
+    List of suggested chromosomes to be added to initial population pool.
 }
  \item{monitorFunc}{
-  A function that is called at each generation. Can be used to monitor evolution of population.
+  A function that is called at each generation. It can be used to monitor evolution of population.
 }
   \item{plapply}{
     \code{lapply} function used for mapping chromosomes to fitness function.
     See details for parallelization tips.
 }
   \item{\dots}{
-    Additional parameters are passed to \code{\link{GeneticAlg.int}}
+    Additional parameters are passed to \code{\link{GeneticAlg.int}}.
 }
 }
 \details{
@@ -119,7 +119,7 @@ fitnessFunction <- function(expr) {
 # expr: a string containing a symbolic expression
 # returns: Symbolic regression Error
   A <- 1:6
-  B <- c(2,5,8,3,4,1)
+  B <- c(2, 5, 8, 3, 4, 1)
 
   result <- EvalExpressions(expr)
 

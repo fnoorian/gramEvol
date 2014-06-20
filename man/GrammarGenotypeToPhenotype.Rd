@@ -68,19 +68,19 @@ again. To avoid unlimited run by recursions in case of a cyclic grammar,
 # <expr> := <var><op><var>
 # <op> := "+" | "-" | "*"
 # <var> := "A" | "B"
-ruleDef <- list(list("expr",     list("<var><op><var>")),
-                list("op",       list("+", "-", "*")),
-                list("var",      list("A", "B", "C")))
+ruleDef <- list(list("expr", list("<var><op><var>")),
+                list("op",   list("+", "-", "*")),
+                list("var",  list("A", "B", "C")))
 			   
 # Create a grammar object
 grammarDef <- CreateGrammar(ruleDef, startSymb = "<expr>")			   
 print(grammarDef)
 
 # this should create the expression "A - C"
-# <expr> 		    -> 0 -> <var><op><var>
-# <var><op><var> 	-> 0 -> A<op><var>
-# A<op><var> 		-> 1 -> A - <var>
-# A - <var> 		-> 2 -> A - C
+# <expr>         -> 0 -> <var><op><var>
+# <var><op><var> -> 0 -> A<op><var>
+# A<op><var>     -> 1 -> A - <var>
+# A - <var>      -> 2 -> A - C
 sq <- c(0, 0, 1, 2)
 expr <- GrammarGenotypeToPhenotype(sq, grammarDef)
 
