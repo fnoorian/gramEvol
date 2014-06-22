@@ -47,10 +47,9 @@ GetGrammarNumOfExpressions(grammar, max.depth = length(grammar$def),
   The rule definition is a collection of lists,  simulating Backus-Naur context free
   grammatical form. Each list is made of a \code{symbol},
   followed by a list of production rules, i.e. possible \code{sequences} 
-  will replace the symbol.
+  that will replace the symbol.
   If the sequence is surrounded by '<' or '>', it is considered as non-terminal
-  and must be defined. Other symbols are terminals and must not appear as a
-  \code{symbol}.
+  and must be defined. Other symbols are considered terminals.
 }
 
 \value{

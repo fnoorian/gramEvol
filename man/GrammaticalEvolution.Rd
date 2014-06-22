@@ -68,7 +68,7 @@ GrammaticalEvolution(grammarDef, fitnessFunction,
   It evolves integer sequences and converts them to a collection containing
   \code{numExpr} strings, which are representation of
   analytical expressions. These expressions can be evaluated using \code{eval} function.
-  \code{fitnessFunction} receives these strings  and must return a numeric value.
+  The \code{fitnessFunction} receives these strings and must return a numeric value.
   The goal of optimization would be to find a chromosome which minimizes this value.
 
   It is guaranteed that \code{fitnessFunction} receives at least one string. 
