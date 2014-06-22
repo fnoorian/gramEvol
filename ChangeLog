@@ -6,6 +6,7 @@
  * Added NA and NaN handling for GA
  * Improved print function's styling
  * Changed GA genome len and range arguements name for more clarity
-
+ * EvalExpression returns NA instead of NaN if expression is non-terminal
+ 
 2014-05-20 - Changes in version 1.0-1
  * Public Release
