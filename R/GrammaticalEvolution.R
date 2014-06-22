@@ -1,7 +1,8 @@
 GrammaticalEvolution <-
 function(grammarDef, fitnessFunction, 
   seqLen = GetGrammarMaxSequenceLen(grammarDef), wrappings=3,
-  elitism=2, popSize=50, iterations=100, terminationFitness=NA, mutationChance=NA,
+  elitism=2, popSize=50, iterations=100, terminationFitness=NA, 
+  mutationChance=NA,
   numExpr = 1, 
   suggestions=NULL,
   monitorFunc=NULL,
@@ -13,6 +14,10 @@ function(grammarDef, fitnessFunction,
 
   # prepare chromosome cutting indices
   chromosomeLen <- seqLen * numExpr
+  
+  if (is.na(mutationChance)) {
+    mutationChance = 1 / (1 + chromosomeLen)
+  }
 
   if (numExpr == 1) {
     ind.cut <- 1
@@ -62,8 +67,8 @@ function(grammarDef, fitnessFunction,
     ga.monFunc <- NULL
   }
 
-  ga.result <- GeneticAlg.int(vars=chromosomeLen, 
-    var.min = 0, var.max = grammarDef$maxRuleSize - 1,
+  ga.result <- GeneticAlg.int(genomeLen=chromosomeLen, 
+    codonMin = 0, codonMax = grammarDef$maxRuleSize - 1,
     evalFunc=evalFunc,
     suggestions=suggestions,
     popSize=popSize, iterations=iterations, elitism=elitism, mutationChance=mutationChance,

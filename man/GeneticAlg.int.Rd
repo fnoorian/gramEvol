@@ -8,31 +8,33 @@ Uses genetic algorithm to find the minima of a given fitness function.
 It evolves chromosomes with limited-range integers as codons.
 }
 \usage{
-GeneticAlg.int(vars, var.min, var.max, 
-    stringMin = rep.int(var.min, vars), stringMax = rep.int(var.max, vars), 
+GeneticAlg.int(genomeLen, codonMin, codonMax, 
+    genomeMin = rep.int(codonMin, genomeLen), 
+  	genomeMax = rep.int(codonMax, genomeLen), 
     suggestions = NULL, popSize = 50, 
-    iterations = 100, terminationFitness = NA, mutationChance = NA, elitism = NA, 
-    monitorFunc = NULL, evalFunc = NULL, allowrepeat = TRUE, 
+    iterations = 100, terminationFitness = NA, 
+	  mutationChance = 1/(genomeLen+1), elitism = floor(popSize/10), 
+    monitorFunc = NULL, evalFunc, allowrepeat = TRUE, 
     showSettings = FALSE, verbose = FALSE, plapply = lapply)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{vars}{
+  \item{genomeLen}{
   Number of integers in chromosome.
 }
-  \item{var.min}{
-  Minimum of integer values range for all codons.
+  \item{codonMin}{
+  Minimum integer value range for all codons.
 }
-  \item{var.max}{
-  Maximum of integer values range for all codons.
+  \item{codonMax}{
+  Maximum integer value range for all codons.
 }
-  \item{stringMin}{
-  A vector of length \code{vars} containing fine-grained control
-  over individual codon's minimum.
+  \item{genomeMin}{
+  A vector of length \code{genomeLen} containing fine-grained control
+  over individual codon's minimum. Overrides \code{codonMin}.
 }
-  \item{stringMax}{
-  A vector of length \code{vars} containing fine-grained control
-  over individual codon's  maximum.
+  \item{genomeMax}{
+  A vector of length \code{genomeLen} containing fine-grained control
+  over individual codon's maximum. Overrides \code{codonMax}.
 }
   \item{suggestions}{
   A list of suggested chromosomes to be used in initial population.
@@ -48,7 +50,7 @@ GeneticAlg.int(vars, var.min, var.max,
    the algorithm terminates.
 }
   \item{mutationChance}{
-  The chance of a codon being mutated.
+  The chance of a codon being mutated. It must be between 0 and 1.
 }
   \item{elitism}{
   Number of top ranking chromosomes that are directly transfered to next generation without
@@ -77,7 +79,9 @@ GeneticAlg.int(vars, var.min, var.max,
 \details{
 %%  ~~ If necessary, more details than the description above ~~
 \code{GeneticAlg.int} implements evolutionary algorithms with
-chromosomes created from integer values in the given range. 
+chromosomes created from integer values in the range of \code{codonMin} to
+\code{codonMax}. \code{genomeMin} and \code{genomeMax} allow fine-grained
+control of range for individual codons.
 It first creates an initial population, using suggested inputs
 \code{suggestions} and randomly generated chromosomes. 
 Fitness of each chromosome is evaluated using the fitness function
@@ -102,10 +106,10 @@ must be exported to worker nodes before invoking \code{GeneticAlg.int}.
 }
 \value{
 
-  \item{stringMin}{
+  \item{genomeMin}{
     Minimum of individual codons as used in the function call }
 
-  \item{stringMax}{
+  \item{genomeMax}{
     Maximum of individual codons as used in the function call }
 
   \item{popSize}{
@@ -178,7 +182,7 @@ monitorFunc <- function(result) {
     cat('Best of gen: ', min(result$evaluations), '\n')
 }
 
-x <- GeneticAlg.int(vars = 20, var.min = 0, var.max = 20,
+x <- GeneticAlg.int(genomeLen = 20, codonMin = 0, codonMax = 20,
                 allowrepeat = FALSE, terminationFitness = -109,
                 monitorFunc = monitorFunc, evalFunc = evalfunc)
 

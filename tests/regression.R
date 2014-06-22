@@ -92,7 +92,7 @@ evalfunc <- function(l) {
     return (err)
 }
 
-x <- GeneticAlg.int(vars = 20, var.min = 0, var.max = 20,
+x <- GeneticAlg.int(genomeLen = 20, codonMin = 0, codonMax = 20,
                 allowrepeat = FALSE, terminationFitness = -109,
                 monitorFunc = NULL, evalFunc = evalfunc)
 

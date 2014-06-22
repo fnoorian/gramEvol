@@ -1,18 +1,18 @@
 GeneticAlg.int <-
-function(vars, var.min, var.max,
-                 stringMin=rep.int(var.min, vars), stringMax=rep.int(var.max, vars),
+function(genomeLen, codonMin, codonMax,
+                 genomeMin=rep.int(codonMin, genomeLen), genomeMax=rep.int(codonMax, genomeLen),
                  suggestions=NULL,
                  popSize=50, 
                  iterations=100, terminationFitness=NA,
-                 mutationChance=NA,
-                 elitism=NA,
-                 monitorFunc=NULL, evalFunc=NULL,
+                 mutationChance=1/(genomeLen+1),
+                 elitism=floor(popSize/10),
+                 monitorFunc=NULL, 
+                 evalFunc,
                  allowrepeat = TRUE,
                  showSettings=FALSE, verbose=FALSE,
                  plapply = lapply) {
     # Optimizes an Integer chromosome using a genetic algorithm.
     #
-    # string           = string to optimize
     # popSize          = the population size
     # iterations       = number of generations
     # terminationFitness = The fitness error that if reached, the GA should termiante
@@ -28,19 +28,12 @@ function(vars, var.min, var.max,
         stop("A evaluation function must be provided. See the evalFunc parameter.");
     }
     
-    vars = length(stringMin);
-    stopifnot(vars > 1)
-    if (is.na(mutationChance)) {
-        mutationChance = 1/(vars+1);
-    }
-    if (is.na(elitism)) {
-        elitism = floor(popSize/5)
-    }
+    stopifnot(genomeLen > 1)
     
     # do a variaty of sanity checks first
     verbose("Testing the sanity of parameters...\n");
-    if (length(stringMin) != length(stringMax)) {
-        stop("The vectors stringMin and stringMax must be of equal length.");
+    if (length(genomeMin) != length(genomeMax)) {
+        stop("The vectors genomeMin and genomeMax must be of equal length.");
     }
     if (popSize < 5) {
         stop("The population size must be at least 5.");
@@ -51,10 +44,16 @@ function(vars, var.min, var.max,
     if (!(elitism < popSize)) {
         stop("The population size must be greater than the elitism.");
     }
+    if (elitism < 0) {
+        stop("elitism must be at least 0.");
+    }
+    if ((mutationChance < 0) | (mutationChance  > 1)) {
+        stop("mutationChance must be between 0 and 1.");
+    }
     
     if (showSettings) {
         verbose("The start conditions:\n");
-        result = list(stringMin=stringMin, stringMax=stringMax, suggestions=suggestions,
+        result = list(genomeMin=genomeMin, genomeMax=genomeMax, suggestions=suggestions,
                       popSize=popSize, iterations=iterations,
                       elitism=elitism, mutationChance=mutationChance);
         class(result) = "rbga";
@@ -68,15 +67,15 @@ function(vars, var.min, var.max,
     rand.int <- function(n, mins, maxs) {
         (mins - 1) + sample.int(maxs - mins + 1, n, replace=TRUE)
     }
-    unique.maker <- function(x, stringMin, stringMax) {
+    unique.maker <- function(x, genomeMin, genomeMax) {
         while (TRUE) {
             dup = duplicated(x)
             if (!any(dup))
                 break
             for (i in which(dup)) {
                 x[i] = x[i] + 1
-                if (x[i] > stringMax[i]) {
-                    x[i] = stringMin[i]
+                if (x[i] > genomeMax[i]) {
+                    x[i] = genomeMin[i]
                 }
             }
         }
@@ -86,7 +85,7 @@ function(vars, var.min, var.max,
 
     ##########
     # Creation
-    population = matrix(nrow=popSize, ncol=vars);
+    population = matrix(nrow=popSize, ncol=genomeLen);
 
     if (!is.null(suggestions)) {
         verbose("Adding suggestions to first population...\n");
@@ -98,15 +97,15 @@ function(vars, var.min, var.max,
         suggestionCount = 0
     }
 
-    for (var in 1:vars) {
+    for (var in 1:genomeLen) {
         population[(suggestionCount+1):popSize,var] = rand.int(popSize-suggestionCount, 
-            stringMin[var],
-            stringMax[var])
+            genomeMin[var],
+            genomeMax[var])
     }
 
     if (!allowrepeat) {
         for (i in (suggestionCount+1):popSize) {
-            population[i,] = unique.maker(population[i,], stringMin, stringMax)
+            population[i,] = unique.maker(population[i,], genomeMin, genomeMax)
         }
     }
     ############################################################################
@@ -142,7 +141,7 @@ function(vars, var.min, var.max,
         if (!is.null(monitorFunc)) {
             verbose("Sending current state to rgba.monitor()...\n");
             # report on GA settings
-            result = list(stringMin=stringMin, stringMax=stringMax,
+            result = list(genomeMin=genomeMin, genomeMax=genomeMax,
                           popSize=popSize, iterations=iterations, suggestions=suggestions,
                           population=population, elitism=elitism, mutationChance=mutationChance,
                           evaluations=evalVals, best=bestEvals, mean=meanEvals,
@@ -171,12 +170,12 @@ function(vars, var.min, var.max,
         # Selection
 
         verbose("Creating next generation...\n");
-        newPopulation = matrix(nrow=popSize, ncol=vars);
+        newPopulation = matrix(nrow=popSize, ncol=genomeLen);
         newEvalVals = rep(NA, popSize);
         
         verbose("  sorting results...\n");
         sortedEvaluations = sort(evalVals, index=TRUE);
-        sortedPopulation  = matrix(population[sortedEvaluations$ix,], ncol=vars);
+        sortedPopulation  = matrix(population[sortedEvaluations$ix,], ncol=genomeLen);
         
         # save the best
         if (elitism > 0) {
@@ -195,24 +194,24 @@ function(vars, var.min, var.max,
             parentIDs = sample(1:popSize, 2, prob=parentProb)
             parents = sortedPopulation[parentIDs,]
 
-            crossOverPoint = sample(0:vars,1)
+            crossOverPoint = sample(0:genomeLen,1)
 
             if (crossOverPoint == 0) {
                 newPopulation[child, ] = parents[2,]
                 newEvalVals[child] = sortedEvaluations$x[parentIDs[2]]
-            } else if (crossOverPoint == vars) {
+            } else if (crossOverPoint == genomeLen) {
                 newPopulation[child, ] = parents[1,]
                 newEvalVals[child] = sortedEvaluations$x[parentIDs[1]]
             } else {
                 newPopulation[child, ] = 
                     c(parents[1, 1:crossOverPoint], 
-                      parents[2, (crossOverPoint+1):vars])
+                      parents[2, (crossOverPoint+1):genomeLen])
             }
         }
         
         if (!allowrepeat) {
             for (i in (elitism+1):popSize) {
-                population[i,] = unique.maker(population[i,], stringMin, stringMax)
+                population[i,] = unique.maker(population[i,], genomeMin, genomeMax)
             }
         }
 
@@ -225,34 +224,34 @@ function(vars, var.min, var.max,
             verbose("  applying mutations... ");
             mutationCount = 0;
             for (object in (elitism+1):popSize) { # don't mutate the best
-                mut_vars = runif(vars) < mutationChance # do mutation for some of variables by chance
-                num_muts = sum(mut_vars)
+                mut_genomeLen = runif(genomeLen) < mutationChance # do mutation for some of variables by chance
+                num_muts = sum(mut_genomeLen)
                 mutationCount = mutationCount + num_muts
 
                 # OPTION 1
                 # mutate to something random
-                #mutation = stringMin[mut_vars] +
-                #    runif(num_muts)*(stringMax[mut_vars]-stringMin[mut_vars]);
+                #mutation = genomeMin[mut_genomeLen] +
+                #    runif(num_muts)*(genomeMax[mut_genomeLen]-genomeMin[mut_genomeLen]);
                 
                 # OPTION 2
                 # mutate around solution
                 dempeningFactor = (iterations-iter)/iterations
                 direction       = sample(c(-1,1), num_muts, replace=TRUE)
-                mutationVal     = stringMax[mut_vars]-stringMin[mut_vars]*0.67
-                mutation = round(population[object,mut_vars] + 
+                mutationVal     = genomeMax[mut_genomeLen]-genomeMin[mut_genomeLen]*0.67
+                mutation = round(population[object,mut_genomeLen] + 
                            direction*mutationVal*dempeningFactor)
                 # but in domain. if not, then take random
-                bad_mutations = which( (mutation < stringMin[mut_vars]) | (mutation > stringMax[mut_vars]) )
+                bad_mutations = which( (mutation < genomeMin[mut_genomeLen]) | (mutation > genomeMax[mut_genomeLen]) )
                 for (b in bad_mutations) {
                     mutation[bad_mutations] = rand.int(n=1, 
-                        stringMin[mut_vars][b],
-                        stringMax[mut_vars][b])
+                        genomeMin[mut_genomeLen][b],
+                        genomeMax[mut_genomeLen][b])
                 }
                 
                 # apply mutation, and delete known evalutation value
-                population[object, mut_vars] = mutation;
+                population[object, mut_genomeLen] = mutation;
                 if (!allowrepeat) {
-                    population[object,] = unique.maker(population[object,], stringMin, stringMax)
+                    population[object,] = unique.maker(population[object,], genomeMin, genomeMax)
                 }
 
                 evalVals[object] = NA;
@@ -263,7 +262,7 @@ function(vars, var.min, var.max,
     }
     
     # report on GA settings
-    result = list(stringMin=stringMin, stringMax=stringMax,
+    result = list(genomeMin=genomeMin, genomeMax=genomeMax,
                   popSize=popSize, iterations=iterations, suggestions=suggestions,
                   population=population, elitism=elitism, mutationChance=mutationChance,
                   evaluations=evalVals, best=bestEvals, mean=meanEvals,

@@ -9,10 +9,10 @@ to minimize a given fitness function.
 }
 \usage{
 GrammaticalEvolution(grammarDef, fitnessFunction, 
-  seqLen = GetGrammarMaxSequenceLen(grammarDef), 
-  wrappings = 3, elitism = 2, popSize = 50, iterations = 100, 
-  terminationFitness = NA, mutationChance = NA, numExpr = 1,
-  suggestions = NULL, monitorFunc=NULL, plapply = lapply, ...)
+    seqLen = GetGrammarMaxSequenceLen(grammarDef), 
+    wrappings = 3, elitism = 2, popSize = 50, iterations = 100, 
+    terminationFitness = NA, mutationChance = NA, numExpr = 1,
+    suggestions = NULL, monitorFunc=NULL, plapply = lapply, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -43,7 +43,8 @@ GrammaticalEvolution(grammarDef, fitnessFunction,
     Target fitness in genetic algorithm.
 }
   \item{mutationChance}{
-    Mutation chance in genetic algorithm.
+    Mutation chance in genetic algorithm. It must be between 0 and 1.
+    By default it is set to \code{1/(1+chromosome size))}.
 }
   \item{numExpr}{
     Number of expressions generated and given to \code{fitnessFunction}.
@@ -66,7 +67,7 @@ GrammaticalEvolution(grammarDef, fitnessFunction,
   This function offers a tiny wrapper around \code{\link{GeneticAlg.int}}.
   It evolves integer sequences and converts them to a collection containing
   \code{numExpr} strings, which are representation of
-  analytical expressions. These expressions are evaluatable using \code{eval} function.
+  analytical expressions. These expressions can be evaluated using \code{eval} function.
   \code{fitnessFunction} receives these strings  and must return a numeric value.
   The goal of optimization would be to find a chromosome which minimizes this value.
 
