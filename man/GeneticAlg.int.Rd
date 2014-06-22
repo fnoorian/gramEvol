@@ -95,7 +95,7 @@ or the number of generations exceeds \code{iterations}.
 At each generation, the supplied \code{monitorFunc} is called, taking a
 list similar to \code{GeneticAlg.int} returning value. 
 
-\code{evalFunc} receives integer sequences and must return a numeric value.
+The \code{evalFunc} receives integer sequences and must return a numeric value.
 The goal of optimization would be to find a chromosome which minimizes this value.
 
 To parallelize fitness function evaluation, set \code{plapply} to a parallelized
