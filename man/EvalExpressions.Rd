@@ -26,13 +26,13 @@ EvalExpressions(expressions, envir = parent.frame())
 \code{EvalExpressions} is a wrapper around 
 \code{eval} and \code{parse} functions in R base package.
 It can handle a single, a collection or a list of expressions
-in string format or as the output of \link{GrammarGenotypeToPhenotype}.
+in string format or as the output of \code{\link{GrammarGenotypeToPhenotype}}.
 
 \code{envir} argument is directly passed to \code{eval} function. If it is not specified,
 the parent frame (the environment where the call to \code{eval} was made) is used instead.	
 
 \code{EvalExpressions} only evaluates terminal expressions and character strings.
-Evaluating non-terminal expressions will result in a warning and return of NaN.
+Evaluating non-terminal expressions will result in a warning and return of NA.
 }
 \value{
 %%  ~Describe the value returned

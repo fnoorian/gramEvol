@@ -18,12 +18,12 @@ EvalExpressions <-
             expr = expr$expr
         } else {
             warning("Can not evaluate non-terminal expression")
-            expr = "NaN"
+            expr = "NA"
         }
     # or evaluate character string
     } else if (class(expr) != "character") {
         warning("Can not evaluate invalid expression")
-        expr = "NaN"
+        expr = "NA"
     }
 
     result <- eval(parse(text = expr), envir=envir)
