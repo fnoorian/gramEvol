@@ -4,7 +4,7 @@
 Grammatical Evolution
 }
 \description{
-\code{GrammaticalEvolution} evolves an expression using a context free grammar
+\code{GrammaticalEvolution} evolves an expression using a context-free grammar
 to minimize a given fitness function.
 }
 \usage{
@@ -28,7 +28,7 @@ GrammaticalEvolution(grammarDef, fitnessFunction,
     Length of integer vector used to create the expression.
 }
  \item{wrappings}{
-    Number of wrappings in case length of chromosome is not enough for conversion to an expression.
+    Number of wrappings in case the length of chromosome is not enough for conversion to an expression.
 }
   \item{elitism}{
     Number of elite individuals in genetic algorithm.
@@ -66,12 +66,13 @@ GrammaticalEvolution(grammarDef, fitnessFunction,
 \details{
   This function offers a tiny wrapper around \code{\link{GeneticAlg.int}}.
   It evolves integer sequences and converts them to a collection containing
-  \code{numExpr} strings, which are representation of
+  \code{numExpr} strings, which are representations of
   analytical expressions. These expressions can be evaluated using \code{eval} function.
   The \code{fitnessFunction} receives these strings and must return a numeric value.
   The goal of optimization would be to find a chromosome which minimizes this value.
 
-  It is guaranteed that \code{fitnessFunction} receives at least one string. 
+  Only valid (i.e., terminal) expressions are passed to \code{fitnessFunction},
+  and it is guaranteed that \code{fitnessFunction} receives at least one string. 
 
   If the grammar contains recursive elements, it is advisable that \code{chromosomeLen} is 
   defined manually, as in such cases the possible search space grows explosively
@@ -82,9 +83,9 @@ GrammaticalEvolution(grammarDef, fitnessFunction,
   \code{monitorFunc} receives a list similar to the \code{GrammaticalEvolution}'s return value.
 }
 \value{
-  \item{bestExpression}{String representation of expression(s) with the best fitness}
+  \item{bestExpression}{String representation of expression(s) with the best fitness.}
   \item{gaSummary}{
-      The results of \code{\link{GeneticAlg.int}}}
+      The results of \code{\link{GeneticAlg.int}}.}
 }
 
 % \references{

@@ -4,7 +4,7 @@
 Convert an integer sequence to an expression
 }
 \description{
-Useing a grammar created by \code{\link{CreateGrammar}},
+Using a grammar created by \code{\link{CreateGrammar}},
 converts a sequence of integer numbers to an expression.
 }
 \usage{
@@ -13,7 +13,7 @@ GrammarGenotypeToPhenotype(inputString, grammar, wrappings = 3)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{inputString}{
-A vector of integers to define the path of symbol selection in grammar. It uses
+A vector of integers to define the path of symbol selection in grammar tree. It uses
 zero-based indexing to address production rules in the grammar.
 }
   \item{grammar}{
@@ -21,17 +21,17 @@ The grammar object as created by \code{\link{CreateGrammar}}.
 }
   \item{wrappings}{
 The number of times the function is allowed to wrap around \code{inputString}
-in case non-terminal symbols are still remaining.
+if non-terminal symbols are still remaining.
 }
 }
 \details{
 %%  ~~ If necessary, more details than the description above ~~
 \code{GrammarGenotypeToPhenotype} starts from the \code{startExpr} given in the
-definition of grammar in \code{\link{CreateGrammar}}.  
-Then it iterates through \code{inputString}, replacing symbols in the expression
+definition of grammar in \code{\link{CreateGrammar}}. ;
+then it iterates through \code{inputString}, replacing symbols in the expression
 with associated replacements in the grammar using the current value of
 \code{inputString}.
-If the function exhausts all non-terminal symbols in expression, it terminates.
+If the function exhausts all non-terminal symbols in the expression, it terminates.
 If the end of \code{inputString} is reached and  still non-terminal symbols
 exist, the algorithm will start from the beginning of the \code{inputString}
 again. To avoid unlimited run by recursions in case of a cyclic grammar,
@@ -40,7 +40,7 @@ again. To avoid unlimited run by recursions in case of a cyclic grammar,
 \value{
 %%  ~Describe the value returned
 %%  If it is a LIST, use
-  \item{expr}{The generated expression as a character string}
+  \item{expr}{The generated expression as a character string.}
   \item{type}{"T" if the expression is valid, "NT" if the expression still 
 				contains non-terminal symbols. }
 %% ...

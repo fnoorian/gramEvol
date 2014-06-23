@@ -4,7 +4,8 @@
  Evaluate one or a collection of expressions to numerial values
 }
 \description{
-\code{EvalExpressions} evaluates the string expression (or collection of expressions).
+\code{EvalExpressions} evaluates expressions, either in string format
+or as a grammar generated expression.
 }
 \usage{
 EvalExpressions(expressions, envir = parent.frame())
@@ -12,13 +13,13 @@ EvalExpressions(expressions, envir = parent.frame())
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{expressions}{
-  an expression (or collection of expressions). Should be either in character
+  an expression, or a collection of expressions. It should be either in character
     string format or be the output of \link{GrammarGenotypeToPhenotype}.
 }
   \item{envir}{
-   the \code{environment} in which expression are to be evaluated.  May
-          also be \code{NULL}, a list, a data frame, a pairlist or an
-          integer as specified to \code{sys.call}.
+   the \code{environment} in which expressions are to be evaluated.  May
+          also be \code{NULL}, a list, a data frame, a pair-list or an
+          integer as specified in \code{sys.call}.
 	}
 }
 \details{
@@ -29,7 +30,7 @@ It can handle a single, a collection or a list of expressions
 in string format or as the output of \code{\link{GrammarGenotypeToPhenotype}}.
 
 The \code{envir} argument is directly passed to \code{eval} function. If it is not specified,
-the parent frame (the environment where the call to \code{eval} was made) is used instead.	
+the parent frame (i.e., the environment where the call to \code{eval} was made) is used instead.	
 
 \code{EvalExpressions} only evaluates terminal expressions and character strings.
 Evaluating non-terminal expressions will result in a warning and return of NA.
@@ -37,7 +38,7 @@ Evaluating non-terminal expressions will result in a warning and return of NA.
 \value{
 %%  ~Describe the value returned
 If one expression is evaluated, a vector of numeric values is returned.
-Otherwise a data frame with result of each expression in each column is returned.
+Otherwise a data frame with result of each expression in a separate column is returned.
 }
 
 %\references{

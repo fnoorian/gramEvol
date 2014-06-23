@@ -10,17 +10,17 @@ It evolves chromosomes with limited-range integers as codons.
 \usage{
 GeneticAlg.int(genomeLen, codonMin, codonMax, 
     genomeMin = rep.int(codonMin, genomeLen), 
-  	genomeMax = rep.int(codonMax, genomeLen), 
+    genomeMax = rep.int(codonMax, genomeLen), 
     suggestions = NULL, popSize = 50, 
     iterations = 100, terminationFitness = NA, 
-	  mutationChance = 1/(genomeLen+1), elitism = floor(popSize/10), 
+    mutationChance = 1/(genomeLen+1), elitism = floor(popSize/10), 
     monitorFunc = NULL, evalFunc, allowrepeat = TRUE, 
     showSettings = FALSE, verbose = FALSE, plapply = lapply)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{genomeLen}{
-  Number of integers in chromosome.
+  Number of integers (i.e, codons) in chromosome.
 }
   \item{codonMin}{
   Minimum integer value range for all codons.
@@ -107,43 +107,43 @@ must be exported to worker nodes before invoking \code{GeneticAlg.int}.
 \value{
 
   \item{genomeMin}{
-    Minimum of individual codons as used in the function call }
+    Minimum of individual codons as used in the function call. }
 
   \item{genomeMax}{
-    Maximum of individual codons as used in the function call }
+    Maximum of individual codons as used in the function call. }
 
   \item{popSize}{
-    Size of the population as used in the function call}
+    Size of the population as used in the function call.}
 
   \item{iterations}{
-    Number of maximum generations as used in the function call}
+    Number of maximum generations as used in the function call.}
 
   \item{suggestions}{
-    Suggested chromosomes as used in the function call}
+    Suggested chromosomes as used in the function call.}
 
   \item{elitism}{
-    Number of elite individuals as used in the function call}
+    Number of elite individuals as used in the function call.}
 
   \item{mutationChance}{
-    Mutation chance as used in the function call}
+    Mutation chance as used in the function call.}
 
   \item{population}{
-    The population during all generations}
+    The population during all generations.}
 
   \item{evaluations}{
-    Fitness of latest generation}
+    Fitness of latest generation.}
 
   \item{best}{
-    Average fitness of the population}
+    Average fitness of the population.}
 
   \item{mean}{
-    Average fitness of the population}
+    Average fitness of the population.}
 
   \item{currentIteration}{
-      Number of generations evolved until now}
+      Number of generations evolved until now.}
 
   \item{bestChrom}{
-    The best chromosome in integer sequence format}
+    The best chromosome in integer sequence format.}
 }
 
 \references{
@@ -179,7 +179,7 @@ evalfunc <- function(l) {
 }
 
 monitorFunc <- function(result) {
-    cat('Best of gen: ', min(result$evaluations), '\n')
+    cat("Best of gen: ", min(result$evaluations), "\n")
 }
 
 x <- GeneticAlg.int(genomeLen = 20, codonMin = 0, codonMax = 20,
@@ -189,9 +189,9 @@ x <- GeneticAlg.int(genomeLen = 20, codonMin = 0, codonMax = 20,
 best.result <- x$bestChrom
 
 print(best.result)
-print('Odds:')
+print("Odds:")
 print(sort(best.result[seq(1, 20, 2)]))
-print('Evens:')
+print("Evens:")
 print(sort(best.result[seq(2, 20, 2)]))
 }
 
