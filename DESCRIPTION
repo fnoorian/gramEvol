@@ -2,7 +2,7 @@ Package: gramEvol
 Type: Package
 Title: Grammatical Evolution For R
 Version: 1.1-1
-Date: 2014-06-22
+Date: 2014-06-23
 Author: Farzad Noorian, Anthony Mihirana de Silva
 Maintainer: Farzad Noorian <farzad.noorian@sydney.edu.au>
 Description: Implementation of Context Free Grammar and Grammatical Evolution for R
