@@ -1,7 +1,8 @@
 \name{GrammarGenotypeToPhenotype}
 \alias{GrammarGenotypeToPhenotype}
+
 \title{
-Convert an integer sequence to an expression
+Genotype to Phenotype Mapping using Context-free Grammar
 }
 \description{
 Using a grammar created by \code{\link{CreateGrammar}},

@@ -1,10 +1,9 @@
 \name{GrammaticalEvolution}
 \alias{GrammaticalEvolution}
-\title{
-Grammatical Evolution
-}
+
+\title{Grammatical Evolution}
 \description{
-\code{GrammaticalEvolution} evolves an expression using a context-free grammar
+Evolves an expression using a context-free grammar
 to minimize a given fitness function.
 }
 \usage{

@@ -5,9 +5,10 @@
 \alias{GetGrammarMaxRuleSize}
 \alias{GetGrammarMaxSequenceLen}
 \alias{GetGrammarNumOfExpressions}
-\title{Create context-free grammar object}
+
+\title{Context-free Grammar Object}
 \description{ %%  ~~ A concise (1-5 lines) description of what the function does. ~~
-Creates a context-free grammar object. 
+Create and examine a context-free grammar object. 
 }
 \usage{
 CreateGrammar(ruleDef, startSymb = "expr")

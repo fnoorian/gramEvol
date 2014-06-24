@@ -1,7 +1,8 @@
 \name{GeneticAlg.int}
 \alias{GeneticAlg.int}
+
 \title{ 
-  Genetic Algorithm with integer chromosomes
+  Genetic Algorithm with Integer Chromosomes
 }
 \description{
 Uses genetic algorithm to find the minima of a given fitness function.

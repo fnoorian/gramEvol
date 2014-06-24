@@ -1,7 +1,8 @@
 \name{EvalExpressions}
 \alias{EvalExpressions}
+
 \title{
- Evaluate one or a collection of expressions to numerial values
+ Evaluate a collection of Expressions
 }
 \description{
 \code{EvalExpressions} evaluates expressions, either in string format
