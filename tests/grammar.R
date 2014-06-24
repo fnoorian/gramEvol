@@ -13,9 +13,9 @@ ruleDef <- list(list('expr',     list('<expr><op><expr>', '<coef>*<var>')),
                 list('op',       list('+', '-', '*', '/')),
                 list('coef',     list('c1', 'c2')),
                 list('var',      list('v1', 'v2')))
-			   
+
 grammarDef <- CreateGrammar(ruleDef, startSymb = '<expr>')			   
-			
+
 grammarDef
 ################
 stopifnot(GetGrammarDepth(grammarDef) == 4)
@@ -27,7 +27,7 @@ ruleDef2 <- list(list('expr',    list('<subexpr><op><subexpr>')),
                  list('op',      list('+', '-', '*', '/')),
                  list('coef',    list('c1', 'c2')),
                  list('var',     list('v1', 'v2')))
-			   
+
 grammarDef2 <- CreateGrammar(ruleDef2, startSymb = '<expr>')			   
 
 stopifnot(GetGrammarDepth(grammarDef2) == 3)
@@ -70,7 +70,7 @@ df = data.frame(c1 = c(1,2),
                 c2 = c(2,3),
                 v1 = c(3,4),
                 v2 = c(4,5))
-                
+
 expressions = list(expr, "c1 * v2")
 r2 = EvalExpressions(expressions, envir = df)
 stopifnot(dim(r2) == c(2,2))
@@ -78,54 +78,4 @@ stopifnot(colnames(r2) == c("expr1","expr2"))
 stopifnot(r2$expr1[1] == 6)
 stopifnot(r2$expr1[2] * 3 == 40)
 stopifnot(r2$expr2 == c(4,10))
-##################
-# The GA only test
-set.seed(0)
 
-odd <- seq(1, 20, 2)
-even <- seq(2, 20, 2)
-evalfunc <- function(l) {
-    err <- sum(l[even]) - sum(l[odd]);
-
-    stopifnot(!any(duplicated(l)))
-
-    return (err)
-}
-
-x <- GeneticAlg.int(genomeLen = 20, codonMin = 0, codonMax = 20,
-                allowrepeat = FALSE, terminationFitness = -109,
-                monitorFunc = NULL, evalFunc = evalfunc)
-
-best.result <- x$bestChrom
-
-stopifnot(sort(best.result[odd]) == 11:20)
-stopifnot(sort(best.result[even]) == 0:9)
-##################
-# The GE test
-ruleDef <- list(list("expr",     list("<der-expr><op><der-expr>")),
-                list("der-expr", list("<func>(<var>)", "<var>")),
-                list("func",     list("log", "exp", "sin", "cos")),
-                list("op",       list("+", "-", "*")),
-                list("var",      list("A", "B", "<n>")),
-                list("n",        list("1", "2", "3", "4")))
-
-grammarDef <- CreateGrammar(ruleDef, startSymb = "<expr>")
-
-fitnessFunction <- function(expr) {
-  A <- 1:6
-  B <- c(2, 5, 8, 3, 4, 1)
-
-  result <- EvalExpressions(expr)
-
-  X <- log(A) * B
-  err <- sum((result - X)^2)
-  
-  return(err)
-}
-
-ge <- GrammaticalEvolution(grammarDef, fitnessFunction)
-
-stopifnot(ge$bestExpression == "B*log(A)")
-
-###############
-print("All tests successful.")
