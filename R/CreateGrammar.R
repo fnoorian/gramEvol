@@ -1,5 +1,5 @@
 CreateGrammar <-
-function(ruleDef, startSymb = 'expr') {
+function(ruleDef, startSymb = "<expr>") {
 
   ruleSizes = sapply(ruleDef, function(r) length(r[[2]]))
 

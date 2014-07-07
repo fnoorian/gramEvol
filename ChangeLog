@@ -1,5 +1,8 @@
 = Changelog =
 
+2014-07-07 - Changes in version 1.1-2
+ * CreateGrammar Default Value fixed
+
 2014-06-23 - Changes in version 1.1-1
  * Added Some regression tests
  * Changed GA and GE default popsize and itercount to be more useful

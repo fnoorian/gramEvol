@@ -11,7 +11,7 @@
 Create and examine a context-free grammar object. 
 }
 \usage{
-CreateGrammar(ruleDef, startSymb = "expr")
+CreateGrammar(ruleDef, startSymb = "<expr>")
 
 GetGrammarDepth(grammar, max.depth = length(grammar$def), 
     startSymb = grammar$startSymb)
