@@ -8,6 +8,6 @@ print.grammar <- function (x, ...) {
         do.call(paste0, as.list(rep(" ", spaces))),
         "::= ",
         do.call(function(...) {paste(..., sep=" | ")}, expressions), 
-        "\n", ...)
+        "\n", ..., sep = "")
   }
 }
