@@ -6,7 +6,7 @@ print.grammar <- function (x, ...) {
     expressions = lapply(rule[[2]], function(x) x)
     cat(paste0("<", rule[[1]], ">" ), 
         do.call(paste0, as.list(rep(" ", spaces))),
-        "::= ",
+        " ::= ",
         do.call(function(...) {paste(..., sep=" | ")}, expressions), 
         "\n", ..., sep = "")
   }
