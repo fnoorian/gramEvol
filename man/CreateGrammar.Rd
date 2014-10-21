@@ -27,7 +27,8 @@ GetGrammarNumOfExpressions(grammar, max.depth = length(grammar$def),
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{ruleDef}{
-    Grammatical rule definition, as a collection of symbols and sequences 
+    Grammatical rule definition. Either a character string or \code{\link{connection}} to a .bnf file,
+    or a list of symbols and sequences 
     with syntax similar to Backus-Naur form. 
     See details. 
   }
@@ -44,9 +45,10 @@ GetGrammarNumOfExpressions(grammar, max.depth = length(grammar$def),
 }
 \details{
 %%  ~~ If necessary, more details than the description above ~~
-  The rule definition is a collection of lists,  simulating Backus-Naur context-free
-  grammatical form. Each list is made of a \code{symbol},
-  followed by a list of production rules, i.e. possible \code{sequences} 
+  The rule definition is the grammar described in Backus-Naur context-free grammatical format.
+  \code{CreateGrammar} can read and parse .bnf files as well as a \code{list} simulating BNF format.
+  Each list has to made of a \emph{symbol},
+  followed by a list of production rules, i.e. possible \emph{sequences} 
   that will replace the symbol.
   If the sequence is surrounded by '<' or '>', it is considered as non-terminal
   and must be defined. Other symbols are considered terminals.

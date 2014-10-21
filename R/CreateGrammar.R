@@ -1,6 +1,11 @@
 CreateGrammar <-
 function(ruleDef, startSymb = "<expr>") {
 
+  # if the ruledef is a file, read it
+  if (("connection" %in% class(ruleDef)) | is.character(ruleDef)) {
+    ruleDef = ReadBNFFile(ruleDef)
+  }
+
   # trim brackets from the rule index
   trim_brackets <- function (x) gsub("^<+|>+$", "", x)
   for (i in seq_along(ruleDef)) {
