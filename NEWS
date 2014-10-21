@@ -1,7 +1,9 @@
 = Changelog =
 
-Unreleased - Version 1.1-2
- * Minor Bug Fix
+2014-10-21 - Version 1.2-1
+ * Added BNF file parser
+ * Brackets around grammar rule identifiers are optional now
+ * Minor bug fixes and style improvements
 
 2014-06-23 - Version 1.1-1
  * Minor improvements
