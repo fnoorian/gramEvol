@@ -66,12 +66,12 @@ again. To avoid unlimited run by recursions in case of a cyclic grammar,
 
 \examples{
 # Define a simple grammar
-# <expr> := <var><op><var>
-# <op> := "+" | "-" | "*"
-# <var> := "A" | "B"
-ruleDef <- list(list("expr", list("<var><op><var>")),
-                list("op",   list("+", "-", "*")),
-                list("var",  list("A", "B", "C")))
+# <expr> ::= <var><op><var>
+# <op>   ::= "+" | "-" | "*"
+# <var>  ::= "A" | "B"
+ruleDef <- list(list("<expr>", list("<var><op><var>")),
+                list("<op>",   list("+", "-", "*")),
+                list("<var>",  list("A", "B", "C")))
 			   
 # Create a grammar object
 grammarDef <- CreateGrammar(ruleDef, startSymb = "<expr>")			   

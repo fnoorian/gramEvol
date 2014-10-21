@@ -86,12 +86,12 @@ GetGrammarNumOfExpressions(grammar, max.depth = length(grammar$def),
 }
 \examples{
 # Define a simple grammar
-# <expr> := <var><op><var>
-# <op> := "+" | "-" | "*"
-# <var> := "A" | "B"
-ruleDef <- list(list("expr", list("<var><op><var>")),
-                list("op",   list("+", "-", "*")),
-                list("var",  list("A", "B")))
+# <expr> ::= <var><op><var>
+# <op>   ::= "+" | "-" | "*"
+# <var>  ::= "A" | "B"
+ruleDef <- list(list("<expr>", list("<var><op><var>")),
+                list("<op>",   list("+", "-", "*")),
+                list("<var>",  list("A", "B")))
 
 # Create a grammar object
 grammarDef <- CreateGrammar(ruleDef, startSymb = "<expr>")			   

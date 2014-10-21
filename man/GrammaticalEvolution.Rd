@@ -105,12 +105,12 @@ GrammaticalEvolution(grammarDef, fitnessFunction,
 }
 \examples{
 # Grammar Definition
-ruleDef <- list(list("expr",     list("<der-expr><op><der-expr>")),
-                list("der-expr", list("<func>(<var>)", "<var>")),
-                list("func",     list("log", "exp", "sin", "cos")),
-                list("op",       list("+", "-", "*")),
-                list("var",      list("A", "B", "<n>")),
-                list("n",        list("1", "2", "3", "4")))
+ruleDef <- list(list("<expr>",     list("<der-expr><op><der-expr>")),
+                list("<der-expr>", list("<func>(<var>)", "<var>")),
+                list("<func>",     list("log", "exp", "sin", "cos")),
+                list("<op>",       list("+", "-", "*")),
+                list("<var>",      list("A", "B", "<n>")),
+                list("<n>",        list("1", "2", "3", "4")))
 
 # Creating the grammar object
 grammarDef <- CreateGrammar(ruleDef, startSymb = "<expr>")

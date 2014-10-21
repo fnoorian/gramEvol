@@ -9,10 +9,10 @@
 
 library("gramEvol")
 
-ruleDef <- list(list('expr',     list('<expr><op><expr>', '<coef>*<var>')),
-                list('op',       list('+', '-', '*', '/')),
-                list('coef',     list('c1', 'c2')),
-                list('var',      list('v1', 'v2')))
+ruleDef <- list(list('<expr>',     list('<expr><op><expr>', '<coef>*<var>')),
+                list('<op>',       list('+', '-', '*', '/')),
+                list('<coef>',     list('c1', 'c2')),
+                list('<var>',      list('v1', 'v2')))
 
 grammarDef <- CreateGrammar(ruleDef, startSymb = '<expr>')			   
 
@@ -22,11 +22,11 @@ stopifnot(GetGrammarDepth(grammarDef) == 4)
 stopifnot(GetGrammarDepth(grammarDef, max.depth=10) == 10)
 ################
 
-ruleDef2 <- list(list('expr',    list('<subexpr><op><subexpr>')),
-                 list('subexpr', list('<coef>*<var>', 'sqrt(<var>)')),
-                 list('op',      list('+', '-', '*', '/')),
-                 list('coef',    list('c1', 'c2')),
-                 list('var',     list('v1', 'v2')))
+ruleDef2 <- list(list('<expr>',    list('<subexpr><op><subexpr>')),
+                 list('<subexpr>', list('<coef>*<var>', 'sqrt(<var>)')),
+                 list('<op>',      list('+', '-', '*', '/')),
+                 list('<coef>',    list('c1', 'c2')),
+                 list('<var>',     list('v1', 'v2')))
 
 grammarDef2 <- CreateGrammar(ruleDef2, startSymb = '<expr>')			   
 
