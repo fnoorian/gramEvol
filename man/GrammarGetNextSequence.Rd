@@ -29,62 +29,41 @@ is.GrammarOverflow(object)
     The grammar object as created by \code{\link{CreateGrammar}}.
   }
   \item{seqStart}{
-    The sequence to be incremented. If \code{NULL}, the first sequence is automatically assumed.
-    Maximum depth of search in case of recursive grammar. 
+    The sequence to be incremented. 
+    A value of \code{NULL}, the first sequence is returned.
+    Partial sequences are completed and returned.
+  }
+  \item{startSymb}{
+    The symbol where the generation of a new expression should start.
+  }
+  \item{max.len}{
+    Maximum length of depth of search in case of recursive grammar. 
     Partial Sequences can be entered.
   }
   \item{object}{
-    Any Object.
+    An object to be tested.
   }
 }
 \details{
 %%  ~~ If necessary, more details than the description above ~~
-  A grammar object, created using\code{\link{CreateGrammar}} can be examined through several
-  functions.
+  \code{GrammarGetFirstSequence} returns the first sequence that creates a valid expression
+  with the given grammar.
+  \code{GrammarGetNextSequence} allows iterating through all valid sequences in a grammar.
+  If a \code{seqStart = NULL} is used, \code{GrammarGetFirstSequence} is called to 
+  and the first sequence in the grammar is returned.
+  Calling \code{GrammarGetNextSequence} or \code{GrammarGetFirstSequence} with an incomplete
+  sequence returns a full-length sequence starting with the given \code{seqStart}.
 
-  The rule definition is the grammar described in Backus-Naur context-free grammatical format.
-  \code{CreateGrammar} can read and parse .bnf files as well as a \code{list} simulating BNF format.
-  Each list has to made of a \emph{symbol},
-  followed by a list of production rules, i.e. possible \emph{sequences} 
-  that will replace the symbol.
-  If the sequence is surrounded by '<' or '>', it is considered as non-terminal
-  and must be defined. Other symbols are considered terminals.
-
-
-print(grammar)
-
-summary(grammar)
-
-GrammarStartSymbol(grammar)
-
-GrammarGetDepth(grammar, max.depth = length(grammar$def), 
-    startSymb = grammar$startSymb)
-
-GrammarMaxRuleSize(grammar)
-
-GrammarMaxSequenceLen(grammar, max.depth = GetGrammarDepth(grammar), 
-    startSymb = grammar$startSymb)
-
-GrammarNumOfExpressions(grammar, max.depth = length(grammar$def), 
-    startSymb = GrammarStartSymbol(grammar))
-
-GrammarIsRecursive(grammar, startSymb = GrammarStartSymbol(grammar), 
-    symb.list = NULL)
+  When \code{GrammarGetNextSequence} reaches the last of all valid sequences, it returns
+  a \code{GrammarOverflow} object. This object can be identified using \code{is.GrammarOverflow}.
 }
 
 \value{
-  \code{CreateGrammar} returns a \code{grammar} object.
+  \code{GrammarGetFirstSequence} returns a numeric vector representing the first sequence of the grammar.
 
-  \code{GetGrammarDepth} returns depth of grammar tree.
+  \code{GrammarGetNextSequence} returns a numeric vector or a \code{GrammarOverflow} object.
 
-  \code{GetGrammarMaxRuleSize} returns maximum grammar rule size.
-
-  \code{GrammarMaxSequenceLen} returns maximum length of integer sequence (i.e., the chromosome)
-  required for generating an expression (without resorting to wrapping).
-
-  \code{GrammarNumOfExpressions} returns the number of possible expressions a 
-  grammar can generate.
-
+  \code{is.GrammarOverflow} returns TRUE if \code{object} is a \code{GrammarOverflow}, otherwise FALSE.
 }
 
 %\references{
@@ -99,8 +78,7 @@ GrammarIsRecursive(grammar, startSymb = GrammarStartSymbol(grammar),
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link{GrammarGenotypeToPhenotype}},
-\code{\link{GrammaticalEvolution}}
+\code{\link{GrammaticalExhaustiveSearch}}
 }
 \examples{
 # Define a simple grammar

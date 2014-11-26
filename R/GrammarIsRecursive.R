@@ -1,5 +1,6 @@
 GrammarIsRecursive <- function(grammar, 
-                               startSymb = GrammarStartSymbol(grammar)) {
+                               startSymb = GrammarStartSymbol(grammar),
+                               ...) {
 
   # call the recursive function, start from no observed symbol
   RecursiveGrammarIsRecursive(grammar, startSymb, NULL)

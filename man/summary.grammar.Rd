@@ -1,5 +1,6 @@
-\name{summary.grammar}
+\name{summary}
 \alias{summary.grammar}
+\alias{print.summary.grammar}
 \alias{GrammarStartSymbol}
 \alias{GrammarGetDepth}
 \alias{GrammarMaxRuleSize}
@@ -12,7 +13,7 @@
 \alias{GetGrammarMaxSequenceLen}
 \alias{GetGrammarNumOfExpressions}
 
-\title{Context-free Grammar Object}
+\title{Context-free Grammar Object Information}
 \description{ %%  ~~ A concise (1-5 lines) description of what the function does. ~~
 Examine a context-free grammar object. 
 }
@@ -22,21 +23,21 @@ Examine a context-free grammar object.
 
 GrammarStartSymbol(grammar)
 
+GrammarIsRecursive(grammar, startSymb = GrammarStartSymbol(grammar), ...)
+
 GrammarGetDepth(grammar, max.depth = length(grammar$def), 
-    startSymb = GrammarStartSymbol(grammar))
+    startSymb = GrammarStartSymbol(grammar), ...)
+
+GrammarMaxSequenceLen(grammar, max.depth = GetGrammarDepth(grammar), 
+    startSymb = GrammarStartSymbol(grammar), ...)
 
 GrammarMaxRuleSize(grammar)
 
-GrammarMaxSequenceLen(grammar, max.depth = GetGrammarDepth(grammar), 
-    startSymb = GrammarStartSymbol(grammar))
+GrammarMaxSequenceRange(grammar, max.depth = length(grammar$def), 
+  startSymb = GrammarStartSymbol(grammar), ...) 
 
 GrammarNumOfExpressions(grammar, max.depth = length(grammar$def), 
-    startSymb = GrammarStartSymbol(grammar))
-
-GrammarMaxSequenceRange(grammar, max.depth = length(grammar$def), 
-  startSymb = GrammarStartSymbol(grammar)) 
-
-GrammarIsRecursive(grammar, startSymb = GrammarStartSymbol(grammar))
+    startSymb = GrammarStartSymbol(grammar), ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -54,54 +55,26 @@ GrammarIsRecursive(grammar, startSymb = GrammarStartSymbol(grammar))
     unused inputs.
   }
 }
-\details{
+%\details{
 %%  ~~ If necessary, more details than the description above ~~
-  A grammar object, created using\code{\link{CreateGrammar}} can be examined through several
-  functions.
-
-  The rule definition is the grammar described in Backus-Naur context-free grammatical format.
-  \code{CreateGrammar} can read and parse .bnf files as well as a \code{list} simulating BNF format.
-  Each list has to made of a \emph{symbol},
-  followed by a list of production rules, i.e. possible \emph{sequences} 
-  that will replace the symbol.
-  If the sequence is surrounded by '<' or '>', it is considered as non-terminal
-  and must be defined. Other symbols are considered terminals.
-
-
-print(grammar)
-
-summary(grammar)
-
-GrammarStartSymbol(grammar)
-
-GrammarGetDepth(grammar, max.depth = length(grammar$def), 
-    startSymb = grammar$startSymb)
-
-GrammarMaxRuleSize(grammar)
-
-GrammarMaxSequenceLen(grammar, max.depth = GetGrammarDepth(grammar), 
-    startSymb = grammar$startSymb)
-
-GrammarNumOfExpressions(grammar, max.depth = length(grammar$def), 
-    startSymb = GrammarStartSymbol(grammar))
-
-GrammarIsRecursive(grammar, startSymb = GrammarStartSymbol(grammar), 
-    symb.list = NULL)
-}
+%  A grammar object can be examined through several functions.
+%  \code{summary} function can be used to get them all.
+%}
 
 \value{
-  \code{CreateGrammar} returns a \code{grammar} object.
 
-  \code{GetGrammarDepth} returns depth of grammar tree.
-
-  \code{GetGrammarMaxRuleSize} returns maximum grammar rule size.
-
-  \code{GrammarMaxSequenceLen} returns maximum length of integer sequence (i.e., the chromosome)
-  required for generating an expression (without resorting to wrapping).
-
-  \code{GrammarNumOfExpressions} returns the number of possible expressions a 
-  grammar can generate.
-
+\code{summary} returns a \code{summary.grammar} object, with the following slots which
+are obtained from the other functions:
+  \item{Start.Symbol}{\code{GrammarStartSymbol} returns the grammar's starting symbol.}
+  \item{Is.Recursive }{\code{GrammarIsRecursive} returns TRUE if grammar contains a recursive element.}
+  \item{Tree.Depth}{\code{GrammarGetDepth} returns the depth of the grammar.
+  It is limited to \code{max.depth} for a recursive grammar.}
+  \item{Maximum.Sequence.Length}{\code{GrammarMaxSequenceLen} returns the maximum length of a sequence need to
+ generate an expression without wrapping.}
+  \item{Maximum.Rule.Size}{\code{GrammarMaxRuleSize} returns the largest rule size in the grammar.}
+  \item{Maximum.Sequence.Variation}{\code{GrammarMaxSequenceRange} returns a numeric sequence, with each of its elements
+hold the highest range the same position in all sequences can hold.}
+  \item{No.of.Unique.Expressions}{\code{GrammarNumOfExpressions} returns the number of expressions a grammar can generate.}
 }
 
 %\references{
@@ -116,8 +89,8 @@ GrammarIsRecursive(grammar, startSymb = GrammarStartSymbol(grammar),
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link{GrammarGenotypeToPhenotype}},
-\code{\link{GrammaticalEvolution}}
+\code{\link{CreateGrammar}},
+\code{\link{GrammarMap}}
 }
 \examples{
 # Define a simple grammar
@@ -131,17 +104,8 @@ ruleDef <- list(expr = gsrule("<var><op><var>"),
 # Create a grammar object
 grammarDef <- CreateGrammar(ruleDef)			   
 
-# print grammar object
-print(grammarDef)
-
 # summarize grammar object
 summary(grammarDef)
-
-# print information about the grammar
-print(paste("Depth:", GetGrammarDepth(grammarDef))) 
-print(paste("Max Rule Size:", GetGrammarMaxRuleSize(grammarDef)))
-print(paste("Max Sequence Len:", GetGrammarMaxSequenceLen(grammarDef)))
-print(paste("Num Of Expressions:", GetGrammarNumOfExpressions(grammarDef))) 
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

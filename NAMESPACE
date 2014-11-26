@@ -26,6 +26,7 @@ export(
     "print.GERule",
     "print.GrammarOverflow",
     "summary.grammar",
+    "print.summary.grammar",
     "is.GrammarOverflow",
     "GrammarGetFirstSequence",
     "GrammarGetNextSequence",

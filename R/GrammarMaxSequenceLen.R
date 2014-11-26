@@ -1,7 +1,8 @@
 GrammarMaxSequenceLen <- 
   function(grammar, 
            max.depth = GetGrammarDepth(grammar), 
-           startSymb = GrammarStartSymbol(grammar)) {
+           startSymb = GrammarStartSymbol(grammar), 
+           ...) {
   # returns the maximum length of a sequence required for the grammar expression
   #    generation
   # max.depth: the maximum depth to search into the tree. It is used to avoid

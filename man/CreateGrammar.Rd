@@ -102,8 +102,11 @@ grammarDef <- CreateGrammar(ruleDef)
 print(grammarDef)
 
 # Two rules with commas and assignments, preserved using .()
-grule(.(x = 1, y = 2), .(x = 5, y = 6))
-
+ruleDef <- list(expr = grule(data.frame(dat)),
+                dat  = grule(.(x = 1, y = 2), .(x = 5, y = 6)))
+grammarDef <- CreateGrammar(ruleDef)
+print(GrammarMap(c(0), grammarDef))
+print(GrammarMap(c(1), grammarDef))
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

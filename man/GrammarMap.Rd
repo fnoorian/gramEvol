@@ -41,17 +41,24 @@ definition of grammar in \code{\link{CreateGrammar}}. ;
 then it iterates through \code{inputString}, replacing symbols in the expression
 with associated replacements in the grammar using the current value of
 \code{inputString}.
+
 If the function exhausts all non-terminal symbols in the expression, it terminates.
 If the end of \code{inputString} is reached and  still non-terminal symbols
 exist, the algorithm will start from the beginning of the \code{inputString}
 again. To avoid unlimited run by recursions in case of a cyclic grammar,
 \code{wrappings} variable limits the number of this restart.
+
+If \code{verbose = TRUE}, step-by-step replacement of symbols with production rules are displayed.
+
+\code{GrammarMap} returns a \code{GEPhenotype} object, which can be converted to
+a character string using \code{as.character}, or an R expression with \code{as.expression}.
 }
 \value{
 %%  ~Describe the value returned
 %%  If it is a LIST, use
   A \code{GrammarMap} returns a \code{GEPhenotype} object.
   \item{expr}{The generated expression as a character string.}
+  \item{parsed}{The generated expression. NULL if the striexpression contain.}
   \item{type}{"T" if the expression is valid, "NT" if the expression still 
 				contains non-terminal symbols. }
 %% ...
@@ -85,7 +92,6 @@ ruleDef <- list(expr = gsrule("<var><op><var>"),
 
 # Create a grammar object
 grammarDef <- CreateGrammar(ruleDef)
-print(grammarDef)
 
 # this should create the expression "A - C"
 # <expr>         -> 0 -> <var><op><var>
@@ -93,12 +99,16 @@ print(grammarDef)
 # A<op><var>     -> 1 -> A - <var>
 # A - <var>      -> 2 -> A - C
 sq <- c(0, 0, 1, 2)
-expr <- GrammarMap(sq, grammarDef)
+expr <- GrammarMap(sq, grammarDef, verbose = TRUE)
 
 print(expr)
 
-print(as.character(expr))
-print(as.expression(expr))
+# check the expression as a character string
+stopifnot(as.character(expr) == "A-C")
+
+# evaluate the expression
+A = 5; C = 1
+eval(as.expression(expr))
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

@@ -1,4 +1,7 @@
-GrammarMaxSequenceRange <- function(grammar, max.depth = length(grammar$def), startSymb = GrammarStartSymbol(grammar)) {
+GrammarMaxSequenceRange <- function(grammar, 
+                            max.depth = length(grammar$def), 
+                            startSymb = GrammarStartSymbol(grammar),
+                            ...) {
   # return range of sequences for different paths
   # returns NULL if not terminal path is found
   

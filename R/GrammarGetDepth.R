@@ -1,6 +1,7 @@
 GrammarGetDepth <- function(grammar, 
                          max.depth = length(grammar$def), 
-                         startSymb = GrammarStartSymbol(grammar)) {
+                         startSymb = GrammarStartSymbol(grammar),
+                         ...) {
   # returns the maximum depth of grammatical tree
   
   if (IsSymbolTerminal(startSymb) || (max.depth == 0))

@@ -1,7 +1,8 @@
 GrammarNumOfExpressions <- 
   function(grammar, 
            max.depth = length(grammar$def), 
-           startSymb = GrammarStartSymbol(grammar)) {
+           startSymb = GrammarStartSymbol(grammar),
+           ...) {
   # returns the maximum number of expressions generatable by grammar
   # max.depth is the maximum depth to search into the tree. It is used to avoid
   # looping in recursive grammar

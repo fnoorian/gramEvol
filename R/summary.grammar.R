@@ -1,9 +1,22 @@
 summary.grammar <- function(object, ...) {
-  cat("Start Symbol:               ", GrammarStartSymbol(object), '\n')
-  cat("Is Recursive:               ", GrammarIsRecursive(object), '\n')
-  cat("Tree Depth:                 ", GrammarGetDepth(object), '\n')
-  cat("Maximum Sequence Length:    ", GrammarMaxSequenceLen(object), '\n')
-  cat("Maximum Rule Size:          ", GrammarMaxRuleSize(object), '\n')
-  cat("Maximum Sequence Variation: ", GrammarMaxSequenceRange(object), '\n')
-  cat("No. of Unique Expressions:  ", GrammarNumOfExpressions(object), '\n')
+  ret = list(Start.Symbol = GrammarStartSymbol(object),
+             Is.Recursive  = GrammarIsRecursive(object, ...),
+             Tree.Depth = GrammarGetDepth(object, ...),
+             Maximum.Sequence.Length = GrammarMaxSequenceLen(object, ...),
+             Maximum.Rule.Size = GrammarMaxRuleSize(object),
+             Maximum.Sequence.Variation = GrammarMaxSequenceRange(object, ...),
+             No.of.Unique.Expressions = GrammarNumOfExpressions(object, ...))
+  class(ret) <- "summary.grammar"
+  
+  return(ret)
+}
+
+print.summary.grammar <- function(x, ...) {
+  cat("Start Symbol:               ", x$Start.Symbol, '\n')
+  cat("Is Recursive:               ", x$Is.Recursive, '\n')
+  cat("Tree Depth:                 ", x$Tree.Depth, '\n')
+  cat("Maximum Sequence Length:    ", x$Maximum.Sequence.Length, '\n')
+  cat("Maximum Rule Size:          ", x$Maximum.Rule.Size, '\n')
+  cat("Maximum Sequence Variation: ", x$Maximum.Sequence.Variation, '\n')
+  cat("No. of Unique Expressions:  ", x$No.of.Unique.Expressions, '\n')
 }

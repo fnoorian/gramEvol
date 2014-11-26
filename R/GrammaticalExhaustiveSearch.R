@@ -3,7 +3,7 @@ GrammaticalExhaustiveSearch <- function(grammar, evalFunc,
                                         startSymb = GrammarStartSymbol(startSymb),
                                         wrappings = 3,
                                         terminationFitness = NA,
-                                        monitor = NULL) {
+                                        monitorFunc = NULL) {
   
   best.expr = NULL
   best.score = Inf
@@ -34,19 +34,20 @@ GrammaticalExhaustiveSearch <- function(grammar, evalFunc,
       }
     }
     
-    if (!is.null(monitor)) {
-      monitor(list(currentSequence = genome,
+    # call the monitor function
+    if (!is.null(monitorFunc)) {
+      monitorFunc(list(currentSequence = genome,
                    currentExpression = expr,
                    currentScore = score,
                    bestSequence = best.seq,
                    bestExpression = best.expr,
                    bestScore = best.score,
-                   iter = iterations))
+                   numExpr = iterations))
     }
   }
   
   return(list( bestSequence = best.seq,
                bestExpression = best.expr,
                bestScore = best.score,
-               iter = iterations))
+               numExpr = iterations))
 }
