@@ -15,6 +15,7 @@ GeneticAlg.int(genomeLen, codonMin, codonMax,
     suggestions = NULL, popSize = 50, 
     iterations = 100, terminationFitness = NA, 
     mutationChance = 1/(genomeLen+1), elitism = floor(popSize/10), 
+    geneCrossoverPoints = NULL,
     monitorFunc = NULL, evalFunc, allowrepeat = TRUE, 
     showSettings = FALSE, verbose = FALSE, plapply = lapply)
 }
@@ -52,6 +53,11 @@ GeneticAlg.int(genomeLen, codonMin, codonMax,
 }
   \item{mutationChance}{
   The chance of a codon being mutated. It must be between 0 and 1.
+}
+  \item{geneCrossoverPoints}{
+  Codon groupings (genes) to be considered while crossover occurs. 
+  If given, odd and even codon groups are exchanged between parents.
+  Otherwise random points are selected and a classic single-point crossover is performed.
 }
   \item{elitism}{
   Number of top ranking chromosomes that are directly transfered to next generation without
@@ -128,7 +134,10 @@ must be exported to worker nodes before invoking \code{GeneticAlg.int}.
   \item{mutationChance}{
     Mutation chance as used in the function call.}
 
-  \item{population}{
+  \item{mutationChance}{
+    Mutation chance as used in the function call.}
+
+  \item{geneCrossoverPoints}{
     The population during all generations.}
 
   \item{evaluations}{

@@ -28,7 +28,7 @@ EvalExpressions(expressions, envir = parent.frame())
 \code{EvalExpressions} is a wrapper around 
 \code{eval} and \code{parse} functions in R base package.
 It can handle a single, a collection or a list of expressions
-in string format or as the output of \code{\link{GrammarGenotypeToPhenotype}}.
+in string format.
 
 The \code{envir} argument is directly passed to \code{eval} function. If it is not specified,
 the parent frame (i.e., the environment where the call to \code{eval} was made) is used instead.	
@@ -48,15 +48,15 @@ Otherwise a data frame with result of each expression in a separate column is re
 %\author{
 %%  ~~who you are~~
 %}
-%\note{
+\note{
+This function is for compatibility with gramEvil versions < 2.0 only.
+The newer versions directly generate expression objects.
 %%  ~~further notes~~
-%}
+}
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link{GrammarGenotypeToPhenotype}},
-\code{\link{GrammaticalEvolution}}
 }
 
 \examples{

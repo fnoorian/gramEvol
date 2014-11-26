@@ -1,72 +1,61 @@
 \name{CreateGrammar}
 \alias{CreateGrammar}
+\alias{grule}
+\alias{gsrule}
 \alias{print.grammar}
-\alias{GetGrammarDepth}
-\alias{GetGrammarMaxRuleSize}
-\alias{GetGrammarMaxSequenceLen}
-\alias{GetGrammarNumOfExpressions}
+\alias{print.GERule}
 
 \title{Context-free Grammar Object}
 \description{ %%  ~~ A concise (1-5 lines) description of what the function does. ~~
-Create and examine a context-free grammar object. 
+Create a context-free grammar object. 
 }
 \usage{
-CreateGrammar(ruleDef, startSymb = "<expr>")
+  grule(...)
 
-GetGrammarDepth(grammar, max.depth = length(grammar$def), 
-    startSymb = grammar$startSymb)
+  gsrule(...)
 
-GetGrammarMaxRuleSize(grammar)
-
-GetGrammarMaxSequenceLen(grammar, max.depth = GetGrammarDepth(grammar), 
-    startSymb = grammar$startSymb)
-
-GetGrammarNumOfExpressions(grammar, max.depth = length(grammar$def), 
-    startSymb = grammar$startSymb)
+  CreateGrammar(ruleDef, startSymb)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
+  \item{...}{
+    A series of comma separated strings or expressions, for \code{gsrule} and
+    \code{grule} respectively. Expressions can be wrapped in \code{.()} to preserve their 
+    commas or assignment operators.
+  }
   \item{ruleDef}{
-    Grammatical rule definition. Either a character string or \code{\link{connection}} to a .bnf file,
-    or a list of symbols and sequences 
-    with syntax similar to Backus-Naur form. 
+    Grammatical rule definition. Either a filename or \code{\link{connection}} to a .bnf file,
+    or a list of symbols and sequences with syntax similar to Backus-Naur form. 
     See details. 
   }
   \item{startSymb}{
     The symbol where the generation of a new expression should start.
-  }
-
-  \item{grammar}{
-    The grammar object.
-  }
-  \item{max.depth}{
-    Maximum depth of search in case of recursive grammar.
+    By default the first rule is used.
   }
 }
 \details{
 %%  ~~ If necessary, more details than the description above ~~
   The rule definition is the grammar described in Backus-Naur context-free grammatical format.
-  \code{CreateGrammar} can read and parse .bnf files as well as a \code{list} simulating BNF format.
-  Each list has to made of a \emph{symbol},
-  followed by a list of production rules, i.e. possible \emph{sequences} 
-  that will replace the symbol.
-  If the sequence is surrounded by '<' or '>', it is considered as non-terminal
-  and must be defined. Other symbols are considered terminals.
+  The preferred way of defining a grammar is to create a \code{list} simulating BNF format,
+  which collects several named rule collection objects (\code{GERules}).
+  Each name defines the \emph{symbol}, and each rule in collection determines the \emph{production rule}, 
+  i.e., possible \emph{sequences} that will replace the symbol.
+
+  Defining a rule collection objects (\code{GERules}) can take two forms:
+
+  1. The first form uses \code{grule} (Grammar Rule), where R expressions are accepted. In the mapping process,
+   variables are looked up and replaced using the produciton rules.
+
+  2. The second form uses \code{gsrule} (Grammar String Rule) and uses strings. The input to \code{gsrule} are string values, wehre any value surrounded by '<' or '>' is considered as \emph{non-terminal sequence} and
+  will be replaced by value of a rule with the same name in the mapping process. Other symbols are considered terminals. This form allows generation of sequences that are not syntatically valid in R (such as \code{`var op var`}).
+
+  Alternatively, \code{CreateGrammar} can read and parse .bnf text files.
 }
 
 \value{
   \code{CreateGrammar} returns a \code{grammar} object.
 
-  \code{GetGrammarDepth} returns depth of grammar tree.
-
-  \code{GetGrammarMaxRuleSize} returns maximum grammar rule size.
-
-  \code{GetGrammarMaxSequenceLen} returns maximum length of integer sequence (i.e., the chromosome)
-  required for generating an expression (without resorting to wrapping).
-
-  \code{GetGrammarNumOfExpressions} returns the number of possible expressions a 
-  grammar can generate.
-
+  \code{grule} and \code{gsrule} return a \code{GERule} object.
 }
 
 %\references{
@@ -81,29 +70,40 @@ GetGrammarNumOfExpressions(grammar, max.depth = length(grammar$def),
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link{GrammarGenotypeToPhenotype}},
+\code{\link{GrammarMap}},
 \code{\link{GrammaticalEvolution}}
 }
 \examples{
-# Define a simple grammar
+
+# Define a simple grammar in BNF format
 # <expr> ::= <var><op><var>
 # <op>   ::= + | - | *
 # <var>  ::= A | B
-ruleDef <- list(list("<expr>", list("<var><op><var>")),
-                list("<op>",   list("+", "-", "*")),
-                list("<var>",  list("A", "B")))
+ruleDef <- list(expr = gsrule("<var><op><var>"),
+                op   = gsrule("+", "-", "*"),
+                var  = gsrule("A", "B"))
+
+# print rules
+print(ruleDef)
 
 # Create a grammar object
-grammarDef <- CreateGrammar(ruleDef, startSymb = "<expr>")			   
+grammarDef <- CreateGrammar(ruleDef)
 
 # print grammar object
 print(grammarDef)
 
-# print information about the grammar
-print(paste("Depth:", GetGrammarDepth(grammarDef))) 
-print(paste("Max Rule Size:", GetGrammarMaxRuleSize(grammarDef)))
-print(paste("Max Sequence Len:", GetGrammarMaxSequenceLen(grammarDef)))
-print(paste("Num Of Expressions:", GetGrammarNumOfExpressions(grammarDef))) 
+# Creating the same grammar using R expressions
+ruleDef <- list(expr = grule(op(var, var)),
+                op   = grule(`+`, `-`, `*`),
+                var  = grule(A, B))
+
+grammarDef <- CreateGrammar(ruleDef)
+
+print(grammarDef)
+
+# Two rules with commas and assignments, preserved using .()
+grule(.(x = 1, y = 2), .(x = 5, y = 6))
+
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

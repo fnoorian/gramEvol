@@ -1,14 +1,44 @@
 export(
+    "grule",
+    "gsrule",
     "CreateGrammar",
+    "GrammarMap",
     "GrammarGenotypeToPhenotype",
+    "GrammarRandomExpression",
+    "EvalExpressions",
     "GeneticAlg.int",
     "GrammaticalEvolution",
-    "print.grammar",
     "GetGrammarDepth",
     "GetGrammarMaxRuleSize",
     "GetGrammarMaxSequenceLen",
     "GetGrammarNumOfExpressions",
-    "EvalExpressions"
+    "GrammarStartSymbol",
+    "GrammarIsRecursive",
+    "GrammarGetDepth",
+    "GrammarMaxRuleSize",
+    "GrammarMaxSequenceLen",
+    "GrammarMaxSequenceRange",
+    "GrammarNumOfExpressions",
+    "as.character.GEPhenotype",
+    "as.expression.GEPhenotype",
+    "print.GEPhenotype",
+    "print.grammar",
+    "print.GERule",
+    "print.GrammarOverflow",
+    "summary.grammar",
+    "is.GrammarOverflow",
+    "GrammarGetFirstSequence",
+    "GrammarGetNextSequence",
+    "GrammaticalExhaustiveSearch"
     )
 
+S3method(summary, grammar)
 S3method(print, grammar)
+S3method(print, GEPhenotype)
+S3method(print, GERule)
+S3method(print, GrammarOverflow)
+S3method(as.character, GEPhenotype)
+S3method(as.expression, GEPhenotype)
+S3method(as.expression, GEPhenotype)
+
+

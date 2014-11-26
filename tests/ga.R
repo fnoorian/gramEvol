@@ -1,4 +1,4 @@
-# This program does some regression testing for package "gramEvol"
+# This program performs regression testing for package "gramEvol"
 
 # Author: Farzad Noorian <farzad.noorian@sydney.edu.au>
 

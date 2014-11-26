@@ -105,25 +105,25 @@ GrammaticalEvolution(grammarDef, fitnessFunction,
 }
 \examples{
 # Grammar Definition
-ruleDef <- list(list("<expr>",     list("<der-expr><op><der-expr>")),
-                list("<der-expr>", list("<func>(<var>)", "<var>")),
-                list("<func>",     list("log", "exp", "sin", "cos")),
-                list("<op>",       list("+", "-", "*")),
-                list("<var>",      list("A", "B", "<n>")),
-                list("<n>",        list("1", "2", "3", "4")))
+ruleDef <- list(expr     = gsrule("<der.expr><op><der.expr>"),
+                der.expr = grule(func(var), var),
+                func     = grule(log, exp, sin, cos),
+                op       = gsrule("+", "-", "*"),
+                var      = grule(A, B, n),
+                n        = grule(1, 2, 3, 4))
 
 # Creating the grammar object
-grammarDef <- CreateGrammar(ruleDef, startSymb = "<expr>")
+grammarDef <- CreateGrammar(ruleDef)
 
 # fitness function
 fitnessFunction <- function(expr) {
-# expr: a string containing a symbolic expression
-# returns: Symbolic regression Error
+  # expr: a string containing a symbolic expression
+  # returns: Symbolic regression Error
   A <- 1:6
   B <- c(2, 5, 8, 3, 4, 1)
-
-  result <- EvalExpressions(expr)
-
+  
+  result <- eval(as.expression(expr))
+  
   X <- log(A) * B
   err <- sum((result - X)^2)
   
@@ -135,7 +135,6 @@ ge <- GrammaticalEvolution(grammarDef, fitnessFunction)
 
 # print results
 print(ge$bestExpression)
-
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

@@ -1,33 +1,42 @@
-\name{GrammarGenotypeToPhenotype}
+\name{GrammarMap}
+\alias{GrammarMap}
 \alias{GrammarGenotypeToPhenotype}
+\alias{as.character.GEPhenotype}
+\alias{as.expression.GEPhenotype}
+\alias{print.GEPhenotype}
 
 \title{
-Genotype to Phenotype Mapping using Context-free Grammar
+Sequence to Expression Mapping using Context-free Grammar
 }
 \description{
 Using a grammar created by \code{\link{CreateGrammar}},
 converts a sequence of integer numbers to an expression.
 }
 \usage{
-GrammarGenotypeToPhenotype(inputString, grammar, wrappings = 3)
+GrammarMap(inputString, grammar, wrappings = 3, verbose = FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{inputString}{
-A vector of integers to define the path of symbol selection in grammar tree. It uses
-zero-based indexing to address production rules in the grammar.
-}
+		A vector of integers to define the path of symbol selection in grammar tree. It uses
+		zero-based indexing to address production rules in the grammar.
+	}
+  
   \item{grammar}{
-The grammar object as created by \code{\link{CreateGrammar}}.
-}
+		The grammar object as created by \code{\link{CreateGrammar}}.
+	}
+  
   \item{wrappings}{
-The number of times the function is allowed to wrap around \code{inputString}
-if non-terminal symbols are still remaining.
-}
+		The number of times the function is allowed to wrap around \code{inputString}
+		if non-terminal symbols are still remaining.
+	}
+  \item{verbose}{
+		Prints out each steps of grammar mapping.
+	}
 }
 \details{
 %%  ~~ If necessary, more details than the description above ~~
-\code{GrammarGenotypeToPhenotype} starts from the \code{startExpr} given in the
+\code{GrammarMap} starts from the \code{startExpr} given in the
 definition of grammar in \code{\link{CreateGrammar}}. ;
 then it iterates through \code{inputString}, replacing symbols in the expression
 with associated replacements in the grammar using the current value of
@@ -41,6 +50,7 @@ again. To avoid unlimited run by recursions in case of a cyclic grammar,
 \value{
 %%  ~Describe the value returned
 %%  If it is a LIST, use
+  A \code{GrammarMap} returns a \code{GEPhenotype} object.
   \item{expr}{The generated expression as a character string.}
   \item{type}{"T" if the expression is valid, "NT" if the expression still 
 				contains non-terminal symbols. }
@@ -61,20 +71,20 @@ again. To avoid unlimited run by recursions in case of a cyclic grammar,
 
 \seealso{
 \code{\link{CreateGrammar}},
-\code{\link{GrammaticalEvolution}}
+\code{\link{GrammarRandomExpression}}
 }
 
 \examples{
 # Define a simple grammar
 # <expr> ::= <var><op><var>
 # <op>   ::= + | - | *
-# <var>  ::= A | B
-ruleDef <- list(list("<expr>", list("<var><op><var>")),
-                list("<op>",   list("+", "-", "*")),
-                list("<var>",  list("A", "B", "C")))
-			   
+# <var>  ::= A | B | C
+ruleDef <- list(expr = gsrule("<var><op><var>"),
+                op =   gsrule("+", "-", "*"),
+                var =  grule(A, B, C))
+
 # Create a grammar object
-grammarDef <- CreateGrammar(ruleDef, startSymb = "<expr>")			   
+grammarDef <- CreateGrammar(ruleDef)
 print(grammarDef)
 
 # this should create the expression "A - C"
@@ -83,10 +93,12 @@ print(grammarDef)
 # A<op><var>     -> 1 -> A - <var>
 # A - <var>      -> 2 -> A - C
 sq <- c(0, 0, 1, 2)
-expr <- GrammarGenotypeToPhenotype(sq, grammarDef)
+expr <- GrammarMap(sq, grammarDef)
 
 print(expr)
 
+print(as.character(expr))
+print(as.expression(expr))
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
