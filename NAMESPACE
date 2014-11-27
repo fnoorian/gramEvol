@@ -25,18 +25,21 @@ export(
     "print.grammar",
     "print.GERule",
     "print.GrammarOverflow",
+    "print.GESearch",
     "summary.grammar",
     "print.summary.grammar",
     "is.GrammarOverflow",
     "GrammarGetFirstSequence",
     "GrammarGetNextSequence",
-    "GrammaticalExhaustiveSearch"
+    "GrammaticalExhaustiveSearch",
+    "GrammaticalRandomSearch"
     )
 
 S3method(summary, grammar)
 S3method(print, grammar)
 S3method(print, GEPhenotype)
 S3method(print, GERule)
+S3method(print, GESearch)
 S3method(print, GrammarOverflow)
 S3method(as.character, GEPhenotype)
 S3method(as.expression, GEPhenotype)
