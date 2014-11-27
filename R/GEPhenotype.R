@@ -1,10 +1,16 @@
-as.character.GEPhenotype <- function(x, ...) {
-  x$expr
+as.character.GEPhenotype <- function(x, ..., simplify=TRUE) {
+  expr = x$parsed
+    
+  if (simplify) {
+    expr = parse(text=as.character(expr))
+  }
+
+  return (as.character(expr))
 }
 
 as.expression.GEPhenotype <- function(x, ...) {
   if (x$type == "NT") {
-    warning("Non-Terminal Phenotype")
+    warning("Non-Terminal Sequence")
     NULL
   } else {
     x$parsed
@@ -13,14 +19,9 @@ as.expression.GEPhenotype <- function(x, ...) {
 
 print.GEPhenotype <- function(x, ..., simplify=TRUE) {
   if (x$type == "NT") {
-    print("Non-Terminal Phenotype", ...)
+    cat("Non-Terminal Sequence:\n", x$expr, "\n", ...)
     #print(NA, ...)
   } else {
-    expr = x$parsed
-    
-    if (simplify) {
-      expr = parse(text=as.character(expr))
-    }
-    print(expr, ...)
+    cat(as.character(x), ..., simplify=simplify)
   }
 }

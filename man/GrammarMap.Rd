@@ -104,7 +104,7 @@ expr <- GrammarMap(sq, grammarDef, verbose = TRUE)
 print(expr)
 
 # check the expression as a character string
-stopifnot(as.character(expr) == "A-C")
+stopifnot(as.character(expr) == "A - C")
 
 # evaluate the expression
 A = 5; C = 1

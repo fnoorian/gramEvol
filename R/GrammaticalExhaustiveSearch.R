@@ -1,6 +1,7 @@
 GrammaticalExhaustiveSearch <- function(grammar, evalFunc,
-                                        max.depth = length(grammar$def), 
-                                        startSymb = GrammarStartSymbol(startSymb),
+                                        max.depth = GrammarGetDepth(grammar),
+                                        startSymb = GrammarStartSymbol(grammar),
+                                        max.len = GrammarMaxSequenceLen(grammar, max.depth, startSymb),
                                         wrappings = 3,
                                         terminationFitness = NA,
                                         monitorFunc = NULL) {
@@ -12,14 +13,14 @@ GrammaticalExhaustiveSearch <- function(grammar, evalFunc,
   iterations = 0
   genome = NULL
   while (TRUE) {
-    genome = GrammarGetNextSequence(grammar, genome)
+    genome = GrammarGetNextSequence(grammar, genome, startSymb, max.len)
     
     if (is.GrammarOverflow(genome))
       break
     
     iterations = iterations + 1
     
-    expr = as.expression(GrammarGenotypeToPhenotype(genome, grammar, wrappings))
+    expr = as.expression(GrammarMap(genome, grammar, wrappings))
     
     score = evalFunc(expr)
     
@@ -36,18 +37,25 @@ GrammaticalExhaustiveSearch <- function(grammar, evalFunc,
     
     # call the monitor function
     if (!is.null(monitorFunc)) {
-      monitorFunc(list(currentSequence = genome,
-                   currentExpression = expr,
-                   currentScore = score,
-                   bestSequence = best.seq,
-                   bestExpression = best.expr,
-                   bestScore = best.score,
-                   numExpr = iterations))
+
+      res <- list(currentSequence = genome,
+                  currentExpression = expr,
+                  currentScore = score,
+                  bestSequence = best.seq,
+                  bestExpression = best.expr,
+                  bestScore = best.score,
+                  numExpr = iterations)
+
+      class(res) <- "GESearch"
+      monitorFunc(res)
     }
   }
   
-  return(list( bestSequence = best.seq,
-               bestExpression = best.expr,
-               bestScore = best.score,
-               numExpr = iterations))
+  res <- list(bestSequence = best.seq,
+              bestExpression = best.expr,
+              bestScore = best.score,
+              numExpr = iterations)
+  class(res) <- "GESearch"
+
+  return(res)
 }

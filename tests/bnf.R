@@ -13,6 +13,6 @@ stopifnot(GetGrammarNumOfExpressions(bnfGrammarDef) == 18500)
 
 genome = c(2, 1, 0, 0, 3, 3, 3, 1)
 expr = GrammarMap(genome, bnfGrammarDef)
-stopifnot(as.character(expr) == "c1*v1/c2*v2")
+stopifnot(as.character(expr) == "c1 * v1/c2 * v2")
 stopifnot(expr$type == "T")
 

@@ -1,5 +1,5 @@
 GrammarMaxSequenceRange <- function(grammar, 
-                            max.depth = length(grammar$def), 
+                            max.depth = GrammarGetDepth(grammar), 
                             startSymb = GrammarStartSymbol(grammar),
                             ...) {
   # return range of sequences for different paths

@@ -1,6 +1,6 @@
 GrammarNumOfExpressions <- 
   function(grammar, 
-           max.depth = length(grammar$def), 
+           max.depth = GrammarGetDepth(grammar), 
            startSymb = GrammarStartSymbol(grammar),
            ...) {
   # returns the maximum number of expressions generatable by grammar

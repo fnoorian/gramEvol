@@ -33,10 +33,10 @@ GrammarMaxSequenceLen(grammar, max.depth = GetGrammarDepth(grammar),
 
 GrammarMaxRuleSize(grammar)
 
-GrammarMaxSequenceRange(grammar, max.depth = length(grammar$def), 
+GrammarMaxSequenceRange(grammar, max.depth = GrammarGetDepth(grammar), 
   startSymb = GrammarStartSymbol(grammar), ...) 
 
-GrammarNumOfExpressions(grammar, max.depth = length(grammar$def), 
+GrammarNumOfExpressions(grammar, max.depth = GrammarGetDepth(grammar), 
     startSymb = GrammarStartSymbol(grammar), ...)
 }
 %- maybe also 'usage' for other objects documented here.
