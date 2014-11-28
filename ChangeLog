@@ -4,10 +4,10 @@
  * CreateGrammar accepts Expressions as well as strings
  * Added predefined multi-point crossover operator to Genetic Algorithm Implementation
  * New functions for iterating through the grammar
- * New Grammatical Exhaustive Search Function
+ * New Grammatical Exhaustive and Random Search Functions
  * New verbose functions to test expressions and grammatical generation
  * New print and summary overload for many objects
-
+ 
 2014-10-21 - Changes in version 1.2-1
  * Added BNF file parser
  * CreateGrammar default value fixed

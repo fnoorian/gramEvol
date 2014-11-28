@@ -7,6 +7,7 @@ export(
     "GrammarRandomExpression",
     "EvalExpressions",
     "GeneticAlg.int",
+    "EvolutionStrategy.int",
     "GrammaticalEvolution",
     "GetGrammarDepth",
     "GetGrammarMaxRuleSize",

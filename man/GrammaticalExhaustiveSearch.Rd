@@ -24,7 +24,7 @@ GrammaticalExhaustiveSearch(grammar, evalFunc,
   }
  \item{evalFunc}{
     The evaluation function, taking an expression as its input
-    and returning the fitness of the expression.
+    and returning the score (i.e., fitness) of the expression.
  }
 \item{max.depth}{
     Maximum depth of recursion, in case of a recursive grammar. 
@@ -42,7 +42,7 @@ GrammaticalExhaustiveSearch(grammar, evalFunc,
     if non-terminal symbols are still remaining.
 }
 \item{terminationFitness}{
-    Target fitness. Not used by default.
+    Target score (fitness). Not used by default.
 }
  \item{monitorFunc}{
   A function that is called at each generation. It can be used to monitor evolution of population.
@@ -55,7 +55,7 @@ GrammaticalExhaustiveSearch(grammar, evalFunc,
   to find the expression that minimises \code{evalFunc}.
 
   The search terminates when all possible expressions are exhausted,
-  or when an expression with fitness less than \code{terminationFitness} is discovered.
+  or when an expression with score less than \code{terminationFitness} is discovered.
 
   If a \code{monitorFunc} is given, it is called for each expression, and it receives a 
   list similar to the \code{GrammaticalExhaustiveSearch}'s return value with the information
@@ -65,13 +65,13 @@ GrammaticalExhaustiveSearch(grammar, evalFunc,
 \value{
   \item{bestExpression}{The Best expresssion.}
   \item{bestSequence}{Best expresssion's generating sequence.}
-  \item{bestScore}{Best expresssion's fitness.}
+  \item{bestScore}{Best expresssion's score (fitness).}
   \item{numExpr}{Number of evaluated expressions.}
   
   In addition, the \code{monitorFunc} receives the following additional slots: 
   \item{currentExpression}{The current expresssion.}
   \item{currentSequence}{Current expresssion's generating sequence.}
-  \item{currentScore}{Current expresssion's fitness.}
+  \item{currentScore}{Current expresssion's score (fitness).}
 }
 
 %\references{

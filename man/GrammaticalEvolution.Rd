@@ -8,7 +8,7 @@ to minimize a given fitness function.
 }
 \usage{
 GrammaticalEvolution(grammarDef, fitnessFunction, 
-    seqLen = GetGrammarMaxSequenceLen(grammarDef), 
+    seqLen = GrammarMaxSequenceLen(grammarDef), 
     wrappings = 3, elitism = 2, popSize = 50, iterations = 100, 
     terminationFitness = NA, mutationChance = NA, numExpr = 1,
     suggestions = NULL, monitorFunc=NULL, plapply = lapply, ...)
@@ -82,9 +82,8 @@ GrammaticalEvolution(grammarDef, fitnessFunction,
   \code{monitorFunc} receives a list similar to the \code{GrammaticalEvolution}'s return value.
 }
 \value{
-  \item{bestExpression}{String representation of expression(s) with the best fitness.}
-  \item{gaSummary}{
-      The results of \code{\link{GeneticAlg.int}}.}
+  The results of \code{\link{GeneticAlg.int}} with an additional item:
+  \item{best$expressions}{Expression(s) with the best fitness.}
 }
 
 % \references{
@@ -134,7 +133,7 @@ fitnessFunction <- function(expr) {
 ge <- GrammaticalEvolution(grammarDef, fitnessFunction)
 
 # print results
-print(ge$bestExpression)
+print(ge$best$expressions)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

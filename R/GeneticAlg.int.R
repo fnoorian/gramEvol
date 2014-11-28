@@ -115,20 +115,29 @@ GeneticAlg.int <- function(genomeLen, codonMin, codonMax,
     # extract statistics about generation
     bestEvals[iter] = min(evalVals);
     meanEvals[iter] = mean(evalVals);
+    bestInd = which.min(evalVals)
     verbose(" done.\n");
+
+    collect.results <- function() {
+      settings = list(genomeMin=genomeMin, genomeMax=genomeMax,
+                      popSize=popSize, elitism=elitism, geneCrossoverPoints = geneCrossoverPoints,
+                      iterations=iterations, suggestions=suggestions,
+                      mutationChance=mutationChance)
+      
+      pop.info = list(population=population, evaluations=evalVals, best=bestEvals, mean=meanEvals, currentIteration=iter)
+      
+      best = list(genome=population[bestInd,], fitness = evalVals[bestInd]);
+      
+      ret = list(settings = settings, population = pop.info, best = best)
+      
+      class(ret) = "GeneticAlg.int";
+      return (ret)
+    }
     
     if (!is.null(monitorFunc)) {
       verbose("Sending current state to rgba.monitor()...\n");
-      # report on GA settings
-      result = list(genomeMin=genomeMin, genomeMax=genomeMax,
-                    popSize=popSize, iterations=iterations, suggestions=suggestions,
-                    population=population, elitism=elitism, mutationChance=mutationChance,
-                    evaluations=evalVals, best=bestEvals, mean=meanEvals,
-                    currentIteration=iter,
-                    bestChrom=population[which.min(evalVals),]);
-      class(result) = "GeneticAlg.int";
-      
-      monitorFunc(result);
+      # report on GA results
+      monitorFunc(collect.results());
     }
     
     ##########
@@ -227,14 +236,8 @@ GeneticAlg.int <- function(genomeLen, codonMin, codonMax,
     }
   }
   
-  # report on GA settings
-  result = list(genomeMin=genomeMin, genomeMax=genomeMax,
-                popSize=popSize, iterations=iterations, suggestions=suggestions,
-                population=population, elitism=elitism, mutationChance=mutationChance,
-                evaluations=evalVals, best=bestEvals, mean=meanEvals,
-                currentIteration=iter,
-                bestChrom=population[which.min(evalVals),]);
-  class(result) = "GeneticAlg.int";
+  # report on GA results
+  result = collect.results()
   
   return(result);
 }

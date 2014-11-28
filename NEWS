@@ -1,5 +1,13 @@
 = Changelog =
 
+2014-12-01 - Changes in version 2.0-1
+ * CreateGrammar accepts Expressions as well as strings
+ * Added predefined multi-point crossover operator to Genetic Algorithm Implementation
+ * New functions for iterating through the grammar
+ * New Grammatical Exhaustive and Random Search Functions
+ * New verbose functions to test expressions and grammatical generation
+ * New print and summary overload for many objects
+ 
 2014-10-21 - Version 1.2-1
  * Added BNF file parser
  * Brackets around grammar rule identifiers are optional now

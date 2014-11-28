@@ -34,6 +34,6 @@ fitnessFunction <- function(expr) {
 
 ge <- GrammaticalEvolution(grammarDef, fitnessFunction, terminationFitness = 1e-3)
 
-stopifnot(as.character(ge$bestExpression) == "log(A) * B")
+stopifnot(as.character(ge$best$expressions) == "log(A) * B")
 
 

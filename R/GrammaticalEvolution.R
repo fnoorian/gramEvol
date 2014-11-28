@@ -1,6 +1,6 @@
 GrammaticalEvolution <-  
   function(grammarDef, fitnessFunction, 
-           seqLen = GetGrammarMaxSequenceLen(grammarDef), wrappings=3,
+           seqLen = GrammarMaxSequenceLen(grammarDef), wrappings=3,
            elitism=2, popSize=50, iterations=100, terminationFitness=NA, 
            mutationChance=NA,
            numExpr = 1, 
@@ -33,7 +33,7 @@ GrammaticalEvolution <-
     expr.list = c()
     for (i in 1:numExpr) {
       ch <- chromosome[ind.cut == i]
-      expr <- GrammarGenotypeToPhenotype(ch, grammarDef, wrappings = wrappings)
+      expr <- GrammarMap(ch, grammarDef, wrappings = wrappings)
       
       if (expr$type == "T") {
         expr.list <- c(expr.list, as.expression(expr))
@@ -57,13 +57,19 @@ GrammaticalEvolution <-
     # evaluate the expressions
     return (fitnessFunction(expr.list))
   }
+
+  collect.results <- function(ga.result) {
+    ga.result$best$expressions = chromToExprList(ga.result$best$genome)
+    class(ga.result) <- "GramEvol"
+    return(ga.result)
+  }
   
   if (!is.null(monitorFunc)) {
     # report by adding the best expressions
     ga.monFunc <- function(result) {
-      res = list(bestExpression = chromToExprList(result$bestChrom),
-                 gaSummary = result)
-      monitorFunc(res)  
+      result$best$expressions = chromToExprList(result$best$genome)
+      class(result) <- "GramEvol"
+      monitorFunc(result)  
     }
   } else {
     ga.monFunc <- NULL
@@ -80,6 +86,5 @@ GrammaticalEvolution <-
                               allowrepeat = TRUE,
                               plapply=plapply, ...)
   
-  return (list(bestExpression = chromToExprList(ga.result$bestChrom),
-               gaSummary = ga.result))
+  return (collect.results(ga.result))
 }
