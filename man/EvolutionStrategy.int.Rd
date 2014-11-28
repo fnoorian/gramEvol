@@ -1,5 +1,6 @@
 \name{EvolutionStrategy.int}
 \alias{EvolutionStrategy.int}
+\alias{print.EvolutionStrategy.int}
 
 \title{ 
   Evolution Strategy with Integer Chromosomes
@@ -190,16 +191,16 @@ evalfunc <- function(l) {
 }
 
 monitorFunc <- function(result) {
-    cat("Best of gen: ", min(result$evaluations), "\n")
+    cat("Best of gen: ", min(result$best$fitness), "\n")
 }
 
 x <- EvolutionStrategy.int(genomeLen = 20, codonMin = 0, codonMax = 20,
                 allowrepeat = FALSE, terminationFitness = -109,
                 monitorFunc = monitorFunc, evalFunc = evalfunc)
 
-best.result <- x$best$genome
+print(x)
 
-print(best.result)
+best.result <- x$best$genome
 print("Odds:")
 print(sort(best.result[seq(1, 20, 2)]))
 print("Evens:")

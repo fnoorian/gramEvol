@@ -1,5 +1,6 @@
 \name{GrammaticalEvolution}
 \alias{GrammaticalEvolution}
+\alias{print.GrammaticalEvolution}
 
 \title{Grammatical Evolution}
 \description{
@@ -14,9 +15,10 @@ GrammaticalEvolution(grammarDef, fitnessFunction,
                                   seqLen = GrammarMaxSequenceLen(grammarDef, max.depth, startSymb),
                                   wrappings=3, 
                                   suggestions=NULL,
-                                  elitism=2, popSize=50, 
+                                  optimizer = c("es", "ga"),
+                                  popSize=8, newPerGen = "auto", elitism = 2,
                                   mutationChance=NA,
-                                  iterations=100, terminationFitness=NA, 
+                                  iterations=1000, terminationFitness=NA, 
                                   monitorFunc=NULL,
                                   plapply=lapply, ...)
 }
@@ -49,21 +51,33 @@ GrammaticalEvolution(grammarDef, fitnessFunction,
   \item{suggestions}{
     List of suggested chromosomes to be added to initial population pool.
 }
-  \item{elitism}{
-    Number of elite individuals in genetic algorithm.
+  \item{optimizer}{
+    The evolutionary optimizer. "es" uses evolution strategy as in \code{\link{EvolutionStrategy.int}}
+    and "ga" uses genetic algorithm as in \code{\link{GeneticAlg.int}}.
 }
   \item{popSize}{
-    Population size in genetic algorithm.
+    Population size in the evolutionary optimizer.
 }
+  \item{newPerGen}{
+    Number of randomly generated individuals in evolution strategy.
+    If "auto", it is set to 25% of population of grammar if it is not recursive,
+    otherwise to all of it.
+}
+  \item{elitism}{
+  Number of top ranking chromosomes that are directly transfered to next generation without
+  going through evolutionary operations, used in genetic algorithm optimizer.
+}
+
   \item{iterations}{
-    Number of maximum iterations in genetic algorithm.
+    Number of maximum iterations in the evolutionary optimizer.
 }
   \item{terminationFitness}{
-    Target fitness in genetic algorithm.
+    Target fitness in the evolutionary optimizer.
 }
   \item{mutationChance}{
-    Mutation chance in genetic algorithm. It must be between 0 and 1.
-    By default it is set to \code{1/(1+chromosome size))}.
+    Mutation chance in the evolutionary optimizer. It must be between 0 and 1.
+    By default it is set to \code{1/(1+chromosome size))} for genetic algorithm and
+    \code{10/(1+chromosome size))} for evolutionary algorithm.
 }
  \item{monitorFunc}{
   A function that is called at each generation. It can be used to monitor evolution of population.
@@ -73,16 +87,19 @@ GrammaticalEvolution(grammarDef, fitnessFunction,
     See details for parallelization tips.
 }
   \item{\dots}{
-    Additional parameters are passed to \code{\link{GeneticAlg.int}}.
+    Additional parameters are passed to \code{\link{GeneticAlg.int}} or \code{\link{EvolutionStrategy.int}}.
 }
 }
 \details{
-  This function offers a tiny wrapper around \code{\link{GeneticAlg.int}}.
+  This function an evolutionary search over the grammar, known as Grammatical Evolution.
   It evolves integer sequences and converts them to a collection containing
   \code{numExpr} strings, which are representations of
   analytical expressions. These expressions can be evaluated using \code{eval} function.
   The \code{fitnessFunction} receives these strings and must return a numeric value.
   The goal of optimization would be to find a chromosome which minimizes this value.
+
+  Two evolutionary optimizers are supported: Genetic algorithm and evolution strategy
+  which are set by the \code{optimizer} parameter.
 
   Only valid (i.e., terminal) expressions are passed to \code{fitnessFunction},
   and it is guaranteed that \code{fitnessFunction} receives at least one string. 
@@ -96,7 +113,7 @@ GrammaticalEvolution(grammarDef, fitnessFunction,
   \code{monitorFunc} receives a list similar to the \code{GrammaticalEvolution}'s return value.
 }
 \value{
-  The results of \code{\link{GeneticAlg.int}} with an additional item:
+  The results of \code{\link{GeneticAlg.int}} or \code{\link{EvolutionStrategy.int}} with an additional item:
   \item{best$expressions}{Expression(s) with the best fitness.}
 }
 

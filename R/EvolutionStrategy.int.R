@@ -155,7 +155,7 @@ EvolutionStrategy.int <- function(genomeLen, codonMin, codonMax,
       
       ret = list(settings = settings, population = pop.info, best = best)
       
-      class(ret) = "EvolStrat.int";
+      class(ret) = "EvolutionStrategy.int";
       return (ret)
     }
     

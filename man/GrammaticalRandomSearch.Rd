@@ -110,7 +110,8 @@ fitness <- function(expr) {
   }
 }
 
-res <- GrammaticalRandomSearch(grammarDef, fitness)
+# search and terminate after getting better than 1
+res <- GrammaticalRandomSearch(grammarDef, fitness, terminationFitness = 0.5)
 
 print(res)
 

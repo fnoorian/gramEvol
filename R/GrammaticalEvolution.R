@@ -5,9 +5,10 @@ GrammaticalEvolution <-  function(grammarDef, fitnessFunction,
                                   seqLen = GrammarMaxSequenceLen(grammarDef, max.depth, startSymb),
                                   wrappings=3, 
                                   suggestions=NULL,
-                                  elitism=2, popSize=50, 
+                                  optimizer = c("es", "ga"),
+                                  popSize=8, newPerGen = "auto", elitism = 2,
                                   mutationChance=NA,
-                                  iterations=100, terminationFitness=NA, 
+                                  iterations=1000, terminationFitness=NA, 
                                   monitorFunc=NULL,
                                   plapply=lapply, ...){
     
@@ -19,21 +20,23 @@ GrammaticalEvolution <-  function(grammarDef, fitnessFunction,
   chromosomeLen <- seqLen * numExpr
   
   # determine the values that are not given
+  optimizer <- match.arg(optimizer)
+
   if (is.na(mutationChance)) {
-    mutationChance <- 1 / (1 + chromosomeLen)
+    mutationChance <- 10 / (1 + chromosomeLen)
   }
 
-# if (newPerGen == "auto") {
-#   if (GrammarIsRecursive(grammar)) {
-#     # random search for recursive grammar
-#     newPerGen = popSize
-#     popSize = 0
-#   } else {
-#     # mixed search for non-recursive
-#     newPerGen = round(popSize / 4)
-#     popSize = popSize - newPerGen
-#   }
-# }
+  if (optimizer == "es" && newPerGen == "auto") {
+    if (GrammarIsRecursive(grammarDef)) {
+      # random search for recursive grammar
+      newPerGen = popSize
+      popSize = 0
+    } else {
+      # mixed search for non-recursive
+      newPerGen = round(popSize / 4)
+      popSize = popSize - newPerGen
+    }
+  }
   
   # determine the indicies for cutting chromosomes to N expressions
   if (numExpr == 1) {
@@ -90,27 +93,30 @@ GrammaticalEvolution <-  function(grammarDef, fitnessFunction,
     ga.monFunc <- NULL
   }
   
-  ga.result <- GeneticAlg.int(genomeLen=chromosomeLen, 
-                              codonMin = 0, codonMax = grammarDef$maxRuleSize - 1,
-                              evalFunc=evalFunc,
-                              suggestions=suggestions,
-                              popSize=popSize, iterations=iterations, elitism=elitism, mutationChance=mutationChance,
-                              geneCrossoverPoints = geneCrossoverPoints,
-                              terminationFitness=terminationFitness,
-                              monitorFunc=ga.monFunc,
-                              allowrepeat = TRUE,
-                              plapply=plapply, ...)
+  if (optimizer == "ga") {
+    result <- GeneticAlg.int(genomeLen=chromosomeLen, 
+                                 codonMin = 0, codonMax = GrammarMaxRuleSize(grammarDef) - 1,
+                                 evalFunc=evalFunc,
+                                 suggestions=suggestions,
+                                 popSize=popSize, iterations=iterations, elitism=elitism, mutationChance=mutationChance,
+                                 geneCrossoverPoints = geneCrossoverPoints,
+                                 terminationFitness=terminationFitness,
+                                 monitorFunc=ga.monFunc,
+                                 allowrepeat = TRUE,
+                                 plapply=plapply, ...)
+  } else {
+    result <- EvolutionStrategy.int(genomeLen=chromosomeLen, 
+                                    codonMin = 0, codonMax = GrammarMaxRuleSize(grammarDef) - 1,
+                                    evalFunc=evalFunc,
+                                    suggestion=suggestions,
+                                    mutationChance=mutationChance,
+                                    popSize=popSize, newPerGen = newPerGen,
+                                    iterations=iterations, terminationFitness=terminationFitness,
+                                    monitorFunc=ga.monFunc,
+                                    allowrepeat = TRUE,
+                                    plapply=plapply, ...)
+  }
 
-  #es.result <- EvolutionStrategy.int(genomeLen=chromosomeLen, 
-  #                                 codonMin = 0, codonMax = GrammarMaxRuleSize(grammar) - 1,
-  #                                 evalFunc=evalFunc,
-  #                                 suggestion=suggestion,
-  #                                 mutationChance=mutationChance,
-  #                                 popSize=popSize, newPerGen = newPerGen,
-  #                                 iterations=iterations, terminationFitness=terminationFitness,
-  #                                 monitorFunc=ga.monFunc,
-  #                                 allowrepeat = TRUE,
-  #                                 plapply=plapply, ...)
   
-  return (add.expression.to.results(ga.result))
+  return (add.expression.to.results(result))
 }

@@ -1,5 +1,6 @@
 \name{GeneticAlg.int}
 \alias{GeneticAlg.int}
+\alias{print.GeneticAlg.int}
 
 \title{ 
   Genetic Algorithm with Integer Chromosomes
@@ -199,9 +200,9 @@ x <- GeneticAlg.int(genomeLen = 20, codonMin = 0, codonMax = 20,
                 allowrepeat = FALSE, terminationFitness = -109,
                 monitorFunc = monitorFunc, evalFunc = evalfunc)
 
-best.result <- x$best$genome
+print(x)
 
-print(best.result)
+best.result <- x$best$genome
 print("Odds:")
 print(sort(best.result[seq(1, 20, 2)]))
 print("Evens:")
