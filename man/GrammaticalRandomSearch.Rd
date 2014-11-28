@@ -64,7 +64,7 @@ GrammaticalRandomSearch(grammar, evalFunc,
 \value{
   \item{bestExpression}{The Best expresssion.}
   \item{bestSequence}{Best expresssion's generating sequence.}
-  \item{bestScore}{Best expresssion's fitness.}
+  \item{bestFitness}{Best expresssion's fitness.}
   \item{numExpr}{Number of evaluated expressions.}
   \item{population}{A matrix of sequences that were tested.}
   \item{populationFitness}{Numeric value of fitness of sequences that were tested.}
@@ -72,7 +72,7 @@ GrammaticalRandomSearch(grammar, evalFunc,
   In addition, the \code{monitorFunc} receives the following additional slots: 
   \item{currentExpression}{The current expresssion.}
   \item{currentSequence}{Current expresssion's generating sequence.}
-  \item{currentScore}{Current expresssion's fitness.}
+  \item{currentFitness}{Current expresssion's fitness.}
 }
 
 %\references{

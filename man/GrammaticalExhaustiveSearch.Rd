@@ -65,13 +65,13 @@ GrammaticalExhaustiveSearch(grammar, evalFunc,
 \value{
   \item{bestExpression}{The Best expresssion.}
   \item{bestSequence}{Best expresssion's generating sequence.}
-  \item{bestScore}{Best expresssion's score (fitness).}
+  \item{bestFitness}{Best expresssion's fitness (score).}
   \item{numExpr}{Number of evaluated expressions.}
   
   In addition, the \code{monitorFunc} receives the following additional slots: 
   \item{currentExpression}{The current expresssion.}
   \item{currentSequence}{Current expresssion's generating sequence.}
-  \item{currentScore}{Current expresssion's score (fitness).}
+  \item{currentFitness}{Current expresssion's fitness (score).}
 }
 
 %\references{

@@ -47,10 +47,10 @@ GrammaticalRandomSearch <- function(grammar, evalFunc,
                   populationFitness = scores,
                   currentSequence = genome,
                   currentExpression = expr,
-                  currentScore = score,
+                  currentFitness = score,
                   bestSequence = best.genome,
                   bestExpression = best.expr,
-                  bestScore = best.score,
+                  bestFitness = best.score,
                   numExpr = i)
 
       class(res) <- "GESearch"

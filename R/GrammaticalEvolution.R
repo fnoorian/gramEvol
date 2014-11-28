@@ -80,7 +80,7 @@ GrammaticalEvolution <-  function(grammarDef, fitnessFunction,
 
   add.expression.to.results <- function(ga.result) {
     ga.result$best$expressions = chromToExprList(ga.result$best$genome)
-    class(ga.result) <- "GramEvol"
+    class(ga.result) <- "GrammaticalEvolution"
     return(ga.result)
   }
   

@@ -43,7 +43,7 @@ GrammaticalExhaustiveSearch <- function(grammar, evalFunc,
                   currentScore = score,
                   bestSequence = best.seq,
                   bestExpression = best.expr,
-                  bestScore = best.score,
+                  bestFitness = best.score,
                   numExpr = iterations)
 
       class(res) <- "GESearch"
@@ -53,7 +53,7 @@ GrammaticalExhaustiveSearch <- function(grammar, evalFunc,
   
   res <- list(bestSequence = best.seq,
               bestExpression = best.expr,
-              bestScore = best.score,
+              bestFitness = best.score,
               numExpr = iterations)
   class(res) <- "GESearch"
 
