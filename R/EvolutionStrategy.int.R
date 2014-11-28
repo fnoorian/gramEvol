@@ -106,7 +106,7 @@ EvolutionStrategy.int <- function(genomeLen, codonMin, codonMax,
     verbose("Adding New Chromosomes ... ");
 
     if (newPerGen > 0) {
-      for (i in (popSize+1):totalPopulation) { # don't mutate the parent
+      for (i in (popSize+1+1):totalPopulation) { # don't mutate the parent
         population[i,] = ga.new.chromosome(genomeLen, genomeMin, genomeMax, allowrepeat)
       }
     }
@@ -132,7 +132,7 @@ EvolutionStrategy.int <- function(genomeLen, codonMin, codonMax,
     # here it means only copying the best to the parent object
     verbose("  sorting results...\n");
     bestInd =  which.min(evalVals)
-    if (length(bestInd) > 1) bestInd = bestInd[1]
+    #if (length(bestInd) > 1) bestInd = bestInd[1]
     
     parent  = population[bestInd,]
     parentEval = evalVals[bestInd]
