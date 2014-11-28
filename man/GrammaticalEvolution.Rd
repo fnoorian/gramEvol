@@ -8,10 +8,17 @@ to minimize a given fitness function.
 }
 \usage{
 GrammaticalEvolution(grammarDef, fitnessFunction, 
-    seqLen = GrammarMaxSequenceLen(grammarDef), 
-    wrappings = 3, elitism = 2, popSize = 50, iterations = 100, 
-    terminationFitness = NA, mutationChance = NA, numExpr = 1,
-    suggestions = NULL, monitorFunc=NULL, plapply = lapply, ...)
+                                  numExpr = 1, 
+                                  max.depth = GrammarGetDepth(grammarDef),
+                                  startSymb = GrammarStartSymbol(grammarDef),
+                                  seqLen = GrammarMaxSequenceLen(grammarDef, max.depth, startSymb),
+                                  wrappings=3, 
+                                  suggestions=NULL,
+                                  elitism=2, popSize=50, 
+                                  mutationChance=NA,
+                                  iterations=100, terminationFitness=NA, 
+                                  monitorFunc=NULL,
+                                  plapply=lapply, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -23,11 +30,24 @@ GrammaticalEvolution(grammarDef, fitnessFunction,
     containing the expression(s) as its input
     and returning the fitness of the expression(s).
 }
+  \item{numExpr}{
+    Number of expressions generated and given to \code{fitnessFunction}.
+}
+ \item{max.depth}{
+    Maximum depth of search in case of recursive grammar. 
+    By default it is limited to the number of production rules in the grammar.
+ }
+  \item{startSymb}{
+    The symbol where the generation of a new expression should start.
+}
   \item{seqLen}{
     Length of integer vector used to create the expression.
 }
  \item{wrappings}{
     Number of wrappings in case the length of chromosome is not enough for conversion to an expression.
+}
+  \item{suggestions}{
+    List of suggested chromosomes to be added to initial population pool.
 }
   \item{elitism}{
     Number of elite individuals in genetic algorithm.
@@ -44,12 +64,6 @@ GrammaticalEvolution(grammarDef, fitnessFunction,
   \item{mutationChance}{
     Mutation chance in genetic algorithm. It must be between 0 and 1.
     By default it is set to \code{1/(1+chromosome size))}.
-}
-  \item{numExpr}{
-    Number of expressions generated and given to \code{fitnessFunction}.
-}
-  \item{suggestions}{
-    List of suggested chromosomes to be added to initial population pool.
 }
  \item{monitorFunc}{
   A function that is called at each generation. It can be used to monitor evolution of population.

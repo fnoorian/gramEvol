@@ -1,12 +1,15 @@
-GrammaticalEvolution <-  
-  function(grammarDef, fitnessFunction, 
-           seqLen = GrammarMaxSequenceLen(grammarDef), wrappings=3,
-           elitism=2, popSize=50, iterations=100, terminationFitness=NA, 
-           mutationChance=NA,
-           numExpr = 1, 
-           suggestions=NULL,
-           monitorFunc=NULL,
-           plapply=lapply, ...) {
+GrammaticalEvolution <-  function(grammarDef, fitnessFunction, 
+                                  numExpr = 1, 
+                                  max.depth = GrammarGetDepth(grammarDef),
+                                  startSymb = GrammarStartSymbol(grammarDef),
+                                  seqLen = GrammarMaxSequenceLen(grammarDef, max.depth, startSymb),
+                                  wrappings=3, 
+                                  suggestions=NULL,
+                                  elitism=2, popSize=50, 
+                                  mutationChance=NA,
+                                  iterations=100, terminationFitness=NA, 
+                                  monitorFunc=NULL,
+                                  plapply=lapply, ...){
     
   if (numExpr < 1) {
     stop("Number of Expressions (numExpr) has to be at least 1.");
@@ -15,10 +18,24 @@ GrammaticalEvolution <-
   # prepare chromosome cutting indices
   chromosomeLen <- seqLen * numExpr
   
+  # determine the values that are not given
   if (is.na(mutationChance)) {
     mutationChance <- 1 / (1 + chromosomeLen)
   }
+
+# if (newPerGen == "auto") {
+#   if (GrammarIsRecursive(grammar)) {
+#     # random search for recursive grammar
+#     newPerGen = popSize
+#     popSize = 0
+#   } else {
+#     # mixed search for non-recursive
+#     newPerGen = round(popSize / 4)
+#     popSize = popSize - newPerGen
+#   }
+# }
   
+  # determine the indicies for cutting chromosomes to N expressions
   if (numExpr == 1) {
     ind.cut <- 1
     geneCrossoverPoints <- NULL
@@ -58,7 +75,7 @@ GrammaticalEvolution <-
     return (fitnessFunction(expr.list))
   }
 
-  collect.results <- function(ga.result) {
+  add.expression.to.results <- function(ga.result) {
     ga.result$best$expressions = chromToExprList(ga.result$best$genome)
     class(ga.result) <- "GramEvol"
     return(ga.result)
@@ -67,9 +84,7 @@ GrammaticalEvolution <-
   if (!is.null(monitorFunc)) {
     # report by adding the best expressions
     ga.monFunc <- function(result) {
-      result$best$expressions = chromToExprList(result$best$genome)
-      class(result) <- "GramEvol"
-      monitorFunc(result)  
+      monitorFunc(add.expression.to.results(result))  
     }
   } else {
     ga.monFunc <- NULL
@@ -85,6 +100,17 @@ GrammaticalEvolution <-
                               monitorFunc=ga.monFunc,
                               allowrepeat = TRUE,
                               plapply=plapply, ...)
+
+  #es.result <- EvolutionStrategy.int(genomeLen=chromosomeLen, 
+  #                                 codonMin = 0, codonMax = GrammarMaxRuleSize(grammar) - 1,
+  #                                 evalFunc=evalFunc,
+  #                                 suggestion=suggestion,
+  #                                 mutationChance=mutationChance,
+  #                                 popSize=popSize, newPerGen = newPerGen,
+  #                                 iterations=iterations, terminationFitness=terminationFitness,
+  #                                 monitorFunc=ga.monFunc,
+  #                                 allowrepeat = TRUE,
+  #                                 plapply=plapply, ...)
   
-  return (collect.results(ga.result))
+  return (add.expression.to.results(ga.result))
 }
