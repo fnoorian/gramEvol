@@ -5,7 +5,7 @@ GrammaticalEvolution <-  function(grammarDef, fitnessFunction,
                                   seqLen = GrammarMaxSequenceLen(grammarDef, max.depth, startSymb),
                                   wrappings=3, 
                                   suggestions=NULL,
-                                  optimizer = c("es", "ga"),
+                                  optimizer = c("auto", "es", "ga"),
                                   popSize=8, newPerGen = "auto", elitism = 2,
                                   mutationChance=NA,
                                   iterations=1000, terminationFitness=NA, 
@@ -24,6 +24,16 @@ GrammaticalEvolution <-  function(grammarDef, fitnessFunction,
 
   if (is.na(mutationChance)) {
     mutationChance <- 10 / (1 + chromosomeLen)
+  }
+
+  if (optimizer == "auto") {
+    if (numExpr > 1) {
+      optimizer = "ga"
+      popSize = popSize * 5
+      iterations = iterations / 5
+      } else {
+        optimizer = "es"
+    }
   }
 
   if (optimizer == "es" && newPerGen == "auto") {

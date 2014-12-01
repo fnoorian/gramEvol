@@ -15,7 +15,7 @@ GrammaticalEvolution(grammarDef, fitnessFunction,
                                   seqLen = GrammarMaxSequenceLen(grammarDef, max.depth, startSymb),
                                   wrappings=3, 
                                   suggestions=NULL,
-                                  optimizer = c("es", "ga"),
+                                  optimizer = c("auto", "es", "ga"),
                                   popSize=8, newPerGen = "auto", elitism = 2,
                                   mutationChance=NA,
                                   iterations=1000, terminationFitness=NA, 
@@ -52,8 +52,9 @@ GrammaticalEvolution(grammarDef, fitnessFunction,
     List of suggested chromosomes to be added to initial population pool.
 }
   \item{optimizer}{
-    The evolutionary optimizer. "es" uses evolution strategy as in \code{\link{EvolutionStrategy.int}}
-    and "ga" uses genetic algorithm as in \code{\link{GeneticAlg.int}}.
+    The evolutionary optimizer. \code{"es"} uses evolution strategy as in \code{\link{EvolutionStrategy.int}}
+    and \code{"ga"} uses genetic algorithm as in \code{\link{GeneticAlg.int}}. 
+    \code{"auto"} chooses evolution strategy when \code{numExpr = 1}, and genetic algorithm otherwise.
 }
   \item{popSize}{
     Population size in the evolutionary optimizer.
