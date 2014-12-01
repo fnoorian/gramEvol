@@ -27,8 +27,16 @@ print.EvolutionStrategy.int <- function(x, ...) {
 print.GrammaticalEvolution <- function(x, ...) {
   cat("Grammatical Evolution Search Results:\n")
   
-  cat("  No. Generations:", as.character(x$population$currentIteration), "\n")
+  cat("  No. Generations: ", as.character(x$population$currentIteration), "\n")
   #cat("  No. Evaluations:", as.character(x$population$currentIteration * x$settings$totalPopulation), "\n")
-  cat("  Best Fitness:   ", as.character(x$best$fitness), "\n")
-  cat("  Best Expression:", as.character(x$best$expressions), "\n")
+  cat("  Best Fitness:    ", as.character(x$best$fitness), "\n")
+
+  if (length(x$best$expressions) == 1) {
+    cat("  Best Expression: ", as.character(x$best$expressions), "\n")
+  } else {
+    cat("  Best Expressions:", as.character(x$best$expressions[1]), "\n")
+    for (i in 2:length(x$best$expressions)) {
+      cat("                  :", as.character(x$best$expressions[i]), "\n")
+    }
+  }
 }
