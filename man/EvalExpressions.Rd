@@ -14,8 +14,7 @@ EvalExpressions(expressions, envir = parent.frame())
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{expressions}{
-  an expression, or a collection of expressions. It should be either in character
-    string format or be the output of \link{GrammarGenotypeToPhenotype}.
+  an expression, or a collection of expressions.
 }
   \item{envir}{
    the \code{environment} in which expressions are to be evaluated.  May
@@ -27,8 +26,8 @@ EvalExpressions(expressions, envir = parent.frame())
 %%  ~~ If necessary, more details than the description above ~~
 \code{EvalExpressions} is a wrapper around 
 \code{eval} and \code{parse} functions in R base package.
-It can handle a single, a collection or a list of expressions
-in string format.
+It can handle a single, a collection or list of expressions,
+character strings or \code{GEPhenotype} objects.
 
 The \code{envir} argument is directly passed to \code{eval} function. If it is not specified,
 the parent frame (i.e., the environment where the call to \code{eval} was made) is used instead.	
@@ -56,8 +55,9 @@ The newer versions directly generate expression objects.
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
-%\seealso{
-%}
+\seealso{
+\code{\link{GrammarMap}}
+}
 
 \examples{
 
@@ -66,7 +66,12 @@ B <- 1
 
 EvalExpressions("A - B")
 
+# a collection of text strings
 exprs <- c("A + B", "A - B")
+EvalExpressions(exprs, data.frame(A = A, B = B))
+
+# a collection of expressions
+exprs <- expression(A + B, A - B)
 EvalExpressions(exprs, data.frame(A = A, B = B))
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
