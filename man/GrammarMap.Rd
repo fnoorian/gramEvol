@@ -77,6 +77,7 @@ a character string using \code{as.character}, or an R expression with \code{as.e
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
+\code{\link{GrammarIsTerminal}}
 \code{\link{CreateGrammar}},
 \code{\link{GrammarRandomExpression}}
 }

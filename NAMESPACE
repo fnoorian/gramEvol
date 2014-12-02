@@ -15,6 +15,7 @@ export(
     "GetGrammarNumOfExpressions",
     "GrammarStartSymbol",
     "GrammarIsRecursive",
+    "GrammarIsTerminal",
     "GrammarGetDepth",
     "GrammarMaxRuleSize",
     "GrammarMaxSequenceLen",

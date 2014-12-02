@@ -68,12 +68,14 @@ stopifnot(GrammarMaxSequenceLen(grammarDef, max.depth = 3) == 8)
 genome = c(2, 1, 0, 0, 3, 3, 3, 1)
 expr = GrammarMap(genome, grammarDef)
 stopifnot(expr$type == "T")
+stopifnot(GrammarIsTerminal(expr))
 stopifnot(as.character(expr) == "c1 * v1/c2 * v2")
 ################
 inputString = c(0) # a recursive example
 expr2 = GrammarMap(inputString, grammarDef, wrapping=2)
 stopifnot(expr2$expr == "<expr><op><expr><op><expr>")
 stopifnot(expr2$type == "NT")
+stopifnot(GrammarIsTerminal(expr2) == FALSE)
 ################
 stopifnot(GrammarIsRecursive(grammarDef, "<expr>"))
 stopifnot(!GrammarIsRecursive(grammarDef, "<op>"))
