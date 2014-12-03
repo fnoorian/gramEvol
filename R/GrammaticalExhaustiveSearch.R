@@ -13,7 +13,7 @@ GrammaticalExhaustiveSearch <- function(grammar, evalFunc,
   iterations = 0
   genome = NULL
   while (TRUE) {
-    genome = GrammarGetNextSequence(grammar, genome, startSymb, max.len)
+    genome = GrammarGetNextSequence(grammar, genome, startSymb, max.depth, max.len)
     
     if (is.GrammarOverflow(genome))
       break

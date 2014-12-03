@@ -25,7 +25,7 @@ GrammarStartSymbol(grammar)
 
 GrammarIsRecursive(grammar, startSymb = GrammarStartSymbol(grammar), ...)
 
-GrammarGetDepth(grammar, max.depth = length(grammar$def), 
+GrammarGetDepth(grammar, max.depth = max(length(grammar$def), 4), 
     startSymb = GrammarStartSymbol(grammar), ...)
 
 GrammarMaxSequenceLen(grammar, max.depth = GetGrammarDepth(grammar), 
@@ -46,7 +46,8 @@ GrammarNumOfExpressions(grammar, max.depth = GrammarGetDepth(grammar),
   }
   \item{max.depth}{
     Maximum depth of search in case of recursive grammar. 
-    By default it is limited to the number of production rules in the grammar.
+    By default it is limited to the maximum of 4 or
+    the number of production rules in the grammar.
   }
   \item{startSymb}{
     The symbol where the generation of a new expression should start.

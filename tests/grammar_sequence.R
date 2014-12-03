@@ -9,26 +9,29 @@ ruleDef <- list(
 grammar <- CreateGrammar(ruleDef) 
 
 max.range <- GrammarMaxSequenceRange(grammar)
-stopifnot(all(max.range == c(4,3,4,3,2)))
+stopifnot(all(max.range == c(4,3,4,3,4,3,2)))
 
 num.expr <- GrammarNumOfExpressions(grammar)
-stopifnot(num.expr == 48)
+stopifnot(num.expr == 156)
 
 # first sequence
 genome <- GrammarGetNextSequence(grammar)
-stopifnot(all(genome == c(0,0,1,0,0)))
+stopifnot(all(genome == c(0,0,0,0,1,0,0)))
 
 genome <- GrammarGetNextSequence(grammar, genome)
-stopifnot(all(genome == c(0,0,1,0,1)))
+stopifnot(all(genome == c(0,0,0,0,1,0,1)))
 
 # start in a loop
 genome <- NULL
+cnt <- 0
 for (i in 1:num.expr) {
   genome <- GrammarGetNextSequence(grammar, genome)
   stopifnot(!is.GrammarOverflow(genome))
   stopifnot(genome < max.range[1:length(genome)])
+  cnt <- cnt + 1
 }
 stopifnot(all(genome == c(3,1,1)))
+stopifnot(cnt == num.expr)
 
 # next one should be overflow
 genome <- GrammarGetNextSequence(grammar, genome)

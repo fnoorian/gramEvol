@@ -13,13 +13,15 @@ Iterate through grammar's valid sequences.
 
 GrammarGetFirstSequence(grammar, 
             seqStart = NULL, 
-            startSymb = GrammarStartSymbol(grammar), 
-            max.len = GrammarMaxSequenceLen(grammar))
+            startSymb = GrammarStartSymbol(grammar),
+            max.depth = GrammarGetDepth(grammar),
+            max.len = GrammarMaxSequenceLen(grammar, max.depth, startSymb))
 
 GrammarGetNextSequence(grammar, 
             seqStart = NULL, 
-            startSymb = GrammarStartSymbol(grammar), 
-            max.len = GrammarMaxSequenceLen(grammar))
+            startSymb = GrammarStartSymbol(grammar),
+            max.depth = GrammarGetDepth(grammar),
+            max.len = GrammarMaxSequenceLen(grammar, max.depth, startSymb))
   
 is.GrammarOverflow(object)
 }
@@ -35,6 +37,10 @@ is.GrammarOverflow(object)
   }
   \item{startSymb}{
     The symbol where the generation of a new expression should start.
+  }
+  \item{max.depth}{
+    Maximum depth of recursion, in case of a recursive grammar.
+    By default it is limited to the number of production rules in the grammar.
   }
   \item{max.len}{
     Maximum length of depth of search in case of recursive grammar. 
