@@ -5,6 +5,13 @@ GrammarVerboseMap <- function(inputString, grammar, wrappings = 3) {
   }
   
   startSymb <- grammar$startSymb # start symbol
+
+  # startubg step
+  df = data.frame(Step = 0,
+                  Codon = NA,
+                  Symbol = "",
+                  Rule = "starting:",
+                  Result = startSymb)
   
   for (i in 1:wrappings) {
     
@@ -12,21 +19,47 @@ GrammarVerboseMap <- function(inputString, grammar, wrappings = 3) {
       cat("Wrapping string to position 0\n")
     }
     
+    TERMINAL = TRUE
+    NON_TERMINAL = FALSE
+    
     codon.string = inputString
     
     total.genes = length(codon.string)
     
-    cat('         Starting:', startSymb, '\n')
+    step = 1
     for (j in 1:total.genes){
-      res = ApplyGrammarRule(codon.string[j], startSymb, grammar)
-      cat('Codon: ', codon.string[j], '\tResult:', res, '\n')
+      
+      sep.symbs = GetFirstNonTerminalandRest(startSymb)
+      if (sep.symbs[[1]] == NON_TERMINAL){
+        res = startSymb
+      } else {
+        terminal.symb = sep.symbs[[1]]
+        non.terminal.symb = sep.symbs[[2]]
+        rest = sep.symbs[[3]]
+        
+        possible.choices = GetPossibleRuleChoices(non.terminal.symb, grammar)
+        choice.no = codon.string[j] %% possible.choices
+        chosen.rule = ChosenGrammarRule(non.terminal.symb, choice.no+1, grammar)
+
+        res = paste0(terminal.symb, chosen.rule, rest)
+      }
+      
+      df = rbind(df, data.frame(Step = step,
+                                Codon = codon.string[j],
+                                Symbol = paste0('<', non.terminal.symb, '>'),
+                                Rule = chosen.rule,
+                                Result = res))
       if (res == startSymb){ # if not replacement is performed, we have reached a terminal
         break
       }
-      startSymb = res  
+      startSymb = res
+      step = step + 1
     }
     
     result.string = startSymb
+    
+    df[1,2] = ""
+    print(df, right=FALSE, row.names=FALSE)
     
     if (IsSymbolTerminal(result.string)) {
       cat("Valid Expression Found\n")
@@ -37,4 +70,6 @@ GrammarVerboseMap <- function(inputString, grammar, wrappings = 3) {
       exprs = list(expr = result.string, type = "NT", parsed = NULL)
     }
   }  
+  
+  return (df)
 }

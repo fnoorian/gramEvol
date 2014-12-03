@@ -22,6 +22,6 @@ print.GEPhenotype <- function(x, ..., simplify=TRUE) {
     cat("Non-Terminal Sequence:\n", x$expr, "\n", ...)
     #print(NA, ...)
   } else {
-    cat(as.character(x, simplify=simplify), ...)
+    cat(as.character(x, simplify=simplify), "\n", ...)
   }
 }
