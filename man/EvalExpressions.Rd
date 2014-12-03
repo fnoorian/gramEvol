@@ -26,7 +26,7 @@ EvalExpressions(expressions, envir = parent.frame())
 %%  ~~ If necessary, more details than the description above ~~
 \code{EvalExpressions} is a wrapper around 
 \code{eval} and \code{parse} functions in R base package.
-It can handle a single, a collection or list of expressions,
+It can handle a single, a vector or list of expressions,
 character strings or \code{GEPhenotype} objects.
 
 The \code{envir} argument is directly passed to \code{eval} function. If it is not specified,
@@ -66,11 +66,11 @@ B <- 1
 
 EvalExpressions("A - B")
 
-# a collection of text strings
+# a vector of text strings
 exprs <- c("A + B", "A - B")
 EvalExpressions(exprs, data.frame(A = A, B = B))
 
-# a collection of expressions
+# a vector of expressions
 exprs <- expression(A + B, A - B)
 EvalExpressions(exprs, data.frame(A = A, B = B))
 }
