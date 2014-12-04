@@ -22,10 +22,6 @@ GrammaticalEvolution <-  function(grammarDef, fitnessFunction,
   # determine the values that are not given
   optimizer <- match.arg(optimizer)
 
-  if (is.na(mutationChance)) {
-    mutationChance <- 10 / (1 + chromosomeLen)
-  }
-
   if (optimizer == "auto") {
     if (numExpr > 1) {
       optimizer = "ga"
@@ -46,6 +42,15 @@ GrammaticalEvolution <-  function(grammarDef, fitnessFunction,
       newPerGen = round(popSize / 4)
       popSize = popSize - newPerGen
     }
+  }
+
+  if (is.na(mutationChance)) {
+    if (optimizer == "es") {
+      mutationChance <- min(0.1, 5 / (1 + chromosomeLen))  
+    } else {
+      mutationChance <- 1 / (1 + chromosomeLen)
+    }
+    
   }
   
   # determine the indicies for cutting chromosomes to N expressions
