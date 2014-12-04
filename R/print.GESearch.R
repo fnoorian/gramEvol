@@ -18,8 +18,8 @@ print.GeneticAlg.int <- function(x, ...) {
   
   cat("  No. Generations:", as.character(x$population$currentIteration), "\n")
   #cat("  No. Evaluations:", as.character(x$population$currentIteration * x$settings$totalPopulation), "\n")
-  cat("  Best Fitness:   ", as.character(x$best$fitness), "\n")
   cat("  Best Genome:    ", as.character(x$best$genome), "\n")
+  cat("  Best Fitness:   ", as.character(x$best$fitness), "\n")
 }
 
 print.EvolutionStrategy.int <- function(x, ...) {
@@ -27,16 +27,19 @@ print.EvolutionStrategy.int <- function(x, ...) {
   
   cat("  No. Generations:", as.character(x$population$currentIteration), "\n")
   #cat("  No. Evaluations:", as.character(x$population$currentIteration * x$settings$totalPopulation), "\n")
-  cat("  Best Fitness:   ", as.character(x$best$fitness), "\n")
   cat("  Best Genome:    ", as.character(x$best$genome), "\n")
+  cat("  Best Fitness:   ", as.character(x$best$fitness), "\n")
 }
 
-print.GrammaticalEvolution <- function(x, ...) {
+print.GrammaticalEvolution <- function(x, ..., show.genome = FALSE) {
   cat("Grammatical Evolution Search Results:\n")
   
   cat("  No. Generations: ", as.character(x$population$currentIteration), "\n")
   #cat("  No. Evaluations:", as.character(x$population$currentIteration * x$settings$totalPopulation), "\n")
-  cat("  Best Fitness:    ", as.character(x$best$fitness), "\n")
+
+  if (show.genome) {
+    cat("  Best Genome:  ", x$best$genome, "\n")
+  }
 
   if (length(x$best$expressions) == 1) {
     cat("  Best Expression: ", as.character(x$best$expressions), "\n")
@@ -46,4 +49,6 @@ print.GrammaticalEvolution <- function(x, ...) {
       cat("                  :", as.character(x$best$expressions[i]), "\n")
     }
   }
+
+  cat("  Best Fitness:    ", as.character(x$best$fitness), "\n")
 }

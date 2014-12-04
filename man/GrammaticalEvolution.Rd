@@ -21,6 +21,8 @@ GrammaticalEvolution(grammarDef, fitnessFunction,
                                   iterations=1000, terminationFitness=NA, 
                                   monitorFunc=NULL,
                                   plapply=lapply, ...)
+
+\method{print}{GrammaticalEvolution}(x, ..., sequence = FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -89,6 +91,12 @@ GrammaticalEvolution(grammarDef, fitnessFunction,
 }
   \item{\dots}{
     Additional parameters are passed to \code{\link{GeneticAlg.int}} or \code{\link{EvolutionStrategy.int}}.
+}
+\item{x}{
+    Grammatical Evolution results.
+}
+\item{show.genome}{
+    Prints the numeric value of genome if TRUE.
 }
 }
 \details{
@@ -165,7 +173,7 @@ fitnessFunction <- function(expr) {
 ge <- GrammaticalEvolution(grammarDef, fitnessFunction)
 
 # print results
-print(ge$best$expressions)
+print(ge, sequence = TRUE)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
