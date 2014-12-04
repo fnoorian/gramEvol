@@ -29,7 +29,7 @@ GrammaticalExhaustiveSearch <- function(grammar, evalFunc,
       best.expr = expr
       best.seq = genome
       if (!is.na(terminationFitness)) {
-        if (score < terminationFitness) {
+        if (score <= terminationFitness) {
           break        
         }
       }

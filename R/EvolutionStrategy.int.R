@@ -172,7 +172,7 @@ EvolutionStrategy.int <- function(genomeLen, codonMin, codonMax,
     }
     
     if (!is.na(terminationFitness)) {
-      if (parentEval < terminationFitness) {
+      if (parentEval <= terminationFitness) {
         verbose("Fitness better than termination fitness reached.\n");
         break
       }

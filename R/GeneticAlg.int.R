@@ -148,7 +148,7 @@ GeneticAlg.int <- function(genomeLen, codonMin, codonMax,
     }
     
     if (!is.na(terminationFitness)) {
-      if (bestEvals[iter] < terminationFitness) {
+      if (bestEvals[iter] <= terminationFitness) {
         verbose("Fitness better than termination fitness reached.\n");
         break
       }

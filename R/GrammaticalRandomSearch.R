@@ -36,7 +36,7 @@ GrammaticalRandomSearch <- function(grammar, evalFunc,
       best.expr = expr
       
       if (!is.na(terminationFitness)) {
-        if (score < terminationFitness) {
+        if (score <= terminationFitness) {
           break        
         }
       }

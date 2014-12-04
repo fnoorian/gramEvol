@@ -21,7 +21,7 @@ evalfunc <- function(l) {
 }
 
 x <- GeneticAlg.int(genomeLen = 20, codonMin = 0, codonMax = 20,
-                allowrepeat = FALSE, terminationFitness = -109,
+                allowrepeat = FALSE, terminationFitness = -110,
                 monitorFunc = NULL, evalFunc = evalfunc)
 
 best.result <- x$best$genome
