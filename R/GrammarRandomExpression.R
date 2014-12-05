@@ -1,5 +1,5 @@
 GrammarRandomExpression <- function(grammar, 
-                                    num.expr = 1,
+                                    numExpr = 1,
                                     max.depth = length(grammar$def), 
                                     startSymb = GrammarStartSymbol(grammar),
                                     max.string = GrammarMaxSequenceRange(grammar, max.depth, startSymb),
@@ -8,7 +8,7 @@ GrammarRandomExpression <- function(grammar,
   n = length(max.string) # size of chromosome
   
   ret.list = list()
-  for (i in 1:num.expr) {
+  for (i in 1:numExpr) {
     # repeat until a terminal grammar is found
     for (j in 1:retries) {
       # create a new genotype and phenotype
@@ -27,7 +27,7 @@ GrammarRandomExpression <- function(grammar,
     }
   }
   
-  if (num.expr == 1)
+  if (numExpr == 1)
     return (ret.list[[1]])
   else
     return (ret.list)

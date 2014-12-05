@@ -10,7 +10,7 @@ Create random expressions from context-free grammar.
 }
 \usage{
 GrammarRandomExpression(grammar, 
-                        num.expr = 1, 
+                        numExpr = 1, 
                         max.depth = length(grammar$def), 
                         startSymb = GrammarStartSymbol(grammar),
                         max.string = GrammarMaxSequenceRange(grammar, max.depth, startSymb), 
@@ -22,7 +22,7 @@ GrammarRandomExpression(grammar,
   \item{grammar}{
     The grammar object as created by \code{\link{CreateGrammar}}.
   }
-  \item{num.expr}{
+  \item{numExpr}{
     Number of random expressions to generate.
 }
   \item{max.depth}{
