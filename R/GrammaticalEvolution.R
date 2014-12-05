@@ -1,4 +1,4 @@
-GrammaticalEvolution <-  function(grammarDef, fitnessFunction, 
+GrammaticalEvolution <-  function(grammarDef, evalFunc, 
                                   numExpr = 1, 
                                   max.depth = GrammarGetDepth(grammarDef),
                                   startSymb = GrammarStartSymbol(grammarDef),
@@ -8,7 +8,7 @@ GrammaticalEvolution <-  function(grammarDef, fitnessFunction,
                                   optimizer = c("auto", "es", "ga"),
                                   popSize=8, newPerGen = "auto", elitism = 2,
                                   mutationChance=NA,
-                                  iterations=1000, terminationFitness=NA, 
+                                  iterations=1000, terminationCost=NA, 
                                   monitorFunc=NULL,
                                   plapply=lapply, ...){
     
@@ -79,7 +79,7 @@ GrammaticalEvolution <-  function(grammarDef, fitnessFunction,
   }
   
   # evaluate the chromosome
-  evalFunc <- function(chromosome) {
+  ga.evalFunc <- function(chromosome) {
     
     # convert multiple chromosomes to expression list
     expr.list = chromToExprList(chromosome)
@@ -90,7 +90,7 @@ GrammaticalEvolution <-  function(grammarDef, fitnessFunction,
     }
     
     # evaluate the expressions
-    return (fitnessFunction(expr.list))
+    return (evalFunc(expr.list))
   }
 
   add.expression.to.results <- function(ga.result) {
@@ -111,22 +111,22 @@ GrammaticalEvolution <-  function(grammarDef, fitnessFunction,
   if (optimizer == "ga") {
     result <- GeneticAlg.int(genomeLen=chromosomeLen, 
                                  codonMin = 0, codonMax = GrammarMaxRuleSize(grammarDef) - 1,
-                                 evalFunc=evalFunc,
+                                 evalFunc=ga.evalFunc,
                                  suggestions=suggestions,
                                  popSize=popSize, iterations=iterations, elitism=elitism, mutationChance=mutationChance,
                                  geneCrossoverPoints = geneCrossoverPoints,
-                                 terminationFitness=terminationFitness,
+                                 terminationCost=terminationCost,
                                  monitorFunc=ga.monFunc,
                                  allowrepeat = TRUE,
                                  plapply=plapply, ...)
   } else {
     result <- EvolutionStrategy.int(genomeLen=chromosomeLen, 
                                     codonMin = 0, codonMax = GrammarMaxRuleSize(grammarDef) - 1,
-                                    evalFunc=evalFunc,
+                                    evalFunc=ga.evalFunc,
                                     suggestion=suggestions,
                                     mutationChance=mutationChance,
                                     popSize=popSize, newPerGen = newPerGen,
-                                    iterations=iterations, terminationFitness=terminationFitness,
+                                    iterations=iterations, terminationCost=terminationCost,
                                     monitorFunc=ga.monFunc,
                                     allowrepeat = TRUE,
                                     plapply=plapply, ...)

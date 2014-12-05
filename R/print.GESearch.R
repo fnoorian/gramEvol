@@ -4,13 +4,13 @@ print.GESearch <- function (x, ..., max.line.len = 60) {
   cat("  Expressions Tested:", x$numExpr, '\n')
   if (!is.null(x$currentExpression)) {
     cat("  Current Expression:", as.character(x$currentExpression), '\n')
-    cat("  Current Fitness:   ", x$currentScore, '\n')
+    cat("  Current Cost:      ", x$currentScore, '\n')
   } else {
     cat("  Best Chromosome:   ", x$bestSequence, '\n')
   }
 
   cat("  Best Expression:   ", as.character(x$bestExpression), '\n')
-  cat("  Best Fitness:      ", x$bestFitness, '\n')
+  cat("  Best Cost:         ", x$bestCost, '\n')
 }
 
 print.GeneticAlg.int <- function(x, ...) {
@@ -19,7 +19,7 @@ print.GeneticAlg.int <- function(x, ...) {
   cat("  No. Generations:", as.character(x$population$currentIteration), "\n")
   #cat("  No. Evaluations:", as.character(x$population$currentIteration * x$settings$totalPopulation), "\n")
   cat("  Best Genome:    ", as.character(x$best$genome), "\n")
-  cat("  Best Fitness:   ", as.character(x$best$fitness), "\n")
+  cat("  Best Cost:      ", as.character(x$best$cost), "\n")
 }
 
 print.EvolutionStrategy.int <- function(x, ...) {
@@ -28,7 +28,7 @@ print.EvolutionStrategy.int <- function(x, ...) {
   cat("  No. Generations:", as.character(x$population$currentIteration), "\n")
   #cat("  No. Evaluations:", as.character(x$population$currentIteration * x$settings$totalPopulation), "\n")
   cat("  Best Genome:    ", as.character(x$best$genome), "\n")
-  cat("  Best Fitness:   ", as.character(x$best$fitness), "\n")
+  cat("  Best Cost:      ", as.character(x$best$cost), "\n")
 }
 
 print.GrammaticalEvolution <- function(x, ..., show.genome = FALSE) {
@@ -38,7 +38,7 @@ print.GrammaticalEvolution <- function(x, ..., show.genome = FALSE) {
   #cat("  No. Evaluations:", as.character(x$population$currentIteration * x$settings$totalPopulation), "\n")
 
   if (show.genome) {
-    cat("  Best Genome:  ", x$best$genome, "\n")
+    cat("  Best Genome:     ", x$best$genome, "\n")
   }
 
   if (length(x$best$expressions) == 1) {
@@ -50,5 +50,5 @@ print.GrammaticalEvolution <- function(x, ..., show.genome = FALSE) {
     }
   }
 
-  cat("  Best Fitness:    ", as.character(x$best$fitness), "\n")
+  cat("  Best Cost:       ", as.character(x$best$cost), "\n")
 }

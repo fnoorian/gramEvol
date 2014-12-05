@@ -2,7 +2,7 @@ GeneticAlg.int <- function(genomeLen, codonMin, codonMax,
                            genomeMin=rep.int(codonMin, genomeLen), genomeMax=rep.int(codonMax, genomeLen),
                            suggestions=NULL,
                            popSize=50, 
-                           iterations=100, terminationFitness=NA,
+                           iterations=100, terminationCost=NA,
                            mutationChance=1/(genomeLen+1),
                            elitism=floor(popSize/10),
                            geneCrossoverPoints=NULL,
@@ -15,7 +15,7 @@ GeneticAlg.int <- function(genomeLen, codonMin, codonMax,
   #
   # popSize          = the population size
   # iterations       = number of generations
-  # terminationFitness = The fitness error that if reached, the GA should termiante
+  # terminationCost  = The cost (error) that if reached, the GA should termiante
   # mutationChance   = chance that a var in the string gets mutated
   # geneCrossoverPoints = An array determining the genes to be swapped in crossover
   #
@@ -109,7 +109,7 @@ GeneticAlg.int <- function(genomeLen, codonMin, codonMax,
     if ((!all(is.numeric(evalVals))) |
           any(is.na(evalVals)) |
           any(is.nan(evalVals))) {
-      stop("Invalid fitness function return value (NA or NaN).")
+      stop("Invalid cost function return value (NA or NaN).")
     }
     
     # extract statistics about generation
@@ -126,7 +126,7 @@ GeneticAlg.int <- function(genomeLen, codonMin, codonMax,
       
       pop.info = list(population=population, evaluations=evalVals, best=bestEvals, mean=meanEvals, currentIteration=iter)
       
-      best = list(genome=population[bestInd,], fitness = evalVals[bestInd]);
+      best = list(genome=population[bestInd,], cost = evalVals[bestInd]);
       
       ret = list(settings = settings, population = pop.info, best = best)
       
@@ -147,9 +147,9 @@ GeneticAlg.int <- function(genomeLen, codonMin, codonMax,
       break
     }
     
-    if (!is.na(terminationFitness)) {
-      if (bestEvals[iter] <= terminationFitness) {
-        verbose("Fitness better than termination fitness reached.\n");
+    if (!is.na(terminationCost)) {
+      if (bestEvals[iter] <= terminationCost) {
+        verbose("Cost better than termination cost reached.\n");
         break
       }
     }

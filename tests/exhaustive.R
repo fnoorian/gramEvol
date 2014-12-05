@@ -17,7 +17,7 @@ grammarDef <- CreateGrammar(ruleDef)
 
 
 # use exhaustive search to find the 
-fitness <- function(expr) {
+evalFunc <- function(expr) {
   if (as.character(expr) == "B - A") {
     return(0)
   } else {
@@ -25,6 +25,6 @@ fitness <- function(expr) {
   }
 }
 
-res = GrammaticalExhaustiveSearch(grammarDef, fitness)
+res = GrammaticalExhaustiveSearch(grammarDef, evalFunc)
 
 stopifnot(all(res$bestSequence == c(0,1,1,0)))

@@ -2,7 +2,7 @@ GrammaticalRandomSearch <- function(grammar, evalFunc,
                                 max.depth = GrammarGetDepth(grammar),
                                 startSymb = GrammarStartSymbol(grammar),
                                 wrappings = 3,
-                                iterations = 1000, terminationFitness = NA,
+                                iterations = 1000, terminationCost = NA,
                                 monitorFunc = NULL) {
   
   # determine depth of search
@@ -35,8 +35,8 @@ GrammaticalRandomSearch <- function(grammar, evalFunc,
       best.genome = genome
       best.expr = expr
       
-      if (!is.na(terminationFitness)) {
-        if (score <= terminationFitness) {
+      if (!is.na(terminationCost)) {
+        if (score <= terminationCost) {
           break        
         }
       }
@@ -44,13 +44,13 @@ GrammaticalRandomSearch <- function(grammar, evalFunc,
       
     if (!is.null(monitorFunc)) {
       res <- list(population = genomes,
-                  populationFitness = scores,
+                  populationCosts = scores,
                   currentSequence = genome,
                   currentExpression = expr,
-                  currentFitness = score,
+                  currentCost = score,
                   bestSequence = best.genome,
                   bestExpression = best.expr,
-                  bestFitness = best.score,
+                  bestCost = best.score,
                   numExpr = i)
 
       class(res) <- "GESearch"
@@ -59,10 +59,10 @@ GrammaticalRandomSearch <- function(grammar, evalFunc,
   }
   
   res <- list(population = genomes,
-              populationFitness = scores,
+              populationCosts = scores,
               bestSequence = best.genome,
               bestExpression = best.expr,
-              bestFitness = best.score,
+              bestCost = best.score,
               numExpr = i)
 
   class(res) <- "GESearch"

@@ -20,7 +20,7 @@ ruleDef <- list(list("<expr>",     list("<der-expr><op><der-expr>")),
 
 grammarDef <- CreateGrammar(ruleDef, startSymb = "<expr>")
 
-fitnessFunction <- function(expr) {
+costFunction <- function(expr) {
   A <- 1:6
   B <- c(2, 5, 8, 3, 4, 1)
   
@@ -32,7 +32,7 @@ fitnessFunction <- function(expr) {
   return(err)
 }
 
-ge <- GrammaticalEvolution(grammarDef, fitnessFunction, terminationFitness = 1e-3)
+ge <- GrammaticalEvolution(grammarDef, costFunction, terminationCost = 1e-3)
 
 stopifnot(as.character(ge$best$expressions) == "log(A) * B")
 

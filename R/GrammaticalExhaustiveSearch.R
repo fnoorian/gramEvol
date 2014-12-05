@@ -3,7 +3,7 @@ GrammaticalExhaustiveSearch <- function(grammar, evalFunc,
                                         startSymb = GrammarStartSymbol(grammar),
                                         max.len = GrammarMaxSequenceLen(grammar, max.depth, startSymb),
                                         wrappings = 3,
-                                        terminationFitness = NA,
+                                        terminationCost = NA,
                                         monitorFunc = NULL) {
   
   best.expr = NULL
@@ -28,8 +28,8 @@ GrammaticalExhaustiveSearch <- function(grammar, evalFunc,
       best.score = score
       best.expr = expr
       best.seq = genome
-      if (!is.na(terminationFitness)) {
-        if (score <= terminationFitness) {
+      if (!is.na(terminationCost)) {
+        if (score <= terminationCost) {
           break        
         }
       }
@@ -40,10 +40,10 @@ GrammaticalExhaustiveSearch <- function(grammar, evalFunc,
 
       res <- list(currentSequence = genome,
                   currentExpression = expr,
-                  currentScore = score,
+                  currentCost = score,
                   bestSequence = best.seq,
                   bestExpression = best.expr,
-                  bestFitness = best.score,
+                  bestCost = best.score,
                   numExpr = iterations)
 
       class(res) <- "GESearch"
@@ -53,7 +53,7 @@ GrammaticalExhaustiveSearch <- function(grammar, evalFunc,
   
   res <- list(bestSequence = best.seq,
               bestExpression = best.expr,
-              bestFitness = best.score,
+              bestCost = best.score,
               numExpr = iterations)
   class(res) <- "GESearch"
 

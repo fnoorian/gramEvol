@@ -6,7 +6,7 @@
   Genetic Algorithm with Integer Chromosomes
 }
 \description{
-Uses genetic algorithm to find the minima of a given fitness function.
+Uses genetic algorithm to find the minima of a given cost function.
 It evolves chromosomes with limited-range integers as codons.
 }
 \usage{
@@ -14,7 +14,7 @@ GeneticAlg.int(genomeLen, codonMin, codonMax,
     genomeMin = rep.int(codonMin, genomeLen), 
     genomeMax = rep.int(codonMax, genomeLen), 
     suggestions = NULL, popSize = 50, 
-    iterations = 100, terminationFitness = NA, 
+    iterations = 100, terminationCost = NA, 
     mutationChance = 1/(genomeLen+1), elitism = floor(popSize/10), 
     geneCrossoverPoints = NULL,
     monitorFunc = NULL, evalFunc, allowrepeat = TRUE, 
@@ -48,8 +48,8 @@ GeneticAlg.int(genomeLen, codonMin, codonMax,
   \item{iterations}{
   Number of generations to evolve the population.
 }
-  \item{terminationFitness}{
-  Target fitness. If the best chromosome's fitness reaches this value
+  \item{terminationCost}{
+  Target cost. If the best chromosome's cost reaches this value
    the algorithm terminates.
 }
   \item{mutationChance}{
@@ -68,7 +68,7 @@ GeneticAlg.int(genomeLen, codonMin, codonMax,
   A function that is called at each generation. Can be used to monitor evolution of population.
 }
   \item{evalFunc}{
-  Fitness function.
+  The cost function.
 }
   \item{allowrepeat}{
   Allows or forbids repeated values in the chromosome.
@@ -80,7 +80,7 @@ GeneticAlg.int(genomeLen, codonMin, codonMax,
   Enables verbose debugging info.
 }
   \item{plapply}{
-  \code{lapply} function used for mapping chromosomes to fitness function.
+  \code{lapply} function used for mapping chromosomes to cost function.
   See details for parallelization tips.
 }
 }
@@ -92,12 +92,12 @@ chromosomes created from integer values in the range of \code{codonMin} to
 control of range for individual codons.
 It first creates an initial population, using suggested inputs
 \code{suggestions} and randomly generated chromosomes. 
-Fitness of each chromosome is evaluated using the fitness function
+Cost of each chromosome is evaluated using the cost function
 \code{evalFunc}. If one of the chromosomes reaches
-\code{terminationFitness}, the algorithm terminates; 
+\code{terminationCost}, the algorithm terminates; 
 Otherwise evolutionary operators including selection, cross-over
 and mutation are applied to the population to create a new generation.
-This iteration is continued until the required fitness is reached
+This iteration is continued until the required cost is reached
 or the number of generations exceeds \code{iterations}.
 
 At each generation, the supplied \code{monitorFunc} is called, taking a
@@ -106,7 +106,7 @@ list similar to \code{GeneticAlg.int} returning value.
 The \code{evalFunc} receives integer sequences and must return a numeric value.
 The goal of optimization would be to find a chromosome which minimizes this value.
 
-To parallelize fitness function evaluation, set \code{plapply} to a parallelized
+To parallelize cost function evaluation, set \code{plapply} to a parallelized
 \code{lapply}, such as \code{mclapply} from package \code{parallel}. 
 In functions that do not handle data dependencies such as \code{parLapply}, 
 variables and functions required for correct execution of \code{evalFunc} 
@@ -142,13 +142,13 @@ must be exported to worker nodes before invoking \code{GeneticAlg.int}.
     The genomic data of current population.}
 
   \item{population$evaluations}{
-    Fitness of latest generation.}
+    Cost of latest generation.}
 
   \item{population$best}{
-    Historical fitness of best chromosomes.}
+    Historical cost of best chromosomes.}
 
   \item{population$mean}{
-    Historical mean fitness of population.}
+    Historical mean cost of population.}
 
   \item{population$currentIteration}{
    Number of generations evolved until now.}
@@ -156,8 +156,8 @@ must be exported to worker nodes before invoking \code{GeneticAlg.int}.
   \item{best$genome}{
     The best chromosome in integer sequence format.}
 
-  \item{best$fitness}{
-    The fitness of the best chromosome.}
+  \item{best$cost}{
+    The cost of the best chromosome.}
 }
 
 \references{
@@ -193,11 +193,11 @@ evalfunc <- function(l) {
 }
 
 monitorFunc <- function(result) {
-    cat("Best of gen: ", min(result$best$fitness), "\n")
+    cat("Best of gen: ", min(result$best$cost), "\n")
 }
 
 x <- GeneticAlg.int(genomeLen = 20, codonMin = 0, codonMax = 20,
-                allowrepeat = FALSE, terminationFitness = -109,
+                allowrepeat = FALSE, terminationCost = -110,
                 monitorFunc = monitorFunc, evalFunc = evalfunc)
 
 print(x)

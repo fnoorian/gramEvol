@@ -14,7 +14,7 @@ GrammaticalExhaustiveSearch(grammar, evalFunc,
                            startSymb = GrammarStartSymbol(grammar),
                            max.len = GrammarMaxSequenceLen(grammar, max.depth, startSymb),
                            wrappings = 3,
-                           terminationFitness = NA,
+                           terminationCost = NA,
                            monitorFunc = NULL)
 }
 %- maybe also 'usage' for other objects documented here.
@@ -24,7 +24,7 @@ GrammaticalExhaustiveSearch(grammar, evalFunc,
   }
  \item{evalFunc}{
     The evaluation function, taking an expression as its input
-    and returning the score (i.e., fitness) of the expression.
+    and returning the cost (i.e., the score) of the expression.
  }
 \item{max.depth}{
     Maximum depth of recursion, in case of a recursive grammar. 
@@ -41,8 +41,8 @@ GrammaticalExhaustiveSearch(grammar, evalFunc,
     The number of times the function is allowed to wrap around \code{inputString}
     if non-terminal symbols are still remaining.
 }
-\item{terminationFitness}{
-    Target score (fitness). Not used by default.
+\item{terminationCost}{
+    Target cost. Not used by default.
 }
  \item{monitorFunc}{
   A function that is called at each generation. It can be used to monitor evolution of population.
@@ -55,7 +55,7 @@ GrammaticalExhaustiveSearch(grammar, evalFunc,
   to find the expression that minimises \code{evalFunc}.
 
   The search terminates when all possible expressions are exhausted,
-  or when an expression with score less than \code{terminationFitness} is discovered.
+  or when an expression with a cost less than \code{terminationCost} is discovered.
 
   If a \code{monitorFunc} is given, it is called for each expression, and it receives a 
   list similar to the \code{GrammaticalExhaustiveSearch}'s return value with the information
@@ -65,13 +65,13 @@ GrammaticalExhaustiveSearch(grammar, evalFunc,
 \value{
   \item{bestExpression}{The Best expresssion.}
   \item{bestSequence}{Best expresssion's generating sequence.}
-  \item{bestFitness}{Best expresssion's fitness (score).}
+  \item{bestCost}{Best expresssion's cost.}
   \item{numExpr}{Number of evaluated expressions.}
   
   In addition, the \code{monitorFunc} receives the following additional slots: 
   \item{currentExpression}{The current expresssion.}
   \item{currentSequence}{Current expresssion's generating sequence.}
-  \item{currentFitness}{Current expresssion's fitness (score).}
+  \item{currentCost}{Current expresssion's cost.}
 }
 
 %\references{
@@ -101,7 +101,7 @@ grammarDef <- CreateGrammar(ruleDef)
 
 
 # use exhaustive search to find the sequence for creating "B - A"
-fitness <- function(expr) {
+evalFunc <- function(expr) {
   if (as.character(expr) == "B - A") {
     return(0) # Minimum error
   } else {
@@ -109,7 +109,7 @@ fitness <- function(expr) {
   }
 }
 
-res <- GrammaticalExhaustiveSearch(grammarDef, fitness)
+res <- GrammaticalExhaustiveSearch(grammarDef, evalFunc, terminationCost = 0)
 
 print(res)
 

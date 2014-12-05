@@ -14,7 +14,7 @@ GrammaticalRandomSearch(grammar, evalFunc,
                            startSymb = GrammarStartSymbol(grammar),
                            wrappings = 3,
                            iterations = 1000, 
-                           terminationFitness = NA,
+                           terminationCost = NA,
                            monitorFunc = NULL)
 }
 %- maybe also 'usage' for other objects documented here.
@@ -24,7 +24,7 @@ GrammaticalRandomSearch(grammar, evalFunc,
   }
  \item{evalFunc}{
     The evaluation function, taking an expression as its input
-    and returning the fitness of the expression.
+    and returning the cost (i.e., the score) of the expression.
  }
 \item{max.depth}{
     Maximum depth of recursion, in case of a recursive grammar. 
@@ -40,8 +40,8 @@ GrammaticalRandomSearch(grammar, evalFunc,
 \item{iterations}{
     Number of random expressions to test.
 }
-\item{terminationFitness}{
-    Target fitness. Not used by default.
+\item{terminationCost}{
+    Target cost. Not used by default.
 }
  \item{monitorFunc}{
   A function that is called at each generation. It can be used to monitor evolution of population.
@@ -54,7 +54,7 @@ GrammaticalRandomSearch(grammar, evalFunc,
   to find the expression that minimises \code{evalFunc}.
 
   The search terminates when either the predetermined number of \code{iterations} are reached, 
-  or when an expression with fitness less than \code{terminationFitness} is discovered.
+  or when an expression with a cost less than \code{terminationCost} is discovered.
 
   If a \code{monitorFunc} is given, it is called for each expression, and it receives a 
   list similar to the \code{GrammaticalExhaustiveSearch}'s return value with the information
@@ -64,15 +64,15 @@ GrammaticalRandomSearch(grammar, evalFunc,
 \value{
   \item{bestExpression}{The Best expresssion.}
   \item{bestSequence}{Best expresssion's generating sequence.}
-  \item{bestFitness}{Best expresssion's fitness.}
+  \item{bestCost}{Best expresssion's cost.}
   \item{numExpr}{Number of evaluated expressions.}
   \item{population}{A matrix of sequences that were tested.}
-  \item{populationFitness}{Numeric value of fitness of sequences that were tested.}
+  \item{populationCost}{Numeric value of cost of sequences that were tested.}
   
   In addition, the \code{monitorFunc} receives the following additional slots: 
   \item{currentExpression}{The current expresssion.}
   \item{currentSequence}{Current expresssion's generating sequence.}
-  \item{currentFitness}{Current expresssion's fitness.}
+  \item{currentCost}{Current expresssion's cost.}
 }
 
 %\references{
@@ -102,7 +102,7 @@ grammarDef <- CreateGrammar(ruleDef)
 
 
 # use exhaustive search to find the sequence for creating "B - A"
-fitness <- function(expr) {
+evalFunc <- function(expr) {
   if (as.character(expr) == "B - A") {
     return(0) # Minimum error
   } else {
@@ -110,8 +110,8 @@ fitness <- function(expr) {
   }
 }
 
-# search and terminate after getting better than 1
-res <- GrammaticalRandomSearch(grammarDef, fitness, terminationFitness = 0.5)
+# search and terminate after getting to cost = 0
+res <- GrammaticalRandomSearch(grammarDef, evalFunc, terminationCost = 0)
 
 print(res)
 

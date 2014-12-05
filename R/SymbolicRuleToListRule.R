@@ -54,6 +54,9 @@ SymbolicRuleToString <- function(current_rule, ruleDefIndex, ruleEscapeList) {
       ry = paste0("<", r, ">")
       current_rule = gsub(rx, ry, current_rule, fixed=TRUE)
     }
+
+    # concatenate if multiline
+    current_rule = paste(current_rule, sep="", collapse="\n")
   }
   
   return (current_rule)

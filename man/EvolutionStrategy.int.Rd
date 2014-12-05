@@ -6,7 +6,7 @@
   Evolution Strategy with Integer Chromosomes
 }
 \description{
-Uses evolution strategy to find the minima of a given fitness function.
+Uses evolution strategy to find the minima of a given cost function.
 It evolves chromosomes with limited-range integers as codons.
 }
 \usage{
@@ -14,7 +14,7 @@ EvolutionStrategy.int(genomeLen, codonMin, codonMax,
     genomeMin = rep.int(codonMin, genomeLen), 
     genomeMax = rep.int(codonMax, genomeLen), 
     suggestion = NULL, popSize=4, newPerGen = 4,
-    iterations = 500, terminationFitness = NA, 
+    iterations = 500, terminationCost = NA, 
     mutationChance = 1/(genomeLen+1), 
     monitorFunc = NULL, evalFunc, allowrepeat = TRUE, 
     showSettings = FALSE, verbose = FALSE, plapply = lapply)
@@ -50,8 +50,8 @@ EvolutionStrategy.int(genomeLen, codonMin, codonMax,
   \item{iterations}{
   Number of generations to evolve the population.
 }
-  \item{terminationFitness}{
-  Target fitness. If the best chromosome's fitness reaches this value
+  \item{terminationCost}{
+  Target cost. If the best chromosome's cost reaches this value
    the algorithm terminates.
 }
   \item{mutationChance}{
@@ -61,7 +61,7 @@ EvolutionStrategy.int(genomeLen, codonMin, codonMax,
   A function that is called at each generation. Can be used to monitor evolution of population.
 }
   \item{evalFunc}{
-  Fitness function.
+  The cost function.
 }
   \item{allowrepeat}{
   Allows or forbids repeated values in the chromosome.
@@ -73,7 +73,7 @@ EvolutionStrategy.int(genomeLen, codonMin, codonMax,
   Enables verbose debugging info.
 }
   \item{plapply}{
-  \code{lapply} function used for mapping chromosomes to fitness function.
+  \code{lapply} function used for mapping chromosomes to the cost function.
   See details for parallelization tips.
 }
 }
@@ -85,12 +85,12 @@ chromosomes created from integer values in the range of \code{codonMin} to
 control of range for individual codons.
 It first creates an initial population, using suggested input
 \code{suggestion} or a randomly generated chromosome.
-Fitness of each chromosome is evaluated using the fitness function
-\code{evalFunc}. If one of the chromosomes reaches
-\code{terminationFitness}, the algorithm terminates; 
+Score of each chromosome is evaluated using the cost function
+\code{costFunc}. If one of the chromosomes reaches
+\code{terminationCost}, the algorithm terminates; 
 Otherwise evolutionary operator mutation is applied to the population to create a new generation.
 This best candidate is chosen for the next generation, and the cycle is repeat.
-This iteration continues until the required fitness is reached
+This iteration continues until the required cost is reached
 or the number of generations exceeds \code{iterations}.
 
 At each generation, the supplied \code{monitorFunc} is called, taking a
@@ -99,7 +99,7 @@ list similar to \code{EvolutionStrategy.int} returning value.
 The \code{evalFunc} receives integer sequences and must return a numeric value.
 The goal of optimization would be to find a chromosome which minimizes this value.
 
-To parallelize fitness function evaluation, set \code{plapply} to a parallelized
+To parallelize cost function evaluation, set \code{plapply} to a parallelized
 \code{lapply}, such as \code{mclapply} from package \code{parallel}. 
 In functions that do not handle data dependencies such as \code{parLapply}, 
 variables and functions required for correct execution of \code{evalFunc} 
@@ -109,7 +109,7 @@ must be exported to worker nodes before invoking \code{EvolutionStrategy.int}.
 
   \item{settings$genomeMin}{
     Minimum of individual codons as used in the function call. 
-    }
+  }
 
   \item{Settings$genomeMax}{
     Maximum of individual codons as used in the function call. 
@@ -140,13 +140,13 @@ must be exported to worker nodes before invoking \code{EvolutionStrategy.int}.
     The genomic data of current population.}
 
   \item{population$evaluations}{
-    Fitness of latest generation.}
+    Cost of latest generation.}
 
   \item{population$best}{
-    Historical fitness of best chromosomes.}
+    Historical cost of best chromosomes.}
 
   \item{population$mean}{
-    Historical mean fitness of population.}
+    Historical mean cost of population.}
 
   \item{population$currentIteration}{
    Number of generations evolved until now.}
@@ -154,8 +154,8 @@ must be exported to worker nodes before invoking \code{EvolutionStrategy.int}.
   \item{best$genome}{
     The best chromosome in integer sequence format.}
 
-  \item{best$fitness}{
-    The fitness of the best chromosome.}
+  \item{best$cost}{
+    The cost of the best chromosome.}
 }
 
 \references{
@@ -191,11 +191,11 @@ evalfunc <- function(l) {
 }
 
 monitorFunc <- function(result) {
-    cat("Best of gen: ", min(result$best$fitness), "\n")
+    cat("Best of gen: ", min(result$best$cost), "\n")
 }
 
 x <- EvolutionStrategy.int(genomeLen = 20, codonMin = 0, codonMax = 20,
-                allowrepeat = FALSE, terminationFitness = -109,
+                allowrepeat = FALSE, terminationCost = -110,
                 monitorFunc = monitorFunc, evalFunc = evalfunc)
 
 print(x)

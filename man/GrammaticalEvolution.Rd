@@ -5,10 +5,10 @@
 \title{Grammatical Evolution}
 \description{
 Evolves an expression using a context-free grammar
-to minimize a given fitness function.
+to minimize a given cost function.
 }
 \usage{
-GrammaticalEvolution(grammarDef, fitnessFunction, 
+GrammaticalEvolution(grammarDef, evalFunc, 
                                   numExpr = 1, 
                                   max.depth = GrammarGetDepth(grammarDef),
                                   startSymb = GrammarStartSymbol(grammarDef),
@@ -18,24 +18,24 @@ GrammaticalEvolution(grammarDef, fitnessFunction,
                                   optimizer = c("auto", "es", "ga"),
                                   popSize=8, newPerGen = "auto", elitism = 2,
                                   mutationChance=NA,
-                                  iterations=1000, terminationFitness=NA, 
+                                  iterations=1000, terminationCost=NA, 
                                   monitorFunc=NULL,
                                   plapply=lapply, ...)
 
-\method{print}{GrammaticalEvolution}(x, ..., sequence = FALSE)
+\method{print}{GrammaticalEvolution}(x, ..., show.genome = FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{grammarDef}{
     \code{grammar} object, created by \code{\link{CreateGrammar}}.
 }
-  \item{fitnessFunction}{
-    The fitness function, taking a string or a collection of strings
+  \item{evalFunc}{
+    The cost function, taking a string or a collection of strings
     containing the expression(s) as its input
-    and returning the fitness of the expression(s).
+    and returning the cost of the expression(s).
 }
   \item{numExpr}{
-    Number of expressions generated and given to \code{fitnessFunction}.
+    Number of expressions generated and given to \code{evalFunc}.
 }
  \item{max.depth}{
     Maximum depth of search in case of recursive grammar. 
@@ -74,8 +74,8 @@ GrammaticalEvolution(grammarDef, fitnessFunction,
   \item{iterations}{
     Number of maximum iterations in the evolutionary optimizer.
 }
-  \item{terminationFitness}{
-    Target fitness in the evolutionary optimizer.
+  \item{terminationCost}{
+    Target cost in the evolutionary optimizer.
 }
   \item{mutationChance}{
     Mutation chance in the evolutionary optimizer. It must be between 0 and 1.
@@ -86,7 +86,7 @@ GrammaticalEvolution(grammarDef, fitnessFunction,
   A function that is called at each generation. It can be used to monitor evolution of population.
 }
   \item{plapply}{
-    \code{lapply} function used for mapping chromosomes to fitness function.
+    \code{lapply} function used for mapping chromosomes to the cost function.
     See details for parallelization tips.
 }
   \item{\dots}{
@@ -104,14 +104,14 @@ GrammaticalEvolution(grammarDef, fitnessFunction,
   It evolves integer sequences and converts them to a collection containing
   \code{numExpr} strings, which are representations of
   analytical expressions. These expressions can be evaluated using \code{eval} function.
-  The \code{fitnessFunction} receives these strings and must return a numeric value.
+  The \code{evalFunc} receives these strings and must return a numeric value.
   The goal of optimization would be to find a chromosome which minimizes this value.
 
   Two evolutionary optimizers are supported: Genetic algorithm and evolution strategy
   which are set by the \code{optimizer} parameter.
 
-  Only valid (i.e., terminal) expressions are passed to \code{fitnessFunction},
-  and it is guaranteed that \code{fitnessFunction} receives at least one string. 
+  Only valid (i.e., terminal) expressions are passed to \code{evalFunc},
+  and it is guaranteed that \code{evalFunc} receives at least one string. 
 
   If the grammar contains recursive elements, it is advisable that \code{chromosomeLen} is 
   defined manually, as in such cases the possible search space grows explosively
@@ -123,7 +123,7 @@ GrammaticalEvolution(grammarDef, fitnessFunction,
 }
 \value{
   The results of \code{\link{GeneticAlg.int}} or \code{\link{EvolutionStrategy.int}} with an additional item:
-  \item{best$expressions}{Expression(s) with the best fitness.}
+  \item{best$expressions}{Expression(s) with the best cost.}
 }
 
 % \references{
@@ -154,8 +154,8 @@ ruleDef <- list(expr     = gsrule("<der.expr><op><der.expr>"),
 # Creating the grammar object
 grammarDef <- CreateGrammar(ruleDef)
 
-# fitness function
-fitnessFunction <- function(expr) {
+# cost function
+evalFunc <- function(expr) {
   # expr: a string containing a symbolic expression
   # returns: Symbolic regression Error
   A <- 1:6
@@ -170,7 +170,7 @@ fitnessFunction <- function(expr) {
 }
 
 # invoke grammatical evolution (with default parameters)
-ge <- GrammaticalEvolution(grammarDef, fitnessFunction)
+ge <- GrammaticalEvolution(grammarDef, evalFunc)
 
 # print results
 print(ge, sequence = TRUE)

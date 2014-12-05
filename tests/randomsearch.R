@@ -17,7 +17,7 @@ grammarDef <- CreateGrammar(ruleDef)
 
 
 # use exhaustive search to find the 
-fitness <- function(expr) {
+costFunc <- function(expr) {
   if (as.character(expr) == "B - A") {
     return(0)
   } else {
@@ -26,6 +26,6 @@ fitness <- function(expr) {
 }
 
 set.seed(0)
-res = GrammaticalRandomSearch(grammarDef, fitness, terminationFitness = 0.5)
+res = GrammaticalRandomSearch(grammarDef, costFunc, terminationCost = 0)
 
 stopifnot(all(as.character(res$bestExpression) == "B - A"))
