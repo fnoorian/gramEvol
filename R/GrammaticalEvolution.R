@@ -23,12 +23,23 @@ GrammaticalEvolution <-  function(grammarDef, evalFunc,
   optimizer <- match.arg(optimizer)
 
   if (optimizer == "auto") {
+    # set the optimiser
     if (numExpr > 1) {
       optimizer = "ga"
       popSize = popSize * 5
-      iterations = iterations / 5
       } else {
-        optimizer = "es"
+      optimizer = "es"
+      newPerGen = "auto"
+    }
+    
+    # automatically set the max iteration
+    num.grammar.expr = GrammarNumOfExpressions(grammarDef, max.depth, startSymb)
+    iterations = round(min(num.grammar.expr / popSize * 2, iterations))
+    
+    # change the popsize if using GA
+    if (optimizer == "ga") {
+      popSize = round(popSize * 5)
+      iterations = round(iterations / 5)
     }
   }
 

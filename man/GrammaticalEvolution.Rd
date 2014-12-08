@@ -57,6 +57,7 @@ GrammaticalEvolution(grammarDef, evalFunc,
     The evolutionary optimizer. \code{"es"} uses evolution strategy as in \code{\link{EvolutionStrategy.int}}
     and \code{"ga"} uses genetic algorithm as in \code{\link{GeneticAlg.int}}. 
     \code{"auto"} chooses evolution strategy when \code{numExpr = 1}, and genetic algorithm otherwise.
+	If \code{"auto"} is used, \code{popSize} and \code{iterations} are tweaked based on the grammar as well.
 }
   \item{popSize}{
     Population size in the evolutionary optimizer.
@@ -170,7 +171,7 @@ evalFunc <- function(expr) {
 }
 
 # invoke grammatical evolution (with default parameters)
-ge <- GrammaticalEvolution(grammarDef, evalFunc)
+ge <- GrammaticalEvolution(grammarDef, evalFunc, terminationCost = 0.001)
 
 # print results
 print(ge, sequence = TRUE)
