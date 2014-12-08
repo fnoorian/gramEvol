@@ -4,7 +4,7 @@ print.GESearch <- function (x, ..., max.line.len = 60) {
   cat("  Expressions Tested:", x$numExpr, '\n')
   if (!is.null(x$currentExpression)) {
     cat("  Current Expression:", as.character(x$currentExpression), '\n')
-    cat("  Current Cost:      ", x$currentScore, '\n')
+    cat("  Current Cost:      ", x$currentCost, '\n')
   } else {
     cat("  Best Chromosome:   ", x$bestSequence, '\n')
   }
