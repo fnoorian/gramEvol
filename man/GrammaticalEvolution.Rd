@@ -9,18 +9,18 @@ to minimize a given cost function.
 }
 \usage{
 GrammaticalEvolution(grammarDef, evalFunc, 
-                                  numExpr = 1, 
-                                  max.depth = GrammarGetDepth(grammarDef),
-                                  startSymb = GrammarStartSymbol(grammarDef),
-                                  seqLen = GrammarMaxSequenceLen(grammarDef, max.depth, startSymb),
-                                  wrappings=3, 
-                                  suggestions=NULL,
-                                  optimizer = c("auto", "es", "ga"),
-                                  popSize=8, newPerGen = "auto", elitism = 2,
-                                  mutationChance=NA,
-                                  iterations=1000, terminationCost=NA, 
-                                  monitorFunc=NULL,
-                                  plapply=lapply, ...)
+                     numExpr = 1, 
+                     max.depth = GrammarGetDepth(grammarDef),
+                     startSymb = GrammarStartSymbol(grammarDef),
+                     seqLen = GrammarMaxSequenceLen(grammarDef, max.depth, startSymb),
+                     wrappings=3, 
+                     suggestions=NULL,
+                     optimizer = c("auto", "es", "ga"),
+                     popSize=8, newPerGen = "auto", elitism = 2,
+                     mutationChance=NA,
+                     iterations=1000, terminationCost=NA, 
+                     monitorFunc=NULL,
+                     plapply=lapply, ...)
 
 \method{print}{GrammaticalEvolution}(x, ..., show.genome = FALSE)
 }
