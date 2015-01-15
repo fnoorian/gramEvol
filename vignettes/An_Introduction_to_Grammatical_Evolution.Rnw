@@ -42,6 +42,7 @@ set.seed(0)
 @
 
 %opening
+%\VignetteIndexEntry{Grammatical Evolution: An Informal Tutorial using gramEvol}
 \title{Grammatical Evolution: An Informal Tutorial using \pkg{gramEvol}}
 \author{Farzad Noorian, Anthony M. de Silva, Philip H.W. Leong}
 
