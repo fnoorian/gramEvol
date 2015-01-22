@@ -66,11 +66,11 @@ This document serves as a quick and informal tutorial on how GE works, with exam
 
 \section{Grammatical Evolution}
 \subsection{What is a grammar}
-A grammar is a way to describe structure of a sentence in a language. As programs are also considered 
+A grammar is a way to describe the structure of a sentence in a language. As programs are also considered 
 collection of a sentence in a language, grammars are extensively used in computer science for describing them.
 
 A \emph{Context-free grammar} (CFG) is a certain class of grammars in formal language theory.
-In CFG, there are two type of words, refered to as \emph{symbols}: \emph{Terminal} and \emph{Non-terminal}.
+In CFGs, there are two type of words, refered to as \emph{symbols}: \emph{Terminal} and \emph{Non-terminal}.
 
 Non-terminal symbols are used to describe the class of words.
 For example: \ntelem{subject} \ntelem{verb} \ntelem{object}
@@ -95,7 +95,7 @@ Each line in the above table is called a \emph{production rule}. The ``|" symbol
 Notice that the first rule, \ntelem{sentence}, is made of other non-terminals.
 
 Also notice that each rule is numbered. Using these numbers, one can describe any valid structure.
-This is performed by replacing the first non-terminal symbol with the $n$th rule if that symbol.
+This is performed by replacing the first non-terminal symbol with the $n$th rule of that symbol.
 For example, 
 \begin{itemize}
 	\item Starting Symbol: \ntelem{sentence}.
@@ -128,14 +128,12 @@ They are used in cases where:
 The oldest and simplest of these algorithms is the genetic algorithm (GA), which optimises a vector of binary variables.
 In this vignette, when referring to GA, we refer to an extended GA which handles integers numbers.
 
-For an in depth introduction, readers are referred to Wikipedia:
-\begin{itemize}
-	\item \url{https://en.wikipedia.org/wiki/Evolutionary_algorithm}
-\end{itemize}
+For an in depth introduction, readers are referred to \href{https://en.wikipedia.org/wiki/Evolutionary_algorithm}{Wikipedia}.
 
 \subsection{Evolving a grammar}
 
-The goal of using GE is to automatically generate full programs:
+The goal of using GE is to automatically generate a valid expression or multiple expressions, 
+in order to create a full program:
 \begin{enumerate}
 	\item A \emph{grammar} is defined to describe the structure and functions used in the grammar.
 	\item A \emph{cost function} is defined to assess the quality of the program.
@@ -143,12 +141,12 @@ The goal of using GE is to automatically generate full programs:
 	\item The sequence is used to generate the program.
 \end{enumerate}
 
-\subsection{Applications of grammatical Evolution}
+\subsection{Applications of grammatical evolution}
 
 As GE is versatile, any application which needs a program, definable by grammar is creatable in GE.
 These include computational finance, music, and robot control, along many other uses. 
 The authors have previously used GE for electricity forecasting in \cite{MNDL_13}.
-See \url{http://www.grammatical-evolution.org/pubs.html} for a collection of publication in this area.
+See \url{http://www.grammatical-evolution.org/pubs.html} for a collection of publications in this area.
 
 %These following classic problems are usually used to demonstrate the abilities of GE (or other algorithms like GP)
 %and are used in this vignette.
@@ -275,7 +273,7 @@ print(grammarDef)
 @
 
 Note that \code{`+`} and \code{op(expr, expr)} are used in the code above because \code{grule} expects valid \proglang{R} expressions,
-and \code{expr op expr} is not. As it might be a nuisance to convert between the functional form and the operator form,
+and \code{expr op expr} is not valid. As it might be a nuisance to convert between the functional form and the operator form,
 the package also provides \code{gsrule} (or grammar string rule), which accepts string with <>:
 <<>>=
 ruleDef <- list(expr  = gsrule("<expr><op><expr>", "<func>(<expr>)", "<var>"),
@@ -286,7 +284,7 @@ ruleDef <- list(expr  = gsrule("<expr><op><expr>", "<func>(<expr>)", "<var>"),
 
 CreateGrammar(ruleDef)
 @
-Note that \code{gsrule} and \code{grules} are mixed!
+Note that \code{gsrule} and \code{grule} are mixed.
 
 \subsection{Defining a cost function}
 We use the following equation to normalise the error,
@@ -406,14 +404,15 @@ R> ge <- GrammaticalEvolution(grammarDef, SymRegFitFunc,
 +    monitorFunc=customMonitorFunc)
 \end{verbatim}
 
-or even sing the \code{print} function directly:
+or even using the \code{print} function directly:
 \begin{verbatim}
 R> ge <- GrammaticalEvolution(grammarDef, SymRegFitFunc, 
 +    terminationCost = 0.021,
-+    monitorFunc=print)
++    monitorFunc = print)
 \end{verbatim}
 
 \section{Regular Expression}
+\label{sec:reg_expr}
 
 A regular expression (RE) is a sequence of characters that describes a certain character pattern.
 Due to their expressiveness, REs are widely used in many string pattern matching tasks, such as searching through log files
@@ -442,22 +441,32 @@ re_score <- function(re) {
 
 For GE to be used, a grammar is required:
 <<tidy=FALSE>>=
-ruleDef <- list(re = grule(rex(start, rules, end)),
+library("rex")
+
+grammarDef <- CreateGrammar(list(
+              re    = grule(rex(start, rules, end)),
               rules = grule(rule, .(rule, rules)),
-              rule  = grule(numbers, ".", or("+", "-"), maybe(rules)))
-grammarDef <- CreateGrammar(ruleDef)
+              rule  = grule(numbers, ".", or("+", "-"), maybe(rules))))
 grammarDef
 @
 
-The first rule, \ntelem{re}, creates a valid \pkg{rex} command that uses \ntelem{rules} for pattern matching.
-The second element, \ntelem{rules}, is recursive and can create collection of rules such as \ntelem{rule}, \ntelem{rule}, \ntelem{rule}.
-The \code{.()} allows using a comma inside a grammar.
-The last element, \ntelem{rule}, expands to an RE function or character pattern. These include \code{numbers} (\pkg{rex} shorthand for \code{[:digit:]}),
+\begin{itemize}
+	\item The first rule, \ntelem{re}, creates a valid \pkg{rex} command 
+		  that uses \ntelem{rules} for pattern matching.
+	\item The second element, \ntelem{rules}, is recursive and can create collection of rules 
+		  such as \ntelem{rule}, \ntelem{rule}, \ntelem{rule}.
+		  The \code{.()} allows using a comma inside a grammar, 
+		  where otherwise it would have been interpreted as another value in the \code{grule} list.
+	\item The last element, \ntelem{rule}, expands to an RE function or character pattern. 
+		  These include \code{numbers} (\pkg{rex} shorthand for \code{[:digit:]}),
 a decimal point, + or -, and a \code{maybe} function.
 A \code{maybe} function allows optional presence of a sequence defined by its own set of \ntelem{rules}.
+\end{itemize}
 
-The last step is performing a search for a regular expression that minimise the score function.
-Here the minimum \code{terminationCost} is known, and \code{max.depth} is increased to allow for more expansion of the recursive \ntelem{rules}:
+The last step is to perform a search for a regular expression that minimise the score function.
+Here the minimum \code{terminationCost} is known, and \code{max.depth} is increased to allow for more expansion of the recursive \ntelem{rules}.
+We use \code{GrammaticalExhaustiveSearch} to exhaustively search
+for the answer among all possible combinations of the grammar:
 % this takes some time to run, use "monitorFunc = print" for more convenience
 \begin{verbatim}
 R> fitfunc = function(chrom) re_score(eval(chrom))
@@ -489,17 +498,18 @@ grammarDef <- CreateGrammar(list(
 grammarDef
 @
 
-\subsection{Manual Mapping}
+\subsection{Manual mapping}
 To \emph{map} a numeric sequence to an expression manually, \code{CreateGrammar} is a useful function:
 <<tidy=FALSE>>=
 GrammarMap(c(0, 1, 0, 0, 1, 1, 0, 0), grammarDef)
 @
-The sequence is zero-indexed (the first rule is zero). To see the step by step mapping, use:
+The sequence is zero-indexed (the first rule is zero). To see the step by step mapping, use the \code{verbose} option:
 <<tidy=FALSE>>=
 GrammarMap(c(0, 1, 0, 0, 1, 1, 0, 0), grammarDef, verbose=TRUE)
 @
 
-If the length of each gene is insufficient for the phenotype to genotype conversion,
+If the length of each gene is insufficient for the genotype to phenotype conversion,
+such that a few non-terminal elements still remain in the resulting expression,
 a wrapping of up to \code{wrappings} is performed. For example:
 <<tidy=FALSE>>=
 GrammarMap(c(0, 1, 0, 0, 1, 1), grammarDef, verbose=TRUE)
@@ -530,11 +540,11 @@ For grammars without recursion, the value returned by
 \code{GetGrammarDepth} is the actual depth of the tree:
 <<tidy=FALSE>>=
 grammarDef2 <- CreateGrammar(list(
-	                expr    = gsrule("(<subexpr>)<op>(<subexpr>)"),
-	                subexpr = gsrule("<coef>*<var>"),
-					op      = gsrule("+", "-", "*", "/"),
-					coef    = gsrule("c1", "c2"),
-					var     = gsrule("v1", "v2")))
+                    expr    = gsrule("(<subexpr>)<op>(<subexpr>)"),
+                    subexpr = gsrule("<coef>*<var>"),
+                    op      = gsrule("+", "-", "*", "/"),
+                    coef    = gsrule("c1", "c2"),
+                    var     = gsrule("v1", "v2")))
 
 GetGrammarDepth(grammarDef2)
 @
@@ -578,7 +588,7 @@ GetGrammarMaxSequenceLen(grammarDef, max.depth = 3)
 GetGrammarMaxSequenceLen(grammarDef2, startSymb = "<subexpr>")
 @
 
-\subsection{Grammatical Evolution options}
+\subsection{Grammatical evolution options}
 \code{GrammaticalEvolution} is defined as follows:
 \begin{verbatim}
 GrammaticalEvolution(grammarDef, evalFunc, 
@@ -586,31 +596,31 @@ GrammaticalEvolution(grammarDef, evalFunc,
                      max.depth = GrammarGetDepth(grammarDef),
                      startSymb = GrammarStartSymbol(grammarDef),
                      seqLen = GrammarMaxSequenceLen(grammarDef, max.depth, startSymb),
-                     wrappings=3, 
-                     suggestions=NULL,
+                     wrappings = 3, 
+                     suggestions = NULL,
                      optimizer = c("auto", "es", "ga"),
-                     popSize=8, newPerGen = "auto", elitism = 2,
-                     mutationChance=NA,
-                     iterations=1000, terminationCost=NA, 
-                     monitorFunc=NULL,
-                     plapply=lapply, ...)
+                     popSize = 8, newPerGen = "auto", elitism = 2,
+                     mutationChance = NA,
+                     iterations = 1000, terminationCost = NA, 
+                     monitorFunc = NULL,
+                     plapply = lapply, ...)
 
 \end{verbatim}
 
 \code{max.depth}, \code{startSymb} and \code{seqLen} determine recursive grammar limitations, similar to 
 what was explained in the previous section.
 
-The rest of the parameters are the evolutionary optimisation parameters:
+The rest of the parameters are the evolutionary optimisation options:
 \begin{itemize}
-	\item \code{GrammaticalEvolution} evolves a population of \code{popSize} chromosomes for a number of \code{iterations}:
+	\item \code{GrammaticalEvolution} evolves a population of \code{popSize} chromosomes for a number of \code{iterations}.
 	
 	\item if \code{optimizer} is set to ``auto", using the information obtained about the grammar 
 		(e.g., number of possibles expressions and maximum sequence length), 
 		it automatically determines a suitable value for \code{popSize}, \code{newPerGen} and \code{iterations}.
 		
-	\item As ordinary cross-over operator is considered destructive when
-		homologous production rules are not aligned \citep{oneill2003crossover}, such as in recursive grammars,
-		\code{GrammaticalEvolution} uses a heuristic algorithm to 
+	\item Ordinary cross-over operator is considered destructive when
+		homologous production rules are not aligned \citep{oneill2003crossover}, such as in recursive grammars.
+		As a result \code{GrammaticalEvolution} uses a heuristic algorithm to 
 		improve optimisation results by automatically changing cross-over parameters depending on the grammar.
 		A user can turn this off by manually setting the \code{optimizer}.
 	
@@ -634,11 +644,11 @@ The rest of the parameters are the evolutionary optimisation parameters:
 	\item \code{monitorFunc} is then called with information and statistics
 		about the current status of the population.
 		
-	\item Finally, \code{plapply} is used for parallel processing.
+	\item \code{plapply} is used for parallel processing.
 
-	\item \code{GrammaticalEvolution} automatically filter non-terminal expressions 
+	\item \code{GrammaticalEvolution} automatically filters non-terminal expressions 
 		(i.e., expressions that don't yield a terminal expression even after times of \code{wrappings}).
-		Therefore the end-user does not need to worry about them in a real-world optimisation scenario.
+		Therefore the end-user does not need to worry about them while using \pkg{gramEvol}.
 \end{itemize}
 
 \subsection{Parallel processing option}
@@ -680,11 +690,11 @@ R> ge <- GrammaticalEvolution(grammarDef, evalFunc,
 R> stopCluster(cl)
 \end{verbatim}
 
-%It must be noticed that in any problem
-%the speed-up achieved depends on the overhead of communication
-%compared with fitness functions' computational complexity.
+It must be noticed that in any problem
+the speed-up achieved depends on the overhead of communication
+compared with fitness functions' computational complexity.
 
-\subsection{Group Evaluation}
+\subsection{Group evaluation}
 
 \code{EvalExpressions} offers a simpler interface for evaluating multiple expressions. 
 The following example uses a dataset for variables defined in the grammar, and evaluates a GE expression object along 
@@ -701,11 +711,11 @@ EvalExpressions(quad.expr, envir = df)
 
 This function is useful specially with \code{numExpr} parameter of the \code{GrammaticalEvolution}.
 It is used in applications when more than one expression is required for an application.
-See our paper in the bibliography for an example.
+See \cite{MNDL_13} as an example.
 
-\subsection{Alternative Optimisation algorithms}
+\subsection{Alternative optimisation algorithms}
 
-\pkg{gramEvol} also provides a random search and an exhaustive search.
+\pkg{gramEvol} also provides a random search and an exhaustive search (which was demonstrated in Section \ref{sec:reg_expr}).
 Their syntax is similar to the \code{GrammaticalEvolution}:
 
 \begin{verbatim}
