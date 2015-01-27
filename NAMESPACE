@@ -21,6 +21,7 @@ export(
     "GrammarMaxSequenceLen",
     "GrammarMaxSequenceRange",
     "GrammarNumOfExpressions",
+    "c.GERule",
     "as.character.GEPhenotype",
     "as.expression.GEPhenotype",
     "print.GEPhenotype",
@@ -40,6 +41,7 @@ export(
     "GrammaticalRandomSearch"
     )
 
+S3method(c, GERule)
 S3method(summary, grammar)
 S3method(print, grammar)
 S3method(print, GEPhenotype)

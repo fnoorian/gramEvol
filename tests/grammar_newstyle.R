@@ -23,6 +23,10 @@ stopifnot(grammarDef$def[[2]][[2]][[1]] == "+")
 
 grammarDef
 ################
+rule.cat = c(ruleDef$expr, ruleDef$op, ruleDef$coef)
+stopifnot("GERule" %in% class(rule.cat) )
+stopifnot(length(rule.cat) == 8)
+################
 stopifnot(GrammarGetDepth(grammarDef) == 4)
 stopifnot(GrammarGetDepth(grammarDef, max.depth=10) == 10)
 ################
