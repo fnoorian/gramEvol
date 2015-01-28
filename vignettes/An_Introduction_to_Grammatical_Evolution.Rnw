@@ -66,20 +66,24 @@ This document serves as a quick and informal tutorial on how GE works, with exam
 
 \section{Grammatical Evolution}
 \subsection{What is a grammar}
-A grammar is a way to describe the structure of a sentence in a language. As programs are also considered 
-collection of a sentence in a language, grammars are extensively used in computer science for describing them.
+A grammar is a set of rules that describe the syntax of sentences and expressions in a language. 
+While grammars were originally invented for studying natural languages,
+they are extensively used in computer science for describing programming languages.
 
-A \emph{Context-free grammar} (CFG) is a certain class of grammars in formal language theory.
-In CFGs, there are two type of words, refered to as \emph{symbols}: \emph{Terminal} and \emph{Non-terminal}.
+In formal language theory, a \emph{context-free grammar} (CFG) is a \textit{formal grammar}
+defined by a collection of \emph{terminal} symbols, \emph{non-terminal} symbols, \emph{production rules}, and a \emph{start} symbol:
 
-Non-terminal symbols are used to describe the class of words.
-For example: \ntelem{subject} \ntelem{verb} \ntelem{object}
+\begin{itemize}
+\item Terminal symbols are words or expressions of the language. 
 
-The style of covering non-terminals in angle brakets (< and >) is referred to as \emph{Backus--Naur Form}, or BNF.
+\item Non-terminal symbols are used to describe the class of words in the language.
+For example, a \ntelem{subject}, a \ntelem{verb}, or an \ntelem{object}.
 
-In a CFG, each non-terminal is replaced with another symbol to create a sentence. For example:
+The style of covering non-terminals in angle brackets (< and >) is referred to as \emph{Backus--Naur Form}, or BNF.
+
+\item A production rule defines what symbols replace a non-terminal. For example, each of the four following lines is a production rule:
 \begin{grammar}
-	<sentence> ::= \ntelem{subject} \ntelem{verb} \ntelem{object} | \ntelem{subject} \ntelem{verb}
+	<sentence> ::= \ntelem{subject} \ntelem{verb} \ntelem{object}. | \ntelem{subject} \ntelem{verb}.
 	\hspace*{\fill} (1.a), (1.b)
 	
 	<subject>  ::= I | You | They
@@ -91,23 +95,29 @@ In a CFG, each non-terminal is replaced with another symbol to create a sentence
 	<object>   ::= books | stories | academic papers
 	\hspace*{\fill} (4.a), (4.b), (4.c)
 \end{grammar}
-Each line in the above table is called a \emph{production rule}. The ``|" symbols separate different replacement possibilities.
-Notice that the first rule, \ntelem{sentence}, is made of other non-terminals.
+In each rule, the ``|" symbol separates different replacement possibilities; 
+such as \ntelem{subject}, that can be replaced with ``I", ``You" or ``They".
 
-Also notice that each rule is numbered. Using these numbers, one can describe any valid structure.
-This is performed by replacing the first non-terminal symbol with the $n$th rule of that symbol.
-For example, 
-\begin{itemize}
-	\item Starting Symbol: \ntelem{sentence}.
-	\item Sequence: 2, 3, 1
+Also a non-terminal symbol can expand to other non-terminals, such as in the example's \ntelem{sentence}.
+
+\item A start symbol determines a non-terminal where the generation of the expression starts. For example:
+	\begin{itemize}
+		\item Start: \ntelem{sentence}
+	\end{itemize}
 \end{itemize}
-selects rules (1.b), (2.c) and (3.a) in the following four-step sequence:
+
+Formally, the 4-tuple $(\mathcal{T}, \mathcal{N}, \mathcal{R}, \mathcal{S})$ denotes the four elements described above.
+
+Informally, only the start symbol and the production rules are required to define a grammar.
+Also notice that each rule is numbered. Using these numbers, one can precisely refer to a certain expression.
+This is performed by replacing the first non-terminal symbol with the $n$th rule of that non-terminal, starting with the start symbol.
+For example, the sequence 2, 3, 1 selects rules (1.b), (2.c) and (3.a) in the following four-step sequence:
 
 %\begin{table}[h]%\centering
 \begin{tabular}{ c c c c l }
 	\toprule
 	Step & Sequence & Rule     &   & Current state                   \\ \midrule
-	0    &          & Starting & ~ & \ntelem{sentence}.              \\
+	0    &          & Start    & ~ & \ntelem{sentence}.              \\
 	1    & 2        & (1.b)    & ~ & \ntelem{subject} \ntelem{verb}. \\
 	2    & 3        & (2.c)    & ~ & They \ntelem{verb}.             \\
 	3    & 1        & (3.a)    & ~ & They read.                      \\ \bottomrule
@@ -128,23 +138,27 @@ They are used in cases where:
 The oldest and simplest of these algorithms is the genetic algorithm (GA), which optimises a vector of binary variables.
 In this vignette, when referring to GA, we refer to an extended GA which handles integers numbers.
 
-For an in depth introduction, readers are referred to \href{https://en.wikipedia.org/wiki/Evolutionary_algorithm}{Wikipedia}.
+For an in depth introduction, readers are referred to Wikipedia:
+\begin{itemize}
+	\item \url{https://en.wikipedia.org/wiki/Evolutionary_algorithm}
+\end{itemize}
 
 \subsection{Evolving a grammar}
 
-The goal of using GE is to automatically generate a valid expression or multiple expressions, 
-in order to create a full program:
+The goal of using GE is to automatically generate a program
+that minimises a cost function:
 \begin{enumerate}
-	\item A \emph{grammar} is defined to describe the structure and functions used in the grammar.
-	\item A \emph{cost function} is defined to assess the quality of the program.
-	\item An \emph{evolutionary algorithm}, like GA, is used to find the sequence that creates the best program.
-	\item The sequence is used to generate the program.
+	\item A \emph{grammar} is defined to describe the syntax of the programs.
+	\item A \emph{cost function} is defined to assess the quality of a program.
+	\item An \emph{evolutionary algorithm}, such as GA, 
+	is used to search with in the space of all programs describable by the grammar,
+	in order to find the program with the lowest cost.
 \end{enumerate}
 
 \subsection{Applications of grammatical evolution}
 
-As GE is versatile, any application which needs a program, definable by grammar is creatable in GE.
-These include computational finance, music, and robot control, along many other uses. 
+As GE is very versatile, any application which needs a program, definable by grammar is creatable in GE.
+Applications include computational finance, music, and robotic control, along others. 
 The authors have previously used GE for electricity forecasting in \cite{MNDL_13}.
 See \url{http://www.grammatical-evolution.org/pubs.html} for a collection of publications in this area.
 
@@ -155,25 +169,26 @@ See \url{http://www.grammatical-evolution.org/pubs.html} for a collection of pub
 %	\item \href{https://en.wikipedia.org/wiki/Santa_Fe_Trail_problem}{Santa Fe Trail problem}
 %\end{itemize}
 
- 
-\section{gramEvol Package}
+ \section{gramEvol Package}
 
 The package \pkg{gramEvol} simplifies defining a grammar and offers a GA implementation. 
-The only things the user has to do is defining the grammar and the cost function.
-In this vignette, examples are brought to demonstrate this.
+The only things the user has to do is to define the grammar and the cost function.
+In this vignette, examples are used to demonstrate its usage.
 
 \section{Symbolic Regression}
 Symbolic regression is the process of discovering a function, in symbolic form,
-which fits a given set of data. Evolutionary algorithms such as GP and GE are commonly used in Symbolic Regression problems.
-See \href{https://en.wikipedia.org/wiki/Symbolic_regression}{Wikipedia} for an in-depth introduction and some examples.
+which fits a given set of data. Evolutionary algorithms such as GP and GE are commonly used to solve Symbolic Regression problems.
+See \url{https://en.wikipedia.org/wiki/Symbolic_regression}.
 
 \subsection{Rediscovery of Kepler's law}
-In this section, rediscovery of Kepler's law is presented as an example in symbolic regression.
-Rediscovering scientific laws has been subject of study, specially using GP or Gene expression programming (See
-\citep{koza1992genetic} or \url{http://www.dtreg.com/gep.htm} for their approach).
+In this section, rediscovery of Kepler's law is presented as an example in symbolic regression using GE
+%Rediscovering scientific laws has been subject of study, specially using GP or Gene expression programming 
+\footnote{
+See \citep{koza1992chapter10} or \url{http://www.dtreg.com/gep.htm} for approaches using 
+GP or Gene expression programming.}.
 %using different heuristic techniques \citep{langley1987heuristics}, GP \citep{koza1992genetic} and Gene expression programming \citep{DTREGGPE}.
 Here, the goal is to find a relationship between orbital periods and distances of solar system planets
-from the sun. The distance and period data, normalised to Earth, is brought in Table~\ref{tab:planets}.
+from the sun. The distance and period data, normalised to Earth, is shown in Table~\ref{tab:planets}.
 
 \begin{table}[!hb]\centering
 	\begin{tabular}{ l c r }
@@ -245,7 +260,8 @@ Here $\mathcal{S}$ denotes the starting symbol and $\mathcal{R}$ is the collecti
 	\caption{Grammar for discovering Kepler's equation.}
 	\label{tab:gram_kepler}
 \end{table}
-This is a general purpose grammar, and it can create different expressions.
+This is a general purpose grammar, and it can create different expressions
+corresponding to different formulas which can explain the data.
 
 The first step for using \pkg{gramEvol} is loading the grammar
 defined in Table~\ref{tab:gram_kepler}:
@@ -272,8 +288,8 @@ The print function reproduces the grammar in a format similar to Table~\ref{tab:
 print(grammarDef)
 @
 
-Note that \code{`+`} and \code{op(expr, expr)} are used in the code above because \code{grule} expects valid \proglang{R} expressions,
-and \code{expr op expr} is not valid. As it might be a nuisance to convert between the functional form and the operator form,
+Note that \code{`+`} and \code{op(expr, expr)} are used in the code above because \code{grule} expects \proglang{R} expressions,
+and \code{expr op expr} is not valid in \proglang{R}. As it is tedious to convert between the functional form and the operator form,
 the package also provides \code{gsrule} (or grammar string rule), which accepts string with <>:
 <<>>=
 ruleDef <- list(expr  = gsrule("<expr><op><expr>", "<func>(<expr>)", "<var>"),
@@ -284,11 +300,11 @@ ruleDef <- list(expr  = gsrule("<expr><op><expr>", "<func>(<expr>)", "<var>"),
 
 CreateGrammar(ruleDef)
 @
-Note that \code{gsrule} and \code{grule} are mixed.
+Note that \code{gsrule} and \code{grule} can be mixed, as in the example above.
 
 \subsection{Defining a cost function}
 We use the following equation to normalise the error,
-adjusting the impact of error on small values (e.g., Venus)
+adjusting its impact on small values (e.g., Venus)
 versus large values (e.g., Uranus):
 \begin{equation}
 	e = \frac{1}{N} \sum{ log(1 + |p-\hat{p}|)}
@@ -414,12 +430,19 @@ R> ge <- GrammaticalEvolution(grammarDef, SymRegFitFunc,
 \section{Regular Expression}
 \label{sec:reg_expr}
 
-A regular expression (RE) is a sequence of characters that describes a certain character pattern.
+In formal language theory, a regular expression (RE) is a sequence of symbols and operators
+that describe a character pattern.
+REs are translated by RE processors into a nondeterministic finite automaton (NFA)
+and subsequently into a deterministic finite automaton (DFA).
+The DFA can then be executed on any character string, recognize substrings that match the regular expression.
 Due to their expressiveness, REs are widely used in many string pattern matching tasks, such as searching through log files
-or parsing a programs output. See the \href{https://en.wikipedia.org/wiki/Regular_expression}{Wikipedia entry} for an in-depth introduction.
+or parsing a programs output. See the Wikipedia entry at \url{https://en.wikipedia.org/wiki/Regular_expression} for an in-depth introduction.
 
-\proglang{R} supports standard regular expression with a Perl-compatible syntax. In addition,
-\href{https://github.com/kevinushey/rex}{\pkg{rex} Package} \cite{rex_package} offers a ``Friendly regular expressions for R''.
+\proglang{R} supports standard regular expression with both POSIX and \proglang{Perl} RE syntax. In addition, the
+\href{https://github.com/kevinushey/rex}{\pkg{rex} Package} \cite{rex_package} offers a ``Friendly regular expressions for \proglang{R}''.
+\begin{verbatim}
+R> library("rex")
+\end{verbatim}
 
 In this section, we use \pkg{gramEvol} to infer a regular expression from examples by evolving a program made of \pkg{rex} function.
 We define the goal as matching a decimal real number, in form of $[\pm]nnn[.nnn]$, where [~] mean optional and $nnn$ denotes numeric characters.
@@ -441,8 +464,6 @@ re_score <- function(re) {
 
 For GE to be used, a grammar is required:
 <<tidy=FALSE>>=
-library("rex")
-
 grammarDef <- CreateGrammar(list(
               re    = grule(rex(start, rules, end)),
               rules = grule(rule, .(rule, rules)),
@@ -723,6 +744,25 @@ R> result1 <- GrammaticalExhaustiveSearch(grammarDef, evalFunc)
 R> result2 <- GrammaticalRandomSearch(grammarDef, evalFunc)
 \end{verbatim}
 
+\subsection{Conclusion}
+
+GE offers a flexible yet powerful framework for automatic program generation.
+The syntax and the structure of the programs are described using a context-free grammar,
+and their objective is determined by a cost function.
+An evolutionary search is performed on the grammar to find the program that minimises the cost function.
+
+\pkg{gramEvol} implements GE in \proglang{R}.
+It allows a grammar to be defined using \proglang{R} expressions, as well as in 
+custom string formats.
+A GE program generator using \pkg{gramEvol} only requires a grammar definition and a cost function,
+and other steps including the evolutionary search and selecting its optimal parameters 
+are handled automatically by the package.
+It also supports parallel computing,
+and includes facilities for exhaustive and random search.
+
+In this tutorial, some of the functionalities of \pkg{gramEvol} were explored.
+Furthermore, two problems were solved
+to demonstrate the flexibility of GE and \pkg{gramEvol}.
 
 \bibliographystyle{IEEEtran}
 \bibliography{vig_refs}  
