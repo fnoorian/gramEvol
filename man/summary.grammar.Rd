@@ -15,7 +15,7 @@
 
 \title{Context-free Grammar Object Information}
 \description{ %%  ~~ A concise (1-5 lines) description of what the function does. ~~
-Examine a context-free grammar object. 
+Examines a context-free grammar object. 
 }
 \usage{
 
@@ -34,7 +34,7 @@ GrammarMaxSequenceLen(grammar, max.depth = GetGrammarDepth(grammar),
 GrammarMaxRuleSize(grammar)
 
 GrammarMaxSequenceRange(grammar, max.depth = GrammarGetDepth(grammar), 
-  startSymb = GrammarStartSymbol(grammar), ...) 
+    startSymb = GrammarStartSymbol(grammar), ...) 
 
 GrammarNumOfExpressions(grammar, max.depth = GrammarGetDepth(grammar), 
     startSymb = GrammarStartSymbol(grammar), ...)
@@ -42,10 +42,10 @@ GrammarNumOfExpressions(grammar, max.depth = GrammarGetDepth(grammar),
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{grammar, object}{
-    The grammar object as created by \code{\link{CreateGrammar}}.
+    A \code{\link[=CreateGrammar]{grammar}} object.
   }
   \item{max.depth}{
-    Maximum depth of search in case of recursive grammar. 
+    Maximum depth of search in case of a cyclic grammar. 
     By default it is limited to the maximum of 4 or
     the number of production rules in the grammar.
   }
@@ -70,11 +70,11 @@ are obtained from the other functions:
   \item{Is.Recursive }{\code{GrammarIsRecursive} returns TRUE if grammar contains a recursive element.}
   \item{Tree.Depth}{\code{GrammarGetDepth} returns the depth of the grammar.
   It is limited to \code{max.depth} for a recursive grammar.}
-  \item{Maximum.Sequence.Length}{\code{GrammarMaxSequenceLen} returns the maximum length of a sequence need to
+  \item{Maximum.Sequence.Length}{\code{GrammarMaxSequenceLen} returns the maximum length of a sequence needed to
  generate an expression without wrapping.}
   \item{Maximum.Rule.Size}{\code{GrammarMaxRuleSize} returns the largest rule size in the grammar.}
   \item{Maximum.Sequence.Variation}{\code{GrammarMaxSequenceRange} returns a numeric sequence, with each of its elements
-hold the highest range the same position in all sequences can hold.}
+holding the highest range that the same position in all sequences can hold.}
   \item{No.of.Unique.Expressions}{\code{GrammarNumOfExpressions} returns the number of expressions a grammar can generate.}
 }
 

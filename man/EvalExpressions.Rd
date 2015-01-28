@@ -5,8 +5,8 @@
  Evaluate a collection of Expressions
 }
 \description{
-\code{EvalExpressions} evaluates expressions, either in string format
-or as a grammar generated expression.
+\code{EvalExpressions} evaluates one or more expressions, either in string format
+or as \code{expression} objects.
 }
 \usage{
 EvalExpressions(expressions, envir = parent.frame())
@@ -26,14 +26,14 @@ EvalExpressions(expressions, envir = parent.frame())
 %%  ~~ If necessary, more details than the description above ~~
 \code{EvalExpressions} is a wrapper around 
 \code{eval} and \code{parse} functions in R base package.
-It can handle a single, a vector or list of expressions,
+It can handle a single, a vector or a list of expressions,
 character strings or \code{GEPhenotype} objects.
 
 The \code{envir} argument is directly passed to \code{eval} function. If it is not specified,
 the parent frame (i.e., the environment where the call to \code{eval} was made) is used instead.	
 
 \code{EvalExpressions} only evaluates terminal expressions and character strings.
-Evaluating non-terminal expressions will result in a warning and return of NA.
+Evaluating non-terminal expressions will result in a warning and \code{NA} is returned.
 }
 \value{
 %%  ~Describe the value returned
@@ -47,11 +47,6 @@ Otherwise a data frame with result of each expression in a separate column is re
 %\author{
 %%  ~~who you are~~
 %}
-\note{
-This function is for compatibility with gramEvil versions < 2.0 only.
-The newer versions directly generate expression objects.
-%%  ~~further notes~~
-}
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 

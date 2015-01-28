@@ -9,25 +9,25 @@ to minimize a given cost function.
 }
 \usage{
 GrammaticalEvolution(grammarDef, evalFunc, 
-                     numExpr = 1, 
-                     max.depth = GrammarGetDepth(grammarDef),
-                     startSymb = GrammarStartSymbol(grammarDef),
-                     seqLen = GrammarMaxSequenceLen(grammarDef, max.depth, startSymb),
-                     wrappings=3, 
-                     suggestions=NULL,
-                     optimizer = c("auto", "es", "ga"),
-                     popSize=8, newPerGen = "auto", elitism = 2,
-                     mutationChance=NA,
-                     iterations=1000, terminationCost=NA, 
-                     monitorFunc=NULL,
-                     plapply=lapply, ...)
+              numExpr = 1, 
+              max.depth = GrammarGetDepth(grammarDef),
+              startSymb = GrammarStartSymbol(grammarDef),
+              seqLen = GrammarMaxSequenceLen(grammarDef, max.depth, startSymb),
+              wrappings = 3, 
+              suggestions = NULL,
+              optimizer = c("auto", "es", "ga"),
+              popSize = 8, newPerGen = "auto", elitism = 2,
+              mutationChance = NA,
+              iterations = 1000, terminationCost = NA, 
+              monitorFunc = NULL,
+              plapply = lapply, ...)
 
 \method{print}{GrammaticalEvolution}(x, ..., show.genome = FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{grammarDef}{
-    \code{grammar} object, created by \code{\link{CreateGrammar}}.
+    A \code{\link[=CreateGrammar]{grammar}} object.
 }
   \item{evalFunc}{
     The cost function, taking a string or a collection of strings
@@ -38,7 +38,7 @@ GrammaticalEvolution(grammarDef, evalFunc,
     Number of expressions generated and given to \code{evalFunc}.
 }
  \item{max.depth}{
-    Maximum depth of search in case of recursive grammar. 
+    Maximum depth of search in case of a cyclic grammar. 
     By default it is limited to the number of production rules in the grammar.
  }
   \item{startSymb}{
@@ -51,7 +51,7 @@ GrammaticalEvolution(grammarDef, evalFunc,
     Number of wrappings in case the length of chromosome is not enough for conversion to an expression.
 }
   \item{suggestions}{
-    List of suggested chromosomes to be added to initial population pool.
+    List of the suggested chromosomes to be added to the initial population pool.
 }
   \item{optimizer}{
     The evolutionary optimizer. \code{"es"} uses evolution strategy as in \code{\link{EvolutionStrategy.int}}
@@ -64,11 +64,11 @@ GrammaticalEvolution(grammarDef, evalFunc,
 }
   \item{newPerGen}{
     Number of randomly generated individuals in evolution strategy.
-    If "auto", it is set to 25% of population of grammar if it is not recursive,
+    If ``auto", it is set to 25\% of population of grammar if it is not recursive,
     otherwise to all of it.
 }
   \item{elitism}{
-  Number of top ranking chromosomes that are directly transfered to next generation without
+  Number of top ranking chromosomes that are directly transfered to the next generation without
   going through evolutionary operations, used in genetic algorithm optimizer.
 }
 
@@ -76,12 +76,13 @@ GrammaticalEvolution(grammarDef, evalFunc,
     Number of maximum iterations in the evolutionary optimizer.
 }
   \item{terminationCost}{
-    Target cost in the evolutionary optimizer.
+    Target cost. If a sequence with this cost or less is found,
+   the algorithm terminates.
 }
   \item{mutationChance}{
     Mutation chance in the evolutionary optimizer. It must be between 0 and 1.
     By default it is set to \code{1/(1+chromosome size))} for genetic algorithm and
-    \code{10/(1+chromosome size))} for evolutionary algorithm.
+    \code{10/(1+chromosome size))} for evolution strategy.
 }
  \item{monitorFunc}{
   A function that is called at each generation. It can be used to monitor evolution of population.
@@ -101,18 +102,17 @@ GrammaticalEvolution(grammarDef, evalFunc,
 }
 }
 \details{
-  This function an evolutionary search over the grammar, known as Grammatical Evolution.
+  This function performs an evolutionary search over the grammar, better known as Grammatical Evolution.
   It evolves integer sequences and converts them to a collection containing
-  \code{numExpr} strings, which are representations of
-  analytical expressions. These expressions can be evaluated using \code{eval} function.
-  The \code{evalFunc} receives these strings and must return a numeric value.
-  The goal of optimization would be to find a chromosome which minimizes this value.
+  \code{numExpr} expression. These expressions can be evaluated using \code{eval} function.
+  The \code{evalFunc} receives these expressions and must return a numeric value.
+  The goal of optimization would be to find a chromosome which minimizes this function.
 
-  Two evolutionary optimizers are supported: Genetic algorithm and evolution strategy
+  Two evolutionary optimizers are supported: Genetic algorithm and evolution strategy,
   which are set by the \code{optimizer} parameter.
 
   Only valid (i.e., terminal) expressions are passed to \code{evalFunc},
-  and it is guaranteed that \code{evalFunc} receives at least one string. 
+  and it is guaranteed that \code{evalFunc} receives at least one expression.
 
   If the grammar contains recursive elements, it is advisable that \code{chromosomeLen} is 
   defined manually, as in such cases the possible search space grows explosively
@@ -141,6 +141,7 @@ GrammaticalEvolution(grammarDef, evalFunc,
 \seealso{
   \code{\link{CreateGrammar}}, 
   \code{\link{GeneticAlg.int}},
+  \code{\link{EvolutionStrategy.int}},
   \code{\link{EvalExpressions}}
 }
 \examples{

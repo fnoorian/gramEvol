@@ -5,36 +5,36 @@
 
 \title{Exhaustive Search}
 \description{ %%  ~~ A concise (1-5 lines) description of what the function does. ~~
-Exhaustive Search with in context-free grammar.
+Exhaustive Search within context-free grammar.
 }
 \usage{
 
 GrammaticalExhaustiveSearch(grammar, evalFunc,
-                           max.depth = GrammarGetDepth(grammar),
-                           startSymb = GrammarStartSymbol(grammar),
-                           max.len = GrammarMaxSequenceLen(grammar, max.depth, startSymb),
-                           wrappings = 3,
-                           terminationCost = NA,
-                           monitorFunc = NULL)
+                max.depth = GrammarGetDepth(grammar),
+                startSymb = GrammarStartSymbol(grammar),
+                max.len = GrammarMaxSequenceLen(grammar, max.depth, startSymb),
+                wrappings = 3,
+                terminationCost = NA,
+                monitorFunc = NULL)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{grammar}{
-    The grammar object as created by \code{\link{CreateGrammar}}.
+    A \code{\link[=CreateGrammar]{grammar}} object.
   }
  \item{evalFunc}{
     The evaluation function, taking an expression as its input
     and returning the cost (i.e., the score) of the expression.
  }
 \item{max.depth}{
-    Maximum depth of recursion, in case of a recursive grammar. 
+    Maximum depth of recursion, in case of a cyclic grammar. 
     By default it is limited to the number of production rules in the grammar.
 }
 \item{startSymb}{
     The symbol where the generation of a new expression should start.
 }
 \item{max.len}{
-    Maximum length of the sequence to search. 
+    Maximum length of the sequences to search. 
     By default it is determined by \code{max.depth}.
 }
 \item{wrappings}{
@@ -42,10 +42,11 @@ GrammaticalExhaustiveSearch(grammar, evalFunc,
     if non-terminal symbols are still remaining.
 }
 \item{terminationCost}{
-    Target cost. Not used by default.
+    Target cost. If an expression with this cost or less is found,
+   the algorithm terminates.
 }
  \item{monitorFunc}{
-  A function that is called at each generation. It can be used to monitor evolution of population.
+  A function that is called at each iteration. It can be used to monitor the search.
 }
 }
 \details{

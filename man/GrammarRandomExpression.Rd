@@ -6,34 +6,34 @@
 }
 \description{
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
-Create random expressions from context-free grammar.
+Creates random expressions from context-free grammar.
 }
 \usage{
 GrammarRandomExpression(grammar, 
-                        numExpr = 1, 
-                        max.depth = length(grammar$def), 
-                        startSymb = GrammarStartSymbol(grammar),
-                        max.string = GrammarMaxSequenceRange(grammar, max.depth, startSymb), 
-                        wrappings = 3, 
-                        retries = 100)
+          numExpr = 1, 
+          max.depth = length(grammar$def), 
+          startSymb = GrammarStartSymbol(grammar),
+          max.string = GrammarMaxSequenceRange(grammar, max.depth, startSymb), 
+          wrappings = 3, 
+          retries = 100)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{grammar}{
-    The grammar object as created by \code{\link{CreateGrammar}}.
+    A \code{\link[=CreateGrammar]{grammar}} object.
   }
   \item{numExpr}{
     Number of random expressions to generate.
 }
   \item{max.depth}{
-    Maximum depth of recursion, in case of a recursive grammar. 
+    Maximum depth of recursion, in case of a cyclic grammar. 
     By default it is limited to the number of production rules in the grammar.
 }
   \item{startSymb}{
     The symbol where the generation of a new expression should start.
 }
   \item{max.string}{
-    Maximum value that sequences can accept.
+    Maximum value for each element of the sequence.
 }
   \item{wrappings}{
     The number of times the function is allowed to wrap around \code{inputString}

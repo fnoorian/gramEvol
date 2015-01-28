@@ -8,7 +8,7 @@
 
 \title{Context-free Grammar Object}
 \description{ %%  ~~ A concise (1-5 lines) description of what the function does. ~~
-Create a context-free grammar object. 
+Creates a context-free grammar object. 
 }
 \usage{
   grule(...)
@@ -25,30 +25,34 @@ Create a context-free grammar object.
     commas or assignment operators.
   }
   \item{ruleDef}{
-    Grammatical rule definition. Either a filename or \code{\link{connection}} to a .bnf file,
-    or a list of symbols and sequences with syntax similar to Backus-Naur form. 
+    Grammatical rule definition. Either a list of grammar rule objects (\code{GERule}) created using \code{grule} and \code{gsrule}
+    with a syntax similar to Backus-Naur form,
+    or a list of character strings representing symbols and sequences in Backus-Naur form,
+    or a filename or \code{\link{connection}} to a .bnf file. 
+
     See details. 
   }
   \item{startSymb}{
     The symbol where the generation of a new expression should start.
-    By default the first rule is used.
+    If not given, the first rule in \code{ruleDef} is used.
   }
 }
 \details{
 %%  ~~ If necessary, more details than the description above ~~
   The rule definition is the grammar described in Backus-Naur context-free grammatical format.
   The preferred way of defining a grammar is to create a \code{list} simulating BNF format,
-  which collects several named rule collection objects (\code{GERules}).
-  Each name defines the \emph{symbol}, and each rule in collection determines the \emph{production rule}, 
+  which collects several named grammar rule objects (\code{GERule}).
+  Each name defines the \emph{non-terminal symbol}, and each rule 
+  in the collection determines the \emph{production rule}, 
   i.e., possible \emph{sequences} that will replace the symbol.
 
-  Defining a rule collection objects (\code{GERules}) can take two forms:
+  Defining a grammar rule object (\code{GERule}) can take two forms:
 
   1. The first form uses \code{grule} (Grammar Rule), where R expressions are accepted. In the mapping process,
-   variables are looked up and replaced using the produciton rules.
+   variables are looked up and replaced using the production rules.
 
-  2. The second form uses \code{gsrule} (Grammar String Rule) and uses strings. The input to \code{gsrule} are string values, wehre any value surrounded by '<' or '>' is considered as \emph{non-terminal sequence} and
-  will be replaced by value of a rule with the same name in the mapping process. Other symbols are considered terminals. This form allows generation of sequences that are not syntatically valid in R (such as \code{`var op var`}).
+  2. The second form uses \code{gsrule} (Grammar String Rule) and uses character strings. The input to \code{gsrule} are character string values, where any value surrounded by '<' or '>' is considered as \emph{non-terminal symbols} and
+  will be replaced using the rule with the same name in the mapping process. Other symbols are considered terminals. This form allows generation of sequences that are not syntactically valid in R (such as \code{`var op var`}).
 
   Alternatively, \code{CreateGrammar} can read and parse .bnf text files.
 }

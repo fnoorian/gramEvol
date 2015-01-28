@@ -33,14 +33,14 @@ GeneticAlg.int(genomeLen, codonMin, codonMax,
 }
   \item{genomeMin}{
   A vector of length \code{genomeLen} containing fine-grained control
-  over individual codon's minimum. Overrides \code{codonMin}.
+  over each codon's minimum. Overrides \code{codonMin}.
 }
   \item{genomeMax}{
   A vector of length \code{genomeLen} containing fine-grained control
-  over individual codon's maximum. Overrides \code{codonMax}.
+  over each codon's maximum. Overrides \code{codonMax}.
 }
   \item{suggestions}{
-  A list of suggested chromosomes to be used in initial population.
+  A list of suggested chromosomes to be used in the initial population.
 }
   \item{popSize}{
   Size of the population.
@@ -71,7 +71,7 @@ GeneticAlg.int(genomeLen, codonMin, codonMax,
   The cost function.
 }
   \item{allowrepeat}{
-  Allows or forbids repeated values in the chromosome.
+  Allows or forbids repeated integers in the chromosome.
 }
   \item{showSettings}{
   Enables printing GA settings.
@@ -100,8 +100,8 @@ and mutation are applied to the population to create a new generation.
 This iteration is continued until the required cost is reached
 or the number of generations exceeds \code{iterations}.
 
-At each generation, the supplied \code{monitorFunc} is called, taking a
-list similar to \code{GeneticAlg.int} returning value. 
+At each generation, the supplied \code{monitorFunc} is called with a
+list similar to \code{GeneticAlg.int} returning value as its argument. 
 
 The \code{evalFunc} receives integer sequences and must return a numeric value.
 The goal of optimization would be to find a chromosome which minimizes this value.
@@ -114,38 +114,41 @@ must be exported to worker nodes before invoking \code{GeneticAlg.int}.
 }
 \value{
 
+  A list containing information about 
+  \code{settings}, \code{population}, and the \code{best} chromosome.
+
   \item{settings$genomeMin}{
-    Minimum of individual codons as used in the function call. }
+    Minimum of each codon. }
 
   \item{Settings$genomeMax}{
-    Maximum of individual codons as used in the function call. }
+    Maximum of each codon. }
 
   \item{settings$popSize}{
-    Size of the mutated population as used in the function call.}
+    Size of the population.}
 
   \item{settings$elitism}{
-    Number of elite individuals as used in the function call.}
+    Number of elite individuals.}
 
   \item{settings$iterations}{
-    Number of maximum generations as used in the function call.}
+    Number of maximum generations.}
 
   \item{settings$suggestions}{
-    Suggested chromosomes as used in the function call.}
+    Suggested chromosomes.}
 
   \item{settings$mutationChance}{
-    Mutation chance as used in the function call.}
+    Mutation chance.}
 
   \item{settings$geneCrossoverPoints}{
-    Mutation chance as used in the function call.}
+    Cross-over points.}
 
   \item{population$population}{
-    The genomic data of current population.}
+    The genomic data of the current population.}
 
   \item{population$evaluations}{
-    Cost of latest generation.}
+    Cost of the latest generation.}
 
   \item{population$best}{
-    Historical cost of best chromosomes.}
+    Historical cost of the best chromosomes.}
 
   \item{population$mean}{
     Historical mean cost of population.}
@@ -154,7 +157,7 @@ must be exported to worker nodes before invoking \code{GeneticAlg.int}.
    Number of generations evolved until now.}
      
   \item{best$genome}{
-    The best chromosome in integer sequence format.}
+    The best chromosome.}
 
   \item{best$cost}{
     The cost of the best chromosome.}
@@ -174,7 +177,8 @@ by Egon Willighagen. See \url{http://cran.r-project.org/web/packages/genalg/}.
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link{GrammaticalEvolution}}
+\code{\link{GrammaticalEvolution}}, 
+\code{\link{EvolutionStrategy.int}}
 }
 
 \examples{

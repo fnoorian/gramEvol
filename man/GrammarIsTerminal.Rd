@@ -5,7 +5,7 @@
 Non-terminal Phenotype test.
 }
 \description{
-Check the phenotype object for containing non-terminal symbols.
+Checks a phenotype object for containing non-terminal symbols.
 }
 \usage{
 GrammarIsTerminal(x)
@@ -13,7 +13,7 @@ GrammarIsTerminal(x)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{
-		The Phenotype object.
+  		A \code{\link[=GrammarMap]{GEPhenotype}} object.
 	}
 }
 %\details{

@@ -9,8 +9,8 @@
 Sequence to Expression Mapping using Context-free Grammar
 }
 \description{
-Using a grammar created by \code{\link{CreateGrammar}},
-converts a sequence of integer numbers to an expression.
+Converts a sequence of integer numbers to an expression
+using a \code{grammar} object.
 }
 \usage{
 GrammarMap(inputString, grammar, wrappings = 3, verbose = FALSE)
@@ -23,7 +23,7 @@ GrammarMap(inputString, grammar, wrappings = 3, verbose = FALSE)
 	}
   
   \item{grammar}{
-		The grammar object as created by \code{\link{CreateGrammar}}.
+    A \code{\link[=CreateGrammar]{grammar}} object.
 	}
   
   \item{wrappings}{
@@ -36,16 +36,16 @@ GrammarMap(inputString, grammar, wrappings = 3, verbose = FALSE)
 }
 \details{
 %%  ~~ If necessary, more details than the description above ~~
-\code{GrammarMap} starts from the \code{startExpr} given in the
-definition of grammar in \code{\link{CreateGrammar}}. ;
+\code{GrammarMap} starts from the \code{startExpr} defined in the 
+\code{\link[=CreateGrammar]{grammar}} object;
 then it iterates through \code{inputString}, replacing symbols in the expression
 with associated replacements in the grammar using the current value of
 \code{inputString}.
 
 If the function exhausts all non-terminal symbols in the expression, it terminates.
 If the end of \code{inputString} is reached and  still non-terminal symbols
-exist, the algorithm will start from the beginning of the \code{inputString}
-again. To avoid unlimited run by recursions in case of a cyclic grammar,
+exist, the algorithm will restart from the beginning of the current \code{inputString}. 
+To avoid unlimited recursions in case of a cyclic grammar,
 \code{wrappings} variable limits the number of this restart.
 
 If \code{verbose = TRUE}, step-by-step replacement of symbols with production rules are displayed.
@@ -58,7 +58,8 @@ a character string using \code{as.character}, or an R expression with \code{as.e
 %%  If it is a LIST, use
   A \code{GrammarMap} returns a \code{GEPhenotype} object.
   \item{expr}{The generated expression as a character string.}
-  \item{parsed}{The generated expression. NULL if the striexpression contain.}
+  \item{parsed}{The generated expression. NULL if the expression still 
+				contains non-terminal symbols.}
   \item{type}{"T" if the expression is valid, "NT" if the expression still 
 				contains non-terminal symbols. }
 %% ...

@@ -5,29 +5,29 @@
 
 \title{Random Search}
 \description{ %%  ~~ A concise (1-5 lines) description of what the function does. ~~
-Random Search with in context-free grammar.
+Random Search within context-free grammar.
 }
 \usage{
 
 GrammaticalRandomSearch(grammar, evalFunc,
-                           max.depth = GrammarGetDepth(grammar),
-                           startSymb = GrammarStartSymbol(grammar),
-                           wrappings = 3,
-                           iterations = 1000, 
-                           terminationCost = NA,
-                           monitorFunc = NULL)
+                        max.depth = GrammarGetDepth(grammar),
+                        startSymb = GrammarStartSymbol(grammar),
+                        wrappings = 3,
+                        iterations = 1000, 
+                        terminationCost = NA,
+                        monitorFunc = NULL)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{grammar}{
-    The grammar object as created by \code{\link{CreateGrammar}}.
+    A \code{\link[=CreateGrammar]{grammar}} object.
   }
  \item{evalFunc}{
     The evaluation function, taking an expression as its input
     and returning the cost (i.e., the score) of the expression.
  }
 \item{max.depth}{
-    Maximum depth of recursion, in case of a recursive grammar. 
+    Maximum depth of recursion, in case of a cyclic grammar. 
     By default it is limited to the number of production rules in the grammar.
 }
 \item{startSymb}{
@@ -41,7 +41,8 @@ GrammaticalRandomSearch(grammar, evalFunc,
     Number of random expressions to test.
 }
 \item{terminationCost}{
-    Target cost. Not used by default.
+    Target cost. If an expression with this cost or less is found,
+   the algorithm terminates.
 }
  \item{monitorFunc}{
   A function that is called at each generation. It can be used to monitor evolution of population.

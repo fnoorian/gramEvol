@@ -7,7 +7,7 @@
 
 \title{Grammar Iterator}
 \description{ %%  ~~ A concise (1-5 lines) description of what the function does. ~~
-Iterate through grammar's valid sequences.
+Iterates through grammar's valid sequences.
 }
 \usage{
 
@@ -28,23 +28,22 @@ is.GrammarOverflow(object)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{grammar}{
-    The grammar object as created by \code{\link{CreateGrammar}}.
+    A \code{\link[=CreateGrammar]{grammar}} object.
   }
   \item{seqStart}{
     The sequence to be incremented. 
-    A value of \code{NULL}, the first sequence is returned.
+    For a value of \code{NULL}, the first sequence is returned.
     Partial sequences are completed and returned.
   }
   \item{startSymb}{
-    The symbol where the generation of a new expression should start.
+    The non-terminal symbol where the generation of a new expression should start.
   }
   \item{max.depth}{
-    Maximum depth of recursion, in case of a recursive grammar.
+    Maximum depth of recursion, in case of a cyclic grammar.
     By default it is limited to the number of production rules in the grammar.
   }
   \item{max.len}{
-    Maximum length of depth of search in case of recursive grammar. 
-    Partial Sequences can be entered.
+    Maximum length of sequence to return. Used to avoid recursion.
   }
   \item{object}{
     An object to be tested.
@@ -53,7 +52,7 @@ is.GrammarOverflow(object)
 \details{
 %%  ~~ If necessary, more details than the description above ~~
   \code{GrammarGetFirstSequence} returns the first sequence that creates a valid expression
-  with the given grammar.
+  with the given \code{\link[=CreateGrammar]{grammar}} object.
   \code{GrammarGetNextSequence} allows iterating through all valid sequences in a grammar.
   If a \code{seqStart = NULL} is used, \code{GrammarGetFirstSequence} is called to 
   and the first sequence in the grammar is returned.
