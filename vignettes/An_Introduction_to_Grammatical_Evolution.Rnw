@@ -42,8 +42,8 @@ set.seed(0)
 @
 
 %opening
-%\VignetteIndexEntry{Grammatical Evolution: An Informal Tutorial using gramEvol}
-\title{Grammatical Evolution: An Informal Tutorial using \pkg{gramEvol}}
+%\VignetteIndexEntry{Grammatical Evolution: A Tutorial using gramEvol}
+\title{Grammatical Evolution: A Tutorial using \pkg{gramEvol}}
 \author{Farzad Noorian, Anthony M. de Silva, Philip H.W. Leong}
 
 \begin{document}
@@ -56,30 +56,50 @@ set.seed(0)
 \section{Introduction}
 
 Grammatical evolution (GE) is an evolutionary search algorithm, similar to genetic programming (GP).
-It is used to generate programs defined through a grammar.
+It is used to generate programs with syntax defined through a grammar.
 The original author's website is a good resource for a formal introduction to this technique:
 \begin{itemize}
 	\item \url{http://www.grammatical-evolution.org/}
 \end{itemize}
 
-This document serves as a quick and informal tutorial on how GE works, with examples in \proglang{R}.
+This document serves as a quick and informal tutorial on GE, 
+with examples implemented using the \pkg{gramEvol} package in \proglang{R}.
 
 \section{Grammatical Evolution}
-\subsection{What is a grammar}
+
+The goal of using GE is to automatically generate a program
+that minimises a cost function:
+\begin{enumerate}
+	\item A \emph{grammar} is defined to describe the syntax of the programs.
+	\item A \emph{cost function} is defined to assess the quality of a program.
+	\item An \emph{evolutionary algorithm}, such as GA, 
+	is used to search with in the space of all programs describable by the grammar,
+	in order to find the program with the lowest cost.
+\end{enumerate}
+
+The rest of this section will describe each component in more details.
+
+\subsection{Grammar}
+
 A grammar is a set of rules that describe the syntax of sentences and expressions in a language. 
 While grammars were originally invented for studying natural languages,
 they are extensively used in computer science for describing programming languages.
 
-In formal language theory, a \emph{context-free grammar} (CFG) is a \textit{formal grammar}
-defined by a collection of \emph{terminal} symbols, \emph{non-terminal} symbols, \emph{production rules}, and a \emph{start} symbol:
+\subsubsection{Informal introduction to context-free grammars}
+\label{sec:informal_grammar}
+
+GE uses \emph{context-free grammar} to describe the syntax of programs.
+
+A grammar in which the rules are not sensitive to the sentence's context is called
+a \emph{context-free grammar} (CFG), and is defined using a collection of 
+\emph{terminal} symbols, \emph{non-terminal} symbols, \emph{production rules}, and a \emph{start} symbol
+\cite{Sethi1986Compiler}:
 
 \begin{itemize}
-\item Terminal symbols are words or expressions of the language. 
+\item Terminal symbols are the lexicon of the language. 
 
-\item Non-terminal symbols are used to describe the class of words in the language.
+\item Non-terminal symbols are used to describe the class of words in the language, or \emph{variables} that can take different values.
 For example, a \ntelem{subject}, a \ntelem{verb}, or an \ntelem{object}.
-
-The style of covering non-terminals in angle brackets (< and >) is referred to as \emph{Backus--Naur Form}, or BNF.
 
 \item A production rule defines what symbols replace a non-terminal. For example, each of the four following lines is a production rule:
 \begin{grammar}
@@ -97,8 +117,11 @@ The style of covering non-terminals in angle brackets (< and >) is referred to a
 \end{grammar}
 In each rule, the ``|" symbol separates different replacement possibilities; 
 such as \ntelem{subject}, that can be replaced with ``I", ``You" or ``They".
+One must note that a non-terminal symbol can be replaced with ther non-terminals
+as well as terminal symbols, such as in the example's \ntelem{sentence}.
 
-Also a non-terminal symbol can expand to other non-terminals, such as in the example's \ntelem{sentence}.
+This style of notation, including the use of angle brackets (< and >) is
+known as the \emph{Backus--Naur Form} (BNF).
 
 \item A start symbol determines a non-terminal where the generation of the expression starts. For example:
 	\begin{itemize}
@@ -106,11 +129,37 @@ Also a non-terminal symbol can expand to other non-terminals, such as in the exa
 	\end{itemize}
 \end{itemize}
 
-Formally, the 4-tuple $(\mathcal{T}, \mathcal{N}, \mathcal{R}, \mathcal{S})$ denotes the four elements described above.
-
 Informally, only the start symbol and the production rules are required to define a grammar.
-Also notice that each rule is numbered. Using these numbers, one can precisely refer to a certain expression.
+
+\subsubsection{Formal definition of a context-free grammar}
+
+In formal language theory, a context-free grammar is a \textit{formal grammar}
+where every production rule, formalized by the pair $(n, V)$,
+is in form of $n \rightarrow V$.
+The CFG is defined by the 4-tuple $(\mathcal{T}, \mathcal{N}, \mathcal{R}, \mathcal{S})$,
+where $\mathcal{T}$ is the finite set of terminal symbols, 
+$\mathcal{N}$ is the finite set of non-terminal symbols,
+$\mathcal{R}$ is the production rule set, 
+$\mathcal{S} \in \mathcal{N}$ is the start symbol.
+
+A production rule $n \rightarrow V$ is realized by replacing the non-terminal symbol $n \in \mathcal{N}$ 
+%in string $\alpha$ 
+with the symbol $v \in V$,
+where $V \subseteq (\mathcal{T} \cup \mathcal{N})$ is a sequence of terminal and/or non-terminal symbols.
+
+For more details on CFGS, their relation to context-free languages, parsing, compilers and
+other related topics refer to Wikipedia:
+\begin{itemize}
+	\item \url{https://en.wikipedia.org/wiki/Context-free_grammar}
+\end{itemize}
+
+\subsubsection{From grammar to an expression}
+\label{sec:grammarmapping}
+
+Notice that each rule in the grammar of Section \ref{sec:informal_grammar} is numbered. 
+Using these numbers, one can precisely refer to a certain expression.
 This is performed by replacing the first non-terminal symbol with the $n$th rule of that non-terminal, starting with the start symbol.
+
 For example, the sequence 2, 3, 1 selects rules (1.b), (2.c) and (3.a) in the following four-step sequence:
 
 %\begin{table}[h]%\centering
@@ -143,22 +192,23 @@ For an in depth introduction, readers are referred to Wikipedia:
 	\item \url{https://en.wikipedia.org/wiki/Evolutionary_algorithm}
 \end{itemize}
 
-\subsection{Evolving a grammar}
-
-The goal of using GE is to automatically generate a program
-that minimises a cost function:
+\subsubsection{Optimising a grammar by evolution}
+GA only optimises numeric arrays. By \emph{mapping} an integer array to a program using a grammar,
+GA can be readily applied to find optimal programs and expressions:
 \begin{enumerate}
-	\item A \emph{grammar} is defined to describe the syntax of the programs.
-	\item A \emph{cost function} is defined to assess the quality of a program.
-	\item An \emph{evolutionary algorithm}, such as GA, 
-	is used to search with in the space of all programs describable by the grammar,
-	in order to find the program with the lowest cost.
+	\item The solution is selected as an array of integers.
+	\item The array is mapped to a program through the grammar using the technique explained is Section \ref{sec:grammarmapping}.
+	\item The cost function measures the fitness of the program.
+	\item Any evolutionary optimisation technique is applied on the integer array, which is referred to as the \emph{chromosome} in GA.
 \end{enumerate}
 
 \subsection{Applications of grammatical evolution}
 
-As GE is very versatile, any application which needs a program, definable by grammar is creatable in GE.
-Applications include computational finance, music, and robotic control, along others. 
+Any application which needs a program, definable by grammar is creatable in GE.
+Using a grammar allows integration of domain knowledge and a custom program syntax,
+which adds flexibility and precision to GE compared to other techniques such as GP.
+
+Applications of GE include computational finance, music, and robotic control, along others. 
 The authors have previously used GE for electricity forecasting in \cite{MNDL_13}.
 See \url{http://www.grammatical-evolution.org/pubs.html} for a collection of publications in this area.
 
@@ -169,10 +219,11 @@ See \url{http://www.grammatical-evolution.org/pubs.html} for a collection of pub
 %	\item \href{https://en.wikipedia.org/wiki/Santa_Fe_Trail_problem}{Santa Fe Trail problem}
 %\end{itemize}
 
- \section{gramEvol Package}
+\section{gramEvol Package}
 
 The package \pkg{gramEvol} simplifies defining a grammar and offers a GA implementation. 
-The only things the user has to do is to define the grammar and the cost function.
+\pkg{gramEvol} hides many details, including the grammar mapping and GA parameters, and
+the only things the user has to do is to define the grammar and the cost function.
 In this vignette, examples are used to demonstrate its usage.
 
 \section{Symbolic Regression}
@@ -263,8 +314,8 @@ Here $\mathcal{S}$ denotes the starting symbol and $\mathcal{R}$ is the collecti
 This is a general purpose grammar, and it can create different expressions
 corresponding to different formulas which can explain the data.
 
-The first step for using \pkg{gramEvol} is loading the grammar
-defined in Table~\ref{tab:gram_kepler}:
+The first step for using \pkg{gramEvol} is loading the grammar:
+%defined in Table~\ref{tab:gram_kepler}:
 
 <<tidy=FALSE>>=
 library("gramEvol")
@@ -332,7 +383,7 @@ Notice that a very high cost (infinite error) is assigned
 to invalid expressions in the fitness function.
 
 \subsection{Evolving the grammar}
-\code{GrammaticalEvolution} is now ready to run. 
+\code{GrammaticalEvolution} can now be run. 
 All of the parameters are determined automatically.
 To avoid wasting time, and as the best possible outcome and its error are known (because we know the answer),
 a \code{terminationCost} is computed and set to terminate GE 
@@ -426,43 +477,76 @@ R> ge <- GrammaticalEvolution(grammarDef, SymRegFitFunc,
 +    terminationCost = 0.021,
 +    monitorFunc = print)
 \end{verbatim}
+which will \code{print}:
+\begin{verbatim}
+Grammatical Evolution Search Results:
+No. Generations:  1 
+Best Expression:  distance 
+Best Cost:        1.60700784338907 
+Grammatical Evolution Search Results:
+No. Generations:  2 
+Best Expression:  distance 
+Best Cost:        1.60700784338907 
+\end{verbatim}
+\dots until:
+\begin{verbatim}
+Grammatical Evolution Search Results:
+No. Generations:  9 
+Best Expression:  distance + distance 
+Best Cost:        1.54428158317392 
+Grammatical Evolution Search Results:
+No. Generations:  10 
+Best Expression:  1 - distance + (cos(distance) - 1) * sin(distance^2) + distance + (log(distance) + distance + (cos(distance) - 1) * sin(distance^2) + distance) 
+Best Cost:        1.4186428597461 
+Grammatical Evolution Search Results:
+No. Generations:  11 
+Best Expression:  sqrt(distance^3) 
+Best Cost:        0.0201895728693592 
+\end{verbatim}
+
+
 
 \section{Regular Expression}
 \label{sec:reg_expr}
 
 In formal language theory, a regular expression (RE) is a sequence of symbols and operators
 that describe a character pattern.
-REs are translated by RE processors into a nondeterministic finite automaton (NFA)
+REs are translated by RE processors into a non-deterministic finite automaton (NFA)
 and subsequently into a deterministic finite automaton (DFA).
 The DFA can then be executed on any character string, recognize substrings that match the regular expression.
 Due to their expressiveness, REs are widely used in many string pattern matching tasks, such as searching through log files
 or parsing a programs output. See the Wikipedia entry at \url{https://en.wikipedia.org/wiki/Regular_expression} for an in-depth introduction.
 
-\proglang{R} supports standard regular expression with both POSIX and \proglang{Perl} RE syntax. In addition, the
-\href{https://github.com/kevinushey/rex}{\pkg{rex} Package} \cite{rex_package} offers a ``Friendly regular expressions for \proglang{R}''.
+\proglang{R} supports standard regular expression with both POSIX and \proglang{Perl} RE syntax. 
+In addition, the
+\href{https://github.com/kevinushey/rex}{\pkg{rex} Package} \cite{rex_package} offers a 
+functional interface for creating REs in \proglang{R}.
 \begin{verbatim}
 R> library("rex")
 \end{verbatim}
 
-In this section, we use \pkg{gramEvol} to infer a regular expression from examples by evolving a program made of \pkg{rex} function.
-We define the goal as matching a decimal real number, in form of $[\pm]nnn[.nnn]$, where [~] mean optional and $nnn$ denotes numeric characters.
-A few good and bad examples are listed below:
+GE can infer a regular expression from examples \cite{bartoli2012automatic}.
+In this section, we use \pkg{gramEvol} to find a RE that matches a decimal real number, 
+in form of $[\pm]nnn[.nnn]$, where [~] means optional and $nnn$ denotes one or more digits
+(i.e., \textbackslash\code{d+} in \proglang{Perl} or \code{[:digit:]} in POSIX).
+
+Some matching and non-matching examples are listed below:
 <<tidy=FALSE>>=
-good <- c("1", "11.1", "1.11", "+11", "-11", "-11.1")
-bad <- c("a", "1.", "1..1", "-.1", "-", "1-", "1.-1", 
-         ".-1", "1.-", "1.1.1", "", ".", "1.1-", "11-11")
+matching <- c("1", "11.1", "1.11", "+11", "-11", "-11.1")
+non.matching <- c("a", "1.", "1..1", "-.1", "-", "1-", "1.-1", 
+                  ".-1", "1.-", "1.1.1", "", ".", "1.1-", "11-11")
 @
 
-Score of any RE is determined by counting the number of good matches and bad rejections:
+Score of any RE is determined by counting the number of matches and non-matches:
 <<tidy=FALSE>>=
 re_score <- function(re) {
-  score <- sum(sapply(good, function(x) grepl(re, x))) + 
-           sum(sapply(bad, function(x)  !grepl(re, x)))
-  return (length(good) + length(bad) - score)
+  score <- sum(sapply(matching, function(x) grepl(re, x))) + 
+           sum(sapply(non.matching, function(x)  !grepl(re, x)))
+  return (length(matching) + length(non.matching) - score)
 }
 @
 
-For GE to be used, a grammar is required:
+A grammar is defined using \pkg{rex} RE functions:
 <<tidy=FALSE>>=
 grammarDef <- CreateGrammar(list(
               re    = grule(rex(start, rules, end)),
@@ -502,8 +586,6 @@ Best Cost:          0
 
 The result, while correct, is different from what we expected: $[\pm][nnn.]nnn[nnn]$, which is true for any real number.
 
-For a similar effort to learn RE using Genetic Programming, see the paper by Bartoli et al.~\cite{bartoli2012automatic}.
-
 \section{Other gramEvol functionality}
 
 In this section, some of the other functionalities of the \pkg{gramEvol} are introduced:
@@ -520,11 +602,11 @@ grammarDef
 @
 
 \subsection{Manual mapping}
-To \emph{map} a numeric sequence to an expression manually, \code{CreateGrammar} is a useful function:
+To \emph{map} a numeric sequence to an expression manually, \code{GrammarMap} is used:
 <<tidy=FALSE>>=
 GrammarMap(c(0, 1, 0, 0, 1, 1, 0, 0), grammarDef)
 @
-The sequence is zero-indexed (the first rule is zero). To see the step by step mapping, use the \code{verbose} option:
+The sequence is zero-indexed (the first rule is zero). To see the step by step mapping, use the \code{verbose} parameter option:
 <<tidy=FALSE>>=
 GrammarMap(c(0, 1, 0, 0, 1, 1, 0, 0), grammarDef, verbose=TRUE)
 @
@@ -541,7 +623,7 @@ GrammarMap(c(0, 1, 0, 0, 1, 1), grammarDef, verbose=TRUE)
 
 \pkg{gramEvol} offers several functions to exmine a defined grammar. 
 
-\code{summary} shows a summary of what grammar presents:
+\code{summary} reports a summary of what grammar presents:
 <<tidy=FALSE>>=
 summary(grammarDef)
 @
@@ -550,7 +632,8 @@ Many of these properties are available through individual functions:
 
 \code{GetGrammarDepth} computes the depth of grammar tree.
 The parameter \code{max.depth} is used to limit recursion.
-For example, this grammar causes infinite recursion because of rule \ntelem{expr} $\rightarrow$ \ntelem{expr}\ntelem{op}\ntelem{expr}. 
+For example, this grammar is cyclic because of rule \ntelem{expr} $\rightarrow$ \ntelem{expr}\ntelem{op}\ntelem{expr},
+expanding a \ntelem{expr} to more \ntelem{expr}s. 
 By default \code{GetGrammarDepth} limits recursion to the number of symbols defined in the grammar:
 <<tidy=FALSE>>=
 GetGrammarDepth(grammarDef)
@@ -578,15 +661,15 @@ GetGrammarDepth(grammarDef2, startSymb = "<coef>")
 
 \code{GetGrammarMaxRuleSize} returns the maximum number of production rules per symbol.
 This function is useful when constructing a GE genome, as it could be used to limit
-the codon size and therefore search space. 
-For this grammar of \ntelem{op} has the highest number of production rules:
+the codon size and therefore the search space. 
+Here, \ntelem{op} has the highest number of production rules:
 <<tidy=FALSE>>=
 GetGrammarMaxRuleSize(grammarDef)
 @
 
 \code{GetGrammarNumOfExpressions} returns number of possible expressions existing
   in the grammar space.  
-This function also uses parameter \code{max.depth} to limit the number of recursions and 
+This function also uses the optional argument \code{max.depth} to limit the number of recursions and 
 \code{startSymb} to set the starting symbol:
 <<tidy=FALSE>>=
 GetGrammarNumOfExpressions(grammarDef)
@@ -637,12 +720,15 @@ The rest of the parameters are the evolutionary optimisation options:
 	
 	\item if \code{optimizer} is set to ``auto", using the information obtained about the grammar 
 		(e.g., number of possibles expressions and maximum sequence length), 
-		it automatically determines a suitable value for \code{popSize}, \code{newPerGen} and \code{iterations}.
+		\code{GrammaticalEvolution} 
+		uses a heuristic algorithm based on \cite{deb1999understanding}
+		to automatically determine a suitable value for \code{popSize} (i.e., the population size) 
+		\code{iterations} (i.e., the number of iterations) parameters.
 		
-	\item Ordinary cross-over operator is considered destructive when
-		homologous production rules are not aligned \citep{oneill2003crossover}, such as in recursive grammars.
-		As a result \code{GrammaticalEvolution} uses a heuristic algorithm to 
-		improve optimisation results by automatically changing cross-over parameters depending on the grammar.
+		\item The ordinary cross-over operator of GA is considered destructive when
+		homologous production rules are not aligned, such as for cyclic grammars \citep{oneill2003crossover}.
+		Consequently, \code{GrammaticalEvolution} automatically changes cross-over parameters depending on the grammar
+		to improve optimisation results.
 		A user can turn this off by manually setting the \code{optimizer}.
 	
 	\item The first generation is made from the \code{suggestions} in form of integer chromosomes,
@@ -711,9 +797,9 @@ R> ge <- GrammaticalEvolution(grammarDef, evalFunc,
 R> stopCluster(cl)
 \end{verbatim}
 
-It must be noticed that in any problem
+It must be noticed that in any problem,
 the speed-up achieved depends on the overhead of communication
-compared with fitness functions' computational complexity.
+compared with the fitness functions' computational complexity.
 
 \subsection{Group evaluation}
 
@@ -761,7 +847,7 @@ It also supports parallel computing,
 and includes facilities for exhaustive and random search.
 
 In this tutorial, some of the functionalities of \pkg{gramEvol} were explored.
-Furthermore, two problems were solved
+Furthermore, two examples were used
 to demonstrate the flexibility of GE and \pkg{gramEvol}.
 
 \bibliographystyle{IEEEtran}
