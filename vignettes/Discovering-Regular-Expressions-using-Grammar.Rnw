@@ -1,0 +1,221 @@
+%\documentclass[nojss]{jss}
+\documentclass[]{article}
+\usepackage{verbatim}
+\usepackage{url}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{fullpage}
+\usepackage{verbatim}
+\usepackage{hyperref}
+\usepackage{enumitem}
+
+\usepackage{algorithmicx}
+\usepackage{algorithm}% http://ctan.org/pkg/algorithm
+\usepackage{algpseudocode}% http://ctan.org/pkg/algorithmicx
+%\renewcommand{\algorithmicrequire}{\textbf{Input}}
+%\renewcommand{\algorithmicensure}{\textbf{Output}}
+
+\usepackage[nounderscore]{syntax}
+\setlength{\grammarparsep}{2pt plus 1pt minus 1pt} % increase separation between rules
+\setlength{\grammarindent}{6em} % increase separation between LHS/RHS
+
+% Grammar Definitions
+\newcommand{\ntelem}[1] {{\textless \textit{#1}\textgreater}}
+\newcommand{\ntgram}[1] {{\texttt{<{#1}>}}}
+
+% Rewriting JSS commands
+\newcommand{\code}[1] {{\texttt{#1}}}
+\newcommand{\pkg}[1]  {{\bf{#1}}}
+%\newcommand{\citep}[1] {{(\cite{#1})}}
+\newcommand{\citep}[1] {{\cite{#1}}}
+%\newcommand{\proglang}[1]  {{#1}}
+\newcommand{\proglang}[1]  {{\textsf{#1}}}
+
+
+<<echo=FALSE>>=
+options(width=70)
+options(warn = (-1))
+options(prompt="R> ")
+@
+
+<<echo=FALSE>>=
+set.seed(0)
+@
+
+%opening
+%\VignetteIndexEntry{Discovering Regular Expressions using Grammar}
+\title{Discovering Regular Expressions using \pkg{gramEvol}}
+\author{Farzad Noorian, Anthony M. de Silva, Philip H.W. Leong}
+
+\begin{document}
+
+\maketitle
+
+%\begin{abstract}
+%\end{abstract}
+
+\section{Introduction}
+
+A regular expressions (RE) is a string that determines a character pattern.
+REs are more expressive and precise in determining sub-string matches compared to wildcards, 
+and are widely used in many string pattern matching tasks, 
+such as searching through log files or parsing a program's output. 
+See the Wikipedia entry at \url{https://en.wikipedia.org/wiki/Regular_expression} for an in-depth introduction to REs.
+
+Creating a regular expressions requires careful assembly of symbols and operators to match the desired pattern.
+%which is often different between implementations.
+While this is usually performed by an expert programmer,
+it is possible to use evolutionary optimisation techniques to infer a RE from examples \cite{bartoli2012automatic}.
+
+In this vignette, we demonstrate how \pkg{gramEvol} can be used to learn REs.
+
+\section{Regular Expressions}
+
+\subsection{Formal definition}
+
+In formal language theory, a regular expression is a sequence of symbols and operators
+that describes a character pattern.
+REs are translated by RE processors into a non-deterministic finite automaton (NFA)
+and subsequently into a deterministic finite automaton (DFA).
+The DFA can then be executed on any character string to recognize sub-strings that match the regular expression.
+
+For a theoretical introduction to REs, including their relationship with context-free grammars, readers are referred to \cite{Sethi1986Compiler}.
+
+\subsection[Creating a regular expression in R]{Creating a regular expression in \proglang{R}}
+\label{sec:decimal_RE}
+
+\proglang{R} supports standard regular expression with both the POSIX standard and \proglang{Perl} syntax. 
+In addition, the \href{https://github.com/kevinushey/rex}{\pkg{rex} Package} \cite{rex_package} 
+offers a functional interface for creating REs in \proglang{R}.
+
+Consider matching a decimal real number in the form of $[\pm]nnn[.nnn]$,
+where [~] means optional and $nnn$ denotes one or more digits.
+The following table compares this notation with the syntax of \proglang{Perl}, POSIX, and \pkg{rex}:
+
+	\begin{tabular}{ l c c c c }
+		%		\toprule
+		                  & Notation & \proglang{Perl}         & POSIX            & \pkg{rex}              \\ \hline
+		One  digit                   & $n$      & \textbackslash d  & [:digit:]        & \code{number}          \\
+		One or more digits           & $nnn$    & \textbackslash d+ & [:digit:]+       & \code{numbers}         \\
+		Optional presence of X       & [X]      & X?                     & X?              & \code{maybe(}X\code{)} \\
+		alternate presence of X or Y & X|Y      & X|Y                     & X|Y              & \code{or(}X, Y\code{)} \\
+		Plus sign                    & +        & \textbackslash +        & \textbackslash + & \code{"+"}             \\
+		Minus sign                   & -        & -                       & -                & \code{"-"}             \\
+		Dot                          & .        & \textbackslash .        & \textbackslash . & \code{"."}             \\ \bottomrule
+	\end{tabular} 
+
+~ \\
+Using the above table,  $[\pm]nnn[.nnn]$ is translated to:
+\begin{itemize}
+	\item \proglang{Perl}: \verb;(\+|-)?\d+(\.\d+)?;
+	\item POSIX: \verb;(\+|-)?[[:digit:]]+(\.[[:digit:]]+)?;
+	\item \pkg{rex}: \code{maybe(or("+", "-")), numbers, maybe(".", numbers)}
+\end{itemize}
+
+% Note: $ and ^ are removed on purpose!
+To use a RE, the expression has to be wrapped in a start and stop symbol
+(\code{\^{}...\$} in POSIX and \proglang{Perl},
+and \code{rex(start, ..., end)} for \pkg{rex}):
+<<tidy=FALSE>>=
+re <- "^(\\+|-)?[[:digit:]]+(\\.[[:digit:]]+)?$"
+@
+
+\code{grepl} can be used to check if a string matches the RE pattern or not:
+<<tidy=FALSE>>=
+grepl(re, "+1.1")
+grepl(re, "1+1")
+@
+
+\section[Using gramEvol to infer a regular expression] {Using \pkg{gramEvol} to infer a regular expression}
+
+In this section, \pkg{gramEvol} is used to learn a RE
+that matches a decimal real number, as explained in the previous section.
+Some matching and non-matching examples are listed below:
+<<tidy=FALSE>>=
+matching <- c("1", "11.1", "1.11", "+11", "-11", "-11.1")
+non.matching <- c("a", "1.", "1..1", "-.1", "-", "1-", "1.-1", 
+                  ".-1", "1.-", "1.1.1", "", ".", "1.1-", "11-11")
+@
+
+The objective is to infer a RE that matches the decimal numbers in the vector \code{matching},
+but not in the \code{non.matching}. Consequently, 
+the score of any RE is determined by counting the number of matches and non-matches:
+<<tidy=FALSE>>=
+re.score <- function(re) {
+  score <- sum(sapply(matching, function(x) grepl(re, x))) + 
+           sum(sapply(non.matching, function(x)  !grepl(re, x)))
+  return (length(matching) + length(non.matching) - score)
+}
+@
+
+We use \pkg{rex} RE functions to create a grammar. 
+The grammar only includes the functions explored in Section \ref{sec:decimal_RE},
+and is designed such that the search space is reduced:
+<<tidy=FALSE>>=
+library("rex")
+library("gramEvol")
+grammarDef <- CreateGrammar(list(
+              re    = grule(rex(start, rules, end)),
+              rules = grule(rule, .(rule, rules)),
+              rule  = grule(numbers, ".", or("+", "-"), maybe(rules))))
+grammarDef
+@
+
+\begin{itemize}
+	\item The first rule, \ntelem{re}, creates a valid \pkg{rex} command 
+		  that uses \ntelem{rules} for pattern matching.
+	\item The second element, \ntelem{rules}, is \emph{recursive} 
+		  and can create a collection of rules 
+		  by repeating itself, e.g., \ntelem{rule}, \ntelem{rule}, \ntelem{rule}.
+		  The \code{.()} allows using a comma inside a \code{grule} definition, 
+		  where otherwise it would have been interpreted as another replacement rule in the list.
+	\item The last element, \ntelem{rule}, expands to a RE function or character pattern. 
+		  These include \code{numbers} and \code{maybe} from \pkg{rex},
+a decimal point, and + or -.
+\end{itemize}
+
+The fitness function in \pkg{gramEvol} receives an \proglang{R} \code{expression}, 
+which has to be evaluated before being passed to \code{re.score}:
+<<tidy=FALSE>>=
+fitfunc <- function(expr) re.score(eval(expr))
+@
+
+The last step is to perform a search for a regular expression that minimises the score function.
+Here the minimum \code{terminationCost} is known, and \code{max.depth} is increased to allow for more expansion of the recursive \ntelem{rules}.
+We use \code{GrammaticalExhaustiveSearch} to exhaustively search
+for the answer among all possible combinations of the grammar:
+% this takes some time to run, use "monitorFunc = print" for more convenience
+\begin{verbatim}
+R> GrammaticalExhaustiveSearch(grammarDef, fitfunc, max.depth=7, terminationCost = 0)
+
+GE Search Results:
+Expressions Tested: 6577 
+Best Chromosome:    0 1 3 0 2 1 3 1 0 0 1 1 0 0 3 0 0 
+Best Expression:    rex(start, maybe(or("+", "-")), maybe(numbers, "."), numbers, maybe(numbers), end) 
+Best Cost:          0 
+\end{verbatim}
+
+The result, while correct, is different from what we expected: $[\pm][nnn.]nnn[nnn]$, which is true for any real number.
+
+\section{Conclusion}
+Context-free grammars are versatile tools that can describe the structure of any problem.
+In this vignette, a regular expression for matching decimal numbers was discovered using
+an exhaustive search in a context-free grammar.
+
+However, it must be noted that there are disadvantages to using this method:
+\begin{itemize}
+\item Matching and non-matching examples must be known in advance.
+\item A search may take a long time to execute, specially if the grammar is defined broadly.
+\end{itemize}
+
+In conclusion, 
+one might find it easier to design REs by hand 
+in real-world scenarios,
+rather than using evolutionary optimisation techniques.
+
+\bibliographystyle{IEEEtran}
+\bibliography{vig_refs}  
+
+\end{document}
+

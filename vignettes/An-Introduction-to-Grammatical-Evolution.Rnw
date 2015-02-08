@@ -29,7 +29,9 @@
 \newcommand{\pkg}[1]  {{\bf{#1}}}
 %\newcommand{\citep}[1] {{(\cite{#1})}}
 \newcommand{\citep}[1] {{\cite{#1}}}
-\newcommand{\proglang}[1]  {{#1}}
+%\newcommand{\proglang}[1]  {{#1}}
+\newcommand{\proglang}[1]  {{\textsf{#1}}}
+
 
 <<echo=FALSE>>=
 options(width=70)
@@ -56,8 +58,8 @@ set.seed(0)
 \section{Introduction}
 
 Grammatical evolution (GE) is an evolutionary search algorithm, similar to genetic programming (GP).
-It is used to generate programs with syntax defined through a grammar.
-The original author's website is a good resource for a formal introduction to this technique:
+It is typically used to generate programs with syntax defined through a grammar.
+The original author's website \cite{o2001grammatical} is a good resource for a formal introduction to this technique:
 \begin{itemize}
 	\item \url{http://www.grammatical-evolution.org/}
 \end{itemize}
@@ -71,11 +73,14 @@ The goal of using GE is to automatically generate a program
 that minimises a cost function:
 \begin{enumerate}
 	\item A \emph{grammar} is defined to describe the syntax of the programs.
-	\item A \emph{cost function} is defined to assess the quality of a program.
+	\item A \emph{cost function} is defined to assess the quality (the \emph{cost} or \emph{fitness}) of a program.
 	\item An \emph{evolutionary algorithm}, such as GA, 
-	is used to search with in the space of all programs describable by the grammar,
+	is used to search within the space of all programs definable by the grammar,
 	in order to find the program with the lowest cost.
 \end{enumerate}
+
+Notice that by a \emph{program}, we refer to any sequence of instructions that perform a specific task.
+This ranges from a single expression (e.g., \code{sin(x)}), to several statements with function declarations, assignments, and control flow.
 
 The rest of this section will describe each component in more details.
 
@@ -147,8 +152,8 @@ A production rule $n \rightarrow V$ is realized by replacing the non-terminal sy
 with the symbol $v \in V$,
 where $V \subseteq (\mathcal{T} \cup \mathcal{N})$ is a sequence of terminal and/or non-terminal symbols.
 
-For more details on CFGS, their relation to context-free languages, parsing, compilers and
-other related topics refer to Wikipedia:
+For more details on CFGs, their relation to context-free languages, parsing, compilers and
+other related topics refer to \cite{Sethi1986Compiler} or Wikipedia:
 \begin{itemize}
 	\item \url{https://en.wikipedia.org/wiki/Context-free_grammar}
 \end{itemize}
@@ -160,12 +165,12 @@ Notice that each rule in the grammar of Section \ref{sec:informal_grammar} is nu
 Using these numbers, one can precisely refer to a certain expression.
 This is performed by replacing the first non-terminal symbol with the $n$th rule of that non-terminal, starting with the start symbol.
 
-For example, the sequence 2, 3, 1 selects rules (1.b), (2.c) and (3.a) in the following four-step sequence:
+For example, the sequence [2, 3, 1] selects rules (1.b), (2.c) and (3.a) in the following four-step sequence:
 
 %\begin{table}[h]%\centering
 \begin{tabular}{ c c c c l }
 	\toprule
-	Step & Sequence & Rule     &   & Current state                   \\ \midrule
+	Step & Sequence & Rule     &   & Current state                   \\ \hline
 	0    &          & Start    & ~ & \ntelem{sentence}.              \\
 	1    & 2        & (1.b)    & ~ & \ntelem{subject} \ntelem{verb}. \\
 	2    & 3        & (2.c)    & ~ & They \ntelem{verb}.             \\
@@ -178,7 +183,13 @@ For example, the sequence 2, 3, 1 selects rules (1.b), (2.c) and (3.a) in the fo
 Evolutionary optimisation algorithms are a class of optimisation techniques inspired by natural evolution.
 They are used in cases where:
 \begin{itemize}
-	\item The solution to the problem has a certain structure. For example, it is an array of binary variables or integer numbers.
+	\item The solution to the problem can be represented by a certain structure.
+	For example, the solution is an array of binary variables, or integer numbers. 
+	\begin{itemize}
+		\item Typically the array size is fixed and each unique value arrangement is considered a candidate solution.
+		\item Using biological terminology, this structure is referred to as the \emph{chromosome} or \emph{genotype}.
+	\end{itemize}
+	
 	\item There exist a cost function which can quickly return the \emph{cost} or \emph{fitness} of any candidate solution.
 	\item Solving the problem using gradient descent techniques is hard or impossible, because the cost function is non-smooth,
 	or has multiple local optimas, or is simply discrete, like the travelling salesman problem (or in hindsight, the grammar).
@@ -194,12 +205,16 @@ For an in depth introduction, readers are referred to Wikipedia:
 
 \subsubsection{Optimising a grammar by evolution}
 GA only optimises numeric arrays. By \emph{mapping} an integer array to a program using a grammar,
-GA can be readily applied to find optimal programs and expressions:
+GA can be readily applied to find optimal programs:
 \begin{enumerate}
-	\item The solution is selected as an array of integers.
+	\item The solution is represented by an array of integers.
 	\item The array is mapped to a program through the grammar using the technique explained is Section \ref{sec:grammarmapping}.
+		\begin{itemize}
+			\item Using biological terminology, the program is called a \emph{phenotype}, and the mapping is referred to as
+			\emph{genotype to phenotype mapping}.
+		\end{itemize}
 	\item The cost function measures the fitness of the program.
-	\item Any evolutionary optimisation technique is applied on the integer array, which is referred to as the \emph{chromosome} in GA.
+	\item Any evolutionary optimisation technique is applied on the integer array.
 \end{enumerate}
 
 \subsection{Applications of grammatical evolution}
@@ -208,8 +223,8 @@ Any application which needs a program, definable by grammar is creatable in GE.
 Using a grammar allows integration of domain knowledge and a custom program syntax,
 which adds flexibility and precision to GE compared to other techniques such as GP.
 
-Applications of GE include computational finance, music, and robotic control, along others. 
-The authors have previously used GE for electricity forecasting in \cite{MNDL_13}.
+Applications of GE include computational finance, music, and robotic control, among others. 
+%The authors have previously used GE for electricity load forecasting in \cite{MNDL_13}.
 See \url{http://www.grammatical-evolution.org/pubs.html} for a collection of publications in this area.
 
 %These following classic problems are usually used to demonstrate the abilities of GE (or other algorithms like GP)
@@ -328,7 +343,7 @@ ruleDef <- list(expr  = grule(op(expr, expr), func(expr), var),
 
 grammarDef <- CreateGrammar(ruleDef)
 @
-Here,
+Here, the BNF notation is implemented in \proglang{R}:
 \begin{itemize}
 	\item Rules are defined as list.
 	\item Each rule is defined using \code{non.terminal.name = grule(replacement1, replacement2, ...)} format.
@@ -358,6 +373,7 @@ We use the following equation to normalise the error,
 adjusting its impact on small values (e.g., Venus)
 versus large values (e.g., Uranus):
 \begin{equation}
+\label{eq:kepler_err}
 	e = \frac{1}{N} \sum{ log(1 + |p-\hat{p}|)}
 \end{equation}
 where $e$ is the normalised error,
@@ -379,8 +395,12 @@ SymRegFitFunc <- function(expr) {
   return (mean(log(1 + abs(period - result))))
 }
 @
-Notice that a very high cost (infinite error) is assigned 
-to invalid expressions in the fitness function.
+Here, the \code{SymRegFitFunc} receives an \proglang{R} \code{expression}
+and evaluates it. It is assumed that the \code{expression} uses
+\code{distance} to estimate the \code{period}.
+Invalid expressions are handled by returning a very high cost (infinite error). 
+Valid results are compared with the actual period according to (\ref{eq:kepler_err})
+to compute the expression's fitness.
 
 \subsection{Evolving the grammar}
 \code{GrammaticalEvolution} can now be run. 
@@ -401,7 +421,7 @@ best.expression <- ge$best$expression
 
 data.frame(distance, period, Kepler = sqrt(distance^3), 
              GE = eval(best.expression))
-@@
+@
 
 %Other GE runs find expressions such as 
 %\texttt{sqrt(distance)*distance}
@@ -452,7 +472,7 @@ data.frame(distance, period, Kepler = sqrt(distance^3),
 %\end{table} 
 
 \subsection{Monitor function}
-A real-world optimisation may take a long time, and a feedback of the state of optimisation is desirable.
+As a real-world optimisation may take a long time, a feedback of the state of optimisation is desirable.
 \code{GrammaticalEvolution} allows monitoring this status using a callback function.
 This function, if provided to parameter \code{monitorFunc}, 
 receives an object similar to the return value of
@@ -468,7 +488,7 @@ R> customMonitorFunc <- function(results){
 
 R> ge <- GrammaticalEvolution(grammarDef, SymRegFitFunc, 
 +    terminationCost = 0.021,
-+    monitorFunc=customMonitorFunc)
++    monitorFunc = customMonitorFunc)
 \end{verbatim}
 
 or even using the \code{print} function directly:
@@ -477,7 +497,7 @@ R> ge <- GrammaticalEvolution(grammarDef, SymRegFitFunc,
 +    terminationCost = 0.021,
 +    monitorFunc = print)
 \end{verbatim}
-which will \code{print}:
+which prints:
 \begin{verbatim}
 Grammatical Evolution Search Results:
 No. Generations:  1 
@@ -504,93 +524,10 @@ Best Expression:  sqrt(distance^3)
 Best Cost:        0.0201895728693592 
 \end{verbatim}
 
-
-
-\section{Regular Expression}
-\label{sec:reg_expr}
-
-In formal language theory, a regular expression (RE) is a sequence of symbols and operators
-that describe a character pattern.
-REs are translated by RE processors into a non-deterministic finite automaton (NFA)
-and subsequently into a deterministic finite automaton (DFA).
-The DFA can then be executed on any character string, recognize substrings that match the regular expression.
-Due to their expressiveness, REs are widely used in many string pattern matching tasks, such as searching through log files
-or parsing a programs output. See the Wikipedia entry at \url{https://en.wikipedia.org/wiki/Regular_expression} for an in-depth introduction.
-
-\proglang{R} supports standard regular expression with both POSIX and \proglang{Perl} RE syntax. 
-In addition, the
-\href{https://github.com/kevinushey/rex}{\pkg{rex} Package} \cite{rex_package} offers a 
-functional interface for creating REs in \proglang{R}.
-\begin{verbatim}
-R> library("rex")
-\end{verbatim}
-
-GE can infer a regular expression from examples \cite{bartoli2012automatic}.
-In this section, we use \pkg{gramEvol} to find a RE that matches a decimal real number, 
-in form of $[\pm]nnn[.nnn]$, where [~] means optional and $nnn$ denotes one or more digits
-(i.e., \textbackslash\code{d+} in \proglang{Perl} or \code{[:digit:]} in POSIX).
-
-Some matching and non-matching examples are listed below:
-<<tidy=FALSE>>=
-matching <- c("1", "11.1", "1.11", "+11", "-11", "-11.1")
-non.matching <- c("a", "1.", "1..1", "-.1", "-", "1-", "1.-1", 
-                  ".-1", "1.-", "1.1.1", "", ".", "1.1-", "11-11")
-@
-
-Score of any RE is determined by counting the number of matches and non-matches:
-<<tidy=FALSE>>=
-re_score <- function(re) {
-  score <- sum(sapply(matching, function(x) grepl(re, x))) + 
-           sum(sapply(non.matching, function(x)  !grepl(re, x)))
-  return (length(matching) + length(non.matching) - score)
-}
-@
-
-A grammar is defined using \pkg{rex} RE functions:
-<<tidy=FALSE>>=
-grammarDef <- CreateGrammar(list(
-              re    = grule(rex(start, rules, end)),
-              rules = grule(rule, .(rule, rules)),
-              rule  = grule(numbers, ".", or("+", "-"), maybe(rules))))
-grammarDef
-@
-
-\begin{itemize}
-	\item The first rule, \ntelem{re}, creates a valid \pkg{rex} command 
-		  that uses \ntelem{rules} for pattern matching.
-	\item The second element, \ntelem{rules}, is recursive and can create collection of rules 
-		  such as \ntelem{rule}, \ntelem{rule}, \ntelem{rule}.
-		  The \code{.()} allows using a comma inside a grammar, 
-		  where otherwise it would have been interpreted as another value in the \code{grule} list.
-	\item The last element, \ntelem{rule}, expands to an RE function or character pattern. 
-		  These include \code{numbers} (\pkg{rex} shorthand for \code{[:digit:]}),
-a decimal point, + or -, and a \code{maybe} function.
-A \code{maybe} function allows optional presence of a sequence defined by its own set of \ntelem{rules}.
-\end{itemize}
-
-The last step is to perform a search for a regular expression that minimise the score function.
-Here the minimum \code{terminationCost} is known, and \code{max.depth} is increased to allow for more expansion of the recursive \ntelem{rules}.
-We use \code{GrammaticalExhaustiveSearch} to exhaustively search
-for the answer among all possible combinations of the grammar:
-% this takes some time to run, use "monitorFunc = print" for more convenience
-\begin{verbatim}
-R> fitfunc = function(chrom) re_score(eval(chrom))
-R> GrammaticalExhaustiveSearch(grammarDef, fitfunc, max.depth=7, terminationCost = 0)
-
-GE Search Results:
-Expressions Tested: 6577 
-Best Chromosome:    0 1 3 0 2 1 3 1 0 0 1 1 0 0 3 0 0 
-Best Expression:    rex(start, maybe(or("+", "-")), maybe(numbers, "."), numbers, maybe(numbers), end) 
-Best Cost:          0 
-\end{verbatim}
-
-The result, while correct, is different from what we expected: $[\pm][nnn.]nnn[nnn]$, which is true for any real number.
-
 \section{Other gramEvol functionality}
 
-In this section, some of the other functionalities of the \pkg{gramEvol} are introduced:
-
-Many examples are demonstrated using the following grammar:
+In this section, some of the other functionalities of the \pkg{gramEvol} are introduced.
+Here, all of the examples are demonstrated using the following grammar:
 <<tidy=FALSE>>=
 grammarDef <- CreateGrammar(list(
                 expr = gsrule("(<expr>)<op>(<expr>)", "<coef>*<var>"),
@@ -611,7 +548,7 @@ The sequence is zero-indexed (the first rule is zero). To see the step by step m
 GrammarMap(c(0, 1, 0, 0, 1, 1, 0, 0), grammarDef, verbose=TRUE)
 @
 
-If the length of each gene is insufficient for the genotype to phenotype conversion,
+If the length of a sequence is insufficient for the mapping process,
 such that a few non-terminal elements still remain in the resulting expression,
 a wrapping of up to \code{wrappings} is performed. For example:
 <<tidy=FALSE>>=
@@ -621,7 +558,7 @@ GrammarMap(c(0, 1, 0, 0, 1, 1), grammarDef, verbose=TRUE)
 
 \subsection{Examining a grammar}
 
-\pkg{gramEvol} offers several functions to exmine a defined grammar. 
+\pkg{gramEvol} offers several functions to examine grammar definitions. 
 
 \code{summary} reports a summary of what grammar presents:
 <<tidy=FALSE>>=
@@ -631,7 +568,7 @@ summary(grammarDef)
 Many of these properties are available through individual functions:
 
 \code{GetGrammarDepth} computes the depth of grammar tree.
-The parameter \code{max.depth} is used to limit recursion.
+The parameter \code{max.depth} is used to limit recursion in \emph{cyclic} grammars.
 For example, this grammar is cyclic because of rule \ntelem{expr} $\rightarrow$ \ntelem{expr}\ntelem{op}\ntelem{expr},
 expanding a \ntelem{expr} to more \ntelem{expr}s. 
 By default \code{GetGrammarDepth} limits recursion to the number of symbols defined in the grammar:
@@ -660,8 +597,6 @@ GetGrammarDepth(grammarDef2, startSymb = "<coef>")
 @
 
 \code{GetGrammarMaxRuleSize} returns the maximum number of production rules per symbol.
-This function is useful when constructing a GE genome, as it could be used to limit
-the codon size and therefore the search space. 
 Here, \ntelem{op} has the highest number of production rules:
 <<tidy=FALSE>>=
 GetGrammarMaxRuleSize(grammarDef)
@@ -740,7 +675,7 @@ The rest of the parameters are the evolutionary optimisation options:
 		added to the next generation's population. The rest of the population is created
 		using cross-over of chromosomes selected with roulette selection operator.
 
-	\item Each chromosome may mutate by \code{mutationChance}.
+	\item Each chromosome may mutate by a probability of \code{mutationChance}.
 		
    	\item After reaching a termination criteria, e.g., the maximum number of \code{iterations} or the desired 
  		\code{terminationCost}, the algorithm stops and returns the best expression found so far.
@@ -817,12 +752,10 @@ EvalExpressions(quad.expr, envir = df)
 @
 
 This function is useful specially with \code{numExpr} parameter of the \code{GrammaticalEvolution}.
-It is used in applications when more than one expression is required for an application.
-See \cite{MNDL_13} as an example.
 
 \subsection{Alternative optimisation algorithms}
 
-\pkg{gramEvol} also provides a random search and an exhaustive search (which was demonstrated in Section \ref{sec:reg_expr}).
+\pkg{gramEvol} also provides a random search and an exhaustive search.
 Their syntax is similar to the \code{GrammaticalEvolution}:
 
 \begin{verbatim}
@@ -830,7 +763,49 @@ R> result1 <- GrammaticalExhaustiveSearch(grammarDef, evalFunc)
 R> result2 <- GrammaticalRandomSearch(grammarDef, evalFunc)
 \end{verbatim}
 
-\subsection{Conclusion}
+\subsection{Using commas and assignments in rules}
+
+There are two ways to use commas and assignments in \pkg{gramEvol} rules:
+\begin{enumerate}
+\item Rules are defined in string form using \code{gsrule}.
+\item Rules are wrapped in \code{.()} and defined using \code{grule}.
+\end{enumerate}
+
+For example, the consider the following rules:
+
+\ntelem{assignment} ::= A = B | A = C
+
+\ntelem{comma}      ::= A, B  | B, C
+
+Their definition in \pkg{gramEvol} is as follows:
+<<tidy=FALSE>>=
+CreateGrammar(list(
+       assignment = gsrule("A = B", "A = C"),
+       comma      = gsrule("A, B", "B, C")))
+@
+or
+<<tidy=FALSE>>=
+CreateGrammar(list(
+       assignment = grule(.(A = B), .(A = C)),
+       comma      = grule(.(A, B), .(B, C))))
+@
+
+\section{Generating more than one expression}
+
+\pkg{gramEvol} supports generation of multiple expressions through:
+\begin{itemize}
+	\item \code{numExpr} in \code{GrammaticalEvolution} to generate more than one \proglang{R} \code{expression}.
+	\item \code{EvalExpressions} to evaluate multiple \code{expression}s at once.
+\end{itemize}
+
+This is useful in applications when more than one expression is required,
+or the collective power of several simple expressions outperform a single complex program.
+
+For example in \cite{MNDL_13}, the authors have used GE for electricity load forecasting.
+Instead of using a complex machine learning algorithm, pools of string expressions were generated 
+in a guided manner and were used as features in a simpler machine learning algorithm to obtain better results.
+
+\section{Conclusion}
 
 GE offers a flexible yet powerful framework for automatic program generation.
 The syntax and the structure of the programs are described using a context-free grammar,
