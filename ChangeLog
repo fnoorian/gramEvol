@@ -1,6 +1,9 @@
 = Changelog =
 
-2014-12-09 - Changes in version 2.0-1
+2015-02-10 - Changes in version 2.0-1
+ * New Vignettes
+ 
+2014-12-09 - Changes in version 2.0-0
  * CreateGrammar accepts Expressions as well as strings
  * Added predefined multi-point crossover operator to Genetic Algorithm Implementation
  * New functions for iterating through the grammar

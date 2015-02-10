@@ -2,8 +2,6 @@ gramEvol: Grammatical Evolution for R
 =====================================
 The files include source code and documentation of *gramEvol: Grammatical Evolution for R*.
 
-A vignette is under preparation and is available at request.
-
 ### Contact Information
  * Farzad Noorian <farzad.noorian@sydney.edu.au> (Maintainer)
  * Anthony Mihirana de Silva <anthonymihirana.desilva@sydney.edu.au>
@@ -29,5 +27,7 @@ Although the paper uses more advanced techniques, we would be more than happy
 to be cited for this package.
 
 ### License
-All files in this package are distributed under GNU GPL v2.0 or later license. 
+All files in this package, including the documentation and vignettes,
+are distributed under GNU GPL v2.0 or later license.
 For full terms of this license visit <https://www.gnu.org/licenses/gpl-2.0.html>.
+
