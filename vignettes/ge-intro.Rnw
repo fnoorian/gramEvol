@@ -239,8 +239,16 @@ See \url{http://www.grammatical-evolution.org/pubs.html} for a collection of pub
 
 The package \pkg{gramEvol} simplifies defining a grammar and offers a GA implementation. 
 \pkg{gramEvol} hides many details, including the grammar mapping and GA parameters, and
-the only things the user has to do is to define the grammar and the cost function.
-In this section, example are used to demonstrate its usage.
+the only things the user has to do is to:
+\begin{enumerate}
+	\item Define a grammar using \code{CreateGrammar}.
+	\item Define a cost function. It should accept one (or more) \proglang{R} \code{expression}(s)
+			and return a numeric value.
+	\item Call \code{GrammaticalEvolution}.
+\end{enumerate}
+
+
+In this section, examples are used to demonstrate its usage.
 
 \subsection{Rediscovery of Kepler's law by symbolic regression}
 Symbolic regression is the process of discovering a function, in symbolic form,
