@@ -195,6 +195,9 @@ They are used in cases where:
 	or has multiple local optimas, or is simply discrete, like the travelling salesman problem (or in hindsight, the grammar).
 \end{itemize}
 
+It most be noted that since most practical problems involve very large search spaces, 
+it is often not computationally feasible to find the optimal solution.
+
 The oldest and simplest of these algorithms is the genetic algorithm (GA), which optimises a vector of binary variables.
 In this vignette, when referring to GA, we refer to an extended GA which handles integers numbers.
 
@@ -205,7 +208,7 @@ For an in depth introduction, readers are referred to Wikipedia:
 
 \subsubsection{Optimising a grammar by evolution}
 GA only optimises numeric arrays. By \emph{mapping} an integer array to a program using a grammar,
-GA can be readily applied to find optimal programs:
+GA can be readily applied to evolve programs:
 \begin{enumerate}
 	\item The solution is represented by an array of integers.
 	\item The array is mapped to a program through the grammar using the technique explained is Section \ref{sec:grammarmapping}.
@@ -239,20 +242,16 @@ See \url{http://www.grammatical-evolution.org/pubs.html} for a collection of pub
 The package \pkg{gramEvol} simplifies defining a grammar and offers a GA implementation. 
 \pkg{gramEvol} hides many details, including the grammar mapping and GA parameters, and
 the only things the user has to do is to define the grammar and the cost function.
-In this vignette, examples are used to demonstrate its usage.
+In this section, an example is used to demonstrate its usage.
 
-\section{Symbolic Regression}
+\subsection{Rediscovery of Kepler's law by symbolic regression}
 Symbolic regression is the process of discovering a function, in symbolic form,
 which fits a given set of data. Evolutionary algorithms such as GP and GE are commonly used to solve Symbolic Regression problems.
-See \url{https://en.wikipedia.org/wiki/Symbolic_regression}.
+For more information, visit \url{https://en.wikipedia.org/wiki/Symbolic_regression} 
+or \url{http://www.symbolicregression.com/}.
 
-\subsection{Rediscovery of Kepler's law}
-In this section, rediscovery of Kepler's law is presented as an example in symbolic regression using GE
-%Rediscovering scientific laws has been subject of study, specially using GP or Gene expression programming 
-\footnote{
-See \citep{koza1992chapter10} or \url{http://www.dtreg.com/gep.htm} for approaches using 
-GP or Gene expression programming.}.
-%using different heuristic techniques \citep{langley1987heuristics}, GP \citep{koza1992genetic} and Gene expression programming \citep{DTREGGPE}.
+Rediscovery of Kepler's law has been used as a benchmark for symbolic regression 
+\citep{koza1992chapter10, Ferreira2006Chapter6, langley1987heuristics}.
 Here, the goal is to find a relationship between orbital periods and distances of solar system planets
 from the sun. The distance and period data, normalised to Earth, is shown in Table~\ref{tab:planets}.
 
@@ -471,7 +470,7 @@ data.frame(distance, period, Kepler = sqrt(distance^3),
 %	\label{tab:symreg_performance}
 %\end{table} 
 
-\subsection{Monitor function}
+\subsection{Monitoring evolution}
 As a real-world optimisation may take a long time, a feedback of the state of optimisation is desirable.
 \code{GrammaticalEvolution} allows monitoring this status using a callback function.
 This function, if provided to parameter \code{monitorFunc}, 
@@ -736,10 +735,17 @@ It must be noticed that in any problem,
 the speed-up achieved depends on the overhead of communication
 compared with the fitness functions' computational complexity.
 
-\subsection{Group evaluation}
+\subsection{Generating more than one expression}
 
-\code{EvalExpressions} offers a simpler interface for evaluating multiple expressions. 
-The following example uses a dataset for variables defined in the grammar, and evaluates a GE expression object along 
+\pkg{gramEvol} supports generation and evaluation of multiple expressions:
+\begin{itemize}
+	\item \code{numExpr} in \code{GrammaticalEvolution} is used to pass a list of more than one \proglang{R} \code{expression}
+	to the fitness function.
+	\item \code{EvalExpressions} offers a simpler interface for evaluating multiple expressions. 
+\end{itemize}
+
+The following example show cases \code{EvalExpressions}: It uses a dataset for variables defined in the grammar, 
+and evaluates a GE expression object along 
 with a string:
 <<tidy=FALSE>>=
 df <- data.frame(c1 = c(1,2),
@@ -751,7 +757,11 @@ quad.expr <- expression(c1 * v1, c1 * v2, c2 * v1, c2 * v2)
 EvalExpressions(quad.expr, envir = df)
 @
 
-This function is useful specially with \code{numExpr} parameter of the \code{GrammaticalEvolution}.
+This is useful in applications when more than one expression is required,
+or the collective power of several simple expressions outperform a single complex program.
+For example in \cite{MNDL_13}, the authors have used GE for electricity load forecasting.
+Instead of using a complex machine learning algorithm, pools of string expressions were generated 
+in a guided manner and were used as features in a simpler machine learning algorithm to obtain better results.
 
 \subsection{Alternative optimisation algorithms}
 
@@ -790,20 +800,7 @@ CreateGrammar(list(
        comma      = grule(.(A, B), .(B, C))))
 @
 
-\section{Generating more than one expression}
 
-\pkg{gramEvol} supports generation of multiple expressions through:
-\begin{itemize}
-	\item \code{numExpr} in \code{GrammaticalEvolution} to generate more than one \proglang{R} \code{expression}.
-	\item \code{EvalExpressions} to evaluate multiple \code{expression}s at once.
-\end{itemize}
-
-This is useful in applications when more than one expression is required,
-or the collective power of several simple expressions outperform a single complex program.
-
-For example in \cite{MNDL_13}, the authors have used GE for electricity load forecasting.
-Instead of using a complex machine learning algorithm, pools of string expressions were generated 
-in a guided manner and were used as features in a simpler machine learning algorithm to obtain better results.
 
 \section{Conclusion}
 
