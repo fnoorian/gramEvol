@@ -479,7 +479,7 @@ data.frame(distance, period, Kepler = sqrt(distance^3),
 \subsubsection{Monitoring evolution}
 As a real-world optimisation may take a long time, a feedback of the state of optimisation is desirable.
 \code{GrammaticalEvolution} allows monitoring this status using a callback function.
-This function, if provided to parameter \code{monitorFunc}, 
+This function, if provided to the parameter \code{monitorFunc}, 
 receives an object similar to the return value of
 \code{GrammaticalEvolution}.
 For example, the following function prints the current generation,
@@ -568,15 +568,14 @@ where [~] means optional and $nnn$ denotes one or more digits.
 The following table compares this notation with the syntax of \proglang{Perl}, POSIX, and \pkg{rex}:
 
 \begin{tabular}{ l c c c c }
-	%		\toprule
-	& Notation & \proglang{Perl}         & POSIX            & \pkg{rex}              \\ \hline
-	One  digit                   & $n$      & \textbackslash d  & [:digit:]        & \code{number}          \\
-	One or more digits           & $nnn$    & \textbackslash d+ & [:digit:]+       & \code{numbers}         \\
-	Optional presence of X       & [X]      & X?                     & X?              & \code{maybe(}X\code{)} \\
-	alternate presence of X or Y & X|Y      & X|Y                     & X|Y              & \code{or(}X, Y\code{)} \\
-	Plus sign                    & +        & \textbackslash +        & \textbackslash + & \code{"+"}             \\
-	Minus sign                   & -        & -                       & -                & \code{"-"}             \\
-	Dot                          & .        & \textbackslash .        & \textbackslash . & \code{"."}             \\ \bottomrule
+	%		\toprule                  & Notation & \proglang{Perl}   & POSIX            & \pkg{rex}              \\ \hline
+	One  digit                   & $n$      & \textbackslash d  & [[:digit:]]      & \code{number}          \\
+	One or more digits           & $nnn$    & \textbackslash d+ & [[:digit:]]+     & \code{numbers}         \\
+	Optional presence of X       & [X]      & X?                & X?               & \code{maybe(}X\code{)} \\
+	alternate presence of X or Y & X|Y      & X|Y               & X|Y              & \code{or(}X, Y\code{)} \\
+	Plus sign                    & +        & \textbackslash +  & \textbackslash + & \code{"+"}             \\
+	Minus sign                   & -        & -                 & -                & \code{"-"}             \\
+	Dot                          & .        & \textbackslash .  & \textbackslash . & \code{"."}             \\ \bottomrule
 \end{tabular} 
 
 ~ \\
@@ -621,8 +620,8 @@ the score of any RE is determined by counting the number of matches and non-matc
 
 <<tidy=FALSE>>=
 re.score <- function(re) {
-score <- sum(sapply(matching, function(x) grepl(re, x))) + 
-         sum(sapply(non.matching, function(x)  !grepl(re, x)))
+  score <- sum(sapply(matching, function(x) grepl(re, x))) + 
+           sum(sapply(non.matching, function(x)  !grepl(re, x)))
   return (length(matching) + length(non.matching) - score)
 }
 @
@@ -658,17 +657,18 @@ grammarDef
 	where otherwise it would have been interpreted as another replacement rule in the list.
 	\item The last element, \ntelem{rule}, expands to a RE function or character pattern. 
 	These include \code{numbers} and \code{maybe} from \pkg{rex},
-	a decimal point, and + or -.
+	a decimal point, and + or --.
 \end{itemize}
 
 \paragraph{Evolving the grammar:}
 The last step is to perform a search for a regular expression that minimises the score function.
-Here the minimum \code{terminationCost} is known, and \code{max.depth} is increased to allow for more expansion of the recursive \ntelem{rules}.
+Here the minimum \code{terminationCost} is known (i.e., zero error), 
+and \code{max.depth} is increased to allow for more expansion of the recursive \ntelem{rules}.
 We use \code{GrammaticalExhaustiveSearch} to exhaustively search
 for the answer among all possible combinations of the grammar:
 % this takes some time to run, use "monitorFunc = print" for more convenience
 <<eval=FALSE>>=
-GrammaticalExhaustiveSearch(grammarDef, fitfunc, max.depth=7, terminationCost = 0)
+GrammaticalExhaustiveSearch(grammarDef, fitfunc, max.depth = 7, terminationCost = 0)
 @
 \begin{verbatim}
 GE Search Results:
@@ -682,13 +682,13 @@ The result, while correct, is different from what we expected: $[\pm][nnn.]nnn[n
 Furthermore, the search takes a considerable amount of time:
 <<eval=FALSE>>=
 system.time(GrammaticalExhaustiveSearch(grammarDef, fitfunc, 
-                                         max.depth=7, terminationCost = 0))
+                                         max.depth = 7, terminationCost = 0))
 @
 \begin{verbatim}
    user  system elapsed 
 380.469  17.022 392.637 
 \end{verbatim}
-The results are from a 3.40 GHz Intel Core i7-2600 CPU.
+which was measured a 3.40 GHz Intel Core i7-2600 CPU.
 
 In conclusion, 
 one might find it easier to design REs by hand 
@@ -716,14 +716,14 @@ GrammarMap(c(0, 1, 0, 0, 1, 1, 0, 0), grammarDef)
 @
 The sequence is zero-indexed (the first rule is zero). To see the step by step mapping, use the \code{verbose} parameter option:
 <<tidy=FALSE>>=
-GrammarMap(c(0, 1, 0, 0, 1, 1, 0, 0), grammarDef, verbose=TRUE)
+GrammarMap(c(0, 1, 0, 0, 1, 1, 0, 0), grammarDef, verbose = TRUE)
 @
 
 If the length of a sequence is insufficient for the mapping process,
 such that a few non-terminal elements still remain in the resulting expression,
 a wrapping of up to \code{wrappings} is performed. For example:
 <<tidy=FALSE>>=
-GrammarMap(c(0, 1, 0, 0, 1, 1), grammarDef, verbose=TRUE)
+GrammarMap(c(0, 1, 0, 0, 1, 1), grammarDef, verbose = TRUE)
 @
 
 
@@ -741,7 +741,7 @@ Many of these properties are available through individual functions:
 \code{GetGrammarDepth} computes the depth of grammar tree.
 The parameter \code{max.depth} is used to limit recursion in \emph{cyclic} grammars.
 For example, this grammar is cyclic because of rule \ntelem{expr} $\rightarrow$ \ntelem{expr}\ntelem{op}\ntelem{expr},
-expanding a \ntelem{expr} to more \ntelem{expr}s. 
+i.e., replacing a \ntelem{expr} with other \ntelem{expr}s. 
 By default \code{GetGrammarDepth} limits recursion to the number of symbols defined in the grammar:
 <<tidy=FALSE>>=
 GetGrammarDepth(grammarDef)
@@ -773,7 +773,7 @@ Here, \ntelem{op} has the highest number of production rules:
 GetGrammarMaxRuleSize(grammarDef)
 @
 
-\code{GetGrammarNumOfExpressions} returns number of possible expressions existing
+\code{GetGrammarNumOfExpressions} returns the number of possible expressions existing
   in the grammar space.  
 This function also uses the optional argument \code{max.depth} to limit the number of recursions and 
 \code{startSymb} to set the starting symbol:
@@ -817,8 +817,8 @@ GrammaticalEvolution(grammarDef, evalFunc,
 
 \end{verbatim}
 
-\code{max.depth}, \code{startSymb} and \code{seqLen} determine recursive grammar limitations, similar to 
-what was explained in the previous section.
+\code{max.depth} and \code{startSymb} determine recursive grammar limitations, similar to 
+what was explained in the previous section.  
 
 The rest of the parameters are the evolutionary optimisation options:
 \begin{itemize}
@@ -851,8 +851,12 @@ The rest of the parameters are the evolutionary optimisation options:
    	\item After reaching a termination criteria, e.g., the maximum number of \code{iterations} or the desired 
  		\code{terminationCost}, the algorithm stops and returns the best expression found so far.
 		
-	\item \code{GrammaticalEvolution} also supports multi-gene operations, generating more than one expression
+	\item \code{GrammaticalEvolution} supports multi-gene operations, generating more than one expression
 		per chromosome using the \code{numExpr} parameter.
+		
+	\item The number of integer codons in the chromosome is determined by 
+	      \code{seqLen} times \code{numExpr} 
+	      (i.e., the sequence length per expression, times the number of expressions).	
 		
 	\item \code{monitorFunc} is then called with information and statistics
 		about the current status of the population.
@@ -872,7 +876,7 @@ to improve its performance. This is done through the
 \code{plapply} argument of \code{GrammaticalEvolution}
 function. By default, \code{lapply} function is used to evaluate all individuals in the population.
 
-Multi-core systems simply benefit from using \code{mclapply} from package \pkg{parallel},% \cite{Rlang},
+Multi-core systems simply benefit from using \code{mclapply} from package \pkg{parallel}, % \cite{Rlang},
 which is a drop-in replacement for \code{lapply} on POSIX compatible systems.  
 The following code optimises \code{evalFunc} on 4 cores:
 
@@ -880,7 +884,7 @@ The following code optimises \code{evalFunc} on 4 cores:
 library("parallel")
 options(mc.cores = 4)
 ge <- GrammaticalEvolution(grammarDef, evalFunc, 
-                            plapply=mclapply)
+                            plapply = mclapply)
 @
 
 To run \pkg{gramEvol} on a cluster,
@@ -899,7 +903,7 @@ cl <- makeCluster(type = "PSOCK", c("127.0.0.1",
 clusterEvalQ(cl, library("gramEvol"))
 clusterExport(cl, c("evalFunc"))
 ge <- GrammaticalEvolution(grammarDef, evalFunc, 
-   plapply=function(...) parLapply(cl, ...))
+   plapply = function(...) parLapply(cl, ...))
 stopCluster(cl)
 @
 
@@ -920,10 +924,10 @@ The following example show cases \code{EvalExpressions}: It uses a dataset for v
 and evaluates a GE expression object along 
 with a string:
 <<tidy=FALSE>>=
-df <- data.frame(c1 = c(1,2),
-                 c2 = c(2,3),
-                 v1 = c(3,4),
-                 v2 = c(4,5))
+df <- data.frame(c1 = c(1, 2),
+                  c2 = c(2, 3),
+                  v1 = c(3, 4),
+                  v2 = c(4, 5))
 
 quad.expr <- expression(c1 * v1, c1 * v2, c2 * v1, c2 * v2)
 EvalExpressions(quad.expr, envir = df)
@@ -931,8 +935,8 @@ EvalExpressions(quad.expr, envir = df)
 
 This is useful in applications when more than one expression is required,
 or the collective power of several simple expressions outperform a single complex program.
-For example in \cite{MNDL_13}, the authors have used GE for electricity load forecasting.
-Instead of using a complex machine learning algorithm, pools of string expressions were generated 
+For example in \cite{MNDL_13}, the authors have used GE for electricity load forecasting;
+instead of using a complex machine learning algorithm, pools of string expressions were generated 
 in a guided manner and were used as features in a simpler machine learning algorithm to obtain better results.
 
 \subsection{Alternative optimisation algorithms}
@@ -949,7 +953,7 @@ result2 <- GrammaticalRandomSearch(grammarDef, evalFunc)
 
 There are two ways to use commas and assignments in \pkg{gramEvol} rules:
 \begin{enumerate}
-\item Rules are defined in string form using \code{gsrule}.
+\item Rules are defined in character string form using \code{gsrule}.
 \item Rules are wrapped in \code{.()} and defined using \code{grule}.
 \end{enumerate}
 
