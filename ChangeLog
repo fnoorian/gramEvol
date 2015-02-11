@@ -1,5 +1,8 @@
 = Changelog =
 
+2015-02-11 - Changes in version 2.0-2
+ * R-devel cran check compatibility fix
+
 2015-02-10 - Changes in version 2.0-1
  * New Vignettes
  
