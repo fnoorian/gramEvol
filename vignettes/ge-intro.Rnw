@@ -147,7 +147,7 @@ $\mathcal{S} \in \mathcal{N}$ is the start symbol.
 A production rule $n \rightarrow V$ is realized by replacing the non-terminal symbol $n \in \mathcal{N}$ 
 %in string $\alpha$ 
 with the symbol $v \in V$,
-where $V \subseteq (\mathcal{T} \cup \mathcal{N})$ is a sequence of terminal and/or non-terminal symbols.
+where $V \in (\mathcal{T} \cup \mathcal{N})^*$ is a sequence of terminal and/or non-terminal symbols.
 
 For more details on CFGs, their relation to context-free languages, parsing, compilers and
 other related topics refer to \cite{Sethi1986Compiler} or Wikipedia:
