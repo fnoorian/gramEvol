@@ -4,7 +4,7 @@ The files include source code and documentation of *gramEvol: Grammatical Evolut
 
 ### Contact Information
  * Farzad Noorian <farzad.noorian@sydney.edu.au> (Maintainer)
- * Anthony Mihirana de Silva <anthonymihirana.desilva@sydney.edu.au>
+ * Anthony Mihirana de Silva <mihids@gmail.com>
 
 ### Release and Development
 The release version of this package is available on CRAN:
