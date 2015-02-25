@@ -6,6 +6,8 @@ Date: 2015-02-11
 Author: Farzad Noorian, Anthony Mihirana de Silva
 Maintainer: Farzad Noorian <farzad.noorian@sydney.edu.au>
 Description: Context Free Grammar and Grammatical Evolution for R.
+URL: https://github.com/fnoorian/gramEvol/
+BugReports: https://github.com/fnoorian/gramEvol/issues
 Depends:
 Suggests: rex
 License: GPL (>= 2)
