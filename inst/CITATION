@@ -1,0 +1,12 @@
+citHeader("To cite package 'gramEvol' in publications, please use:")
+
+citEntry(entry = "Article",
+  author = c(person("Farzad", "Noorian",  email = "farzad.noorian@sydney.edu.au"),
+             person("Anthony M.", "de Silva", email = "mihids@gmail.com"),
+             person("Philip H. W.", "Leong", email = "philip.leong@sydney.edu.au")),
+  title = "gramEvol: Grammatical Evolution in R",
+  journal = "Journal of Statistical Software",
+  year = "2015",
+  note = "In press, conditionally accepted 4 April 2015",
+  textVersion = "Farzad Noorian, Anthony M. de Silva, and Philip H.W. Leong. gramEvol: Grammatical Evolution in R. Journal of Statistical Software, 2015. In press, conditionally accepted 4 April 2015."
+)
