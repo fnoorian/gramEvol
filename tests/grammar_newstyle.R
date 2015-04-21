@@ -106,4 +106,9 @@ stopifnot(colnames(r2) == c("expr1","expr2"))
 stopifnot(r2$expr1[1] == 6)
 stopifnot(r2$expr1[2] * 3 == 40)
 stopifnot(r2$expr2 == c(4,10))
+################
+vrule = gvrule(1:10)
+stopifnot(length(vrule) == 10)
+stopifnot(all(as.vector(vrule) == 1:10))
+
 

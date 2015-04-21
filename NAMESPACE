@@ -1,6 +1,7 @@
 export(
     "grule",
     "gsrule",
+    "gvrule",
     "CreateGrammar",
     "GrammarMap",
     "GrammarGenotypeToPhenotype",

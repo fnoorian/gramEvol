@@ -10,6 +10,11 @@ gsrule <- function(...) {
   return (rule)
 }
 
+gvrule <- function(vec) {
+# create GERule for a vector
+  do.call(grule, as.list(vec))
+}
+
 print.GERule <- function(x, ...) {
   i = 0
   for (item in x) {
