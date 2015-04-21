@@ -90,7 +90,7 @@ they are extensively used in computer science for describing programming languag
 \subsubsection{Informal introduction to context-free grammars}
 \label{sec:informal_grammar}
 
-GE uses \emph{context-free grammar} to describe the syntax of programs.
+GE uses a \emph{context-free grammar} to describe the syntax of programs.
 
 A grammar in which the rules are not sensitive to the sentence's context is called
 a \emph{context-free grammar} (CFG), and is defined using a collection of 
