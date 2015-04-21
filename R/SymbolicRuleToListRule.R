@@ -1,3 +1,22 @@
+ is.call.primitive <- function(x) {
+ # returns true if the given input (a "call" object) is a .primitive
+   if (length(x) != 1) {
+     return(FALSE)
+   }
+   
+   str = deparse(x)
+   if (length(str) != 1) {
+     return(FALSE)
+   }
+   
+   # it is not a string if it contains paranthesis
+   if (length(grep("(", str, fixed=TRUE)) != 0) {
+     return(FALSE)
+   }
+   
+   return(is.primitive(try(eval(x), silent=TRUE)))
+ }
+
 SymbolicRuleToListRule <- function(ruleDef) {
   # ruleDef: Receives the symbolically defined rule
   # returns: a grammar rule in string list format with gt and lt escaped
@@ -39,7 +58,7 @@ SymbolicRuleToString <- function(current_rule, ruleDefIndex, ruleEscapeList) {
   escape_expression_rules <- function(expr) eval(substitute(substitute(e, ruleEscapeList), list(e = expr)))
   
   # do not process primitives
-  if (is.primitive(try(eval(current_rule), silent=TRUE)) & (length(current_rule) == 1)) {
+  if (is.call.primitive(current_rule)) {
     current_rule = paste0('`', escape.gt.lt(current_rule), '`')
   } else {
     # add ".GElt." and ".GEgt." around parsed blocks to mark them as future substitutables
