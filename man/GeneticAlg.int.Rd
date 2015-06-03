@@ -165,7 +165,7 @@ must be exported to worker nodes before invoking \code{GeneticAlg.int}.
 
 \references{
 This function is partially based on \code{genalg} package
-by Egon Willighagen. See \url{http://cran.r-project.org/web/packages/genalg/}.
+by Egon Willighagen. See \url{http://cran.r-project.org/package=genalg}.
 }
 
 % \author{
