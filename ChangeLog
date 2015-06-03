@@ -1,7 +1,14 @@
 = Changelog =
 
+2015-06-03 - Changes in version 2.1-0
+ * Added grammar rule concatenation
+ * Added iterative grammar rule
+ * Improved primitive function printing in the grammar
+ * Fixed typos and cleaned up latex in the vignette
+ * R-devel CRAN check compatibility fixes
+
 2015-02-11 - Changes in version 2.0-2
- * R-devel cran check compatibility fix
+ * R-devel CRAN check compatibility fix
 
 2015-02-10 - Changes in version 2.0-1
  * New Vignettes
