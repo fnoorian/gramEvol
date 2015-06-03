@@ -10,12 +10,6 @@
 \usepackage{hyperref}
 \usepackage{enumitem}
 
-\usepackage{algorithmicx}
-\usepackage{algorithm}% http://ctan.org/pkg/algorithm
-\usepackage{algpseudocode}% http://ctan.org/pkg/algorithmicx
-%\renewcommand{\algorithmicrequire}{\textbf{Input}}
-%\renewcommand{\algorithmicensure}{\textbf{Output}}
-
 \usepackage[nounderscore]{syntax}
 \setlength{\grammarparsep}{2pt plus 1pt minus 1pt} % increase separation between rules
 \setlength{\grammarindent}{6em} % increase separation between LHS/RHS
