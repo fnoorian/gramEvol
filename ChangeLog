@@ -1,5 +1,8 @@
 = Changelog =
 
+2015-06-04 - Changes in version 2.1-1
+ * Changed package's description, explaining what grammatical evolution is.
+
 2015-06-03 - Changes in version 2.1-0
  * Added grammar rule concatenation
  * Added iterative grammar rule
