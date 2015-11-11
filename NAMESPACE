@@ -1,3 +1,5 @@
+importFrom("stats", "dnorm", "runif")
+importFrom("utils", "tail")
 export(
     "grule",
     "gsrule",
