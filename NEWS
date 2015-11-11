@@ -1,4 +1,9 @@
-= Changelog =
+= News =
+
+2015-11-11 - Changes in version 2.1-2
+ * Changed contact email
+ * Added citation information
+ * Fixed global function imports in package namespace
 
 2015-06-04 - Changes in version 2.1-1
  * Changed package's description, explaining what grammatical evolution is.
