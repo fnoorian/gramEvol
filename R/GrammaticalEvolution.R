@@ -8,7 +8,8 @@ GrammaticalEvolution <-  function(grammarDef, evalFunc,
                                   optimizer = c("auto", "es", "ga"),
                                   popSize=8, newPerGen = "auto", elitism = 2,
                                   mutationChance=NA,
-                                  iterations=1000, terminationCost=NA, 
+                                  iterations="auto",
+                                  terminationCost=NA,
                                   monitorFunc=NULL,
                                   plapply=lapply, ...){
     
@@ -26,19 +27,27 @@ GrammaticalEvolution <-  function(grammarDef, evalFunc,
     # set the optimiser
     if (numExpr > 1) {
       optimizer = "ga"
-      popSize = popSize * 5
       } else {
       optimizer = "es"
       newPerGen = "auto"
     }
     
+    # change the popsize if using GA
+    if (optimizer == "ga") {
+      popSize = round(popSize * 5)
+    }
+  }
+  
+  # set number of iterations
+  if (iterations == "auto") {
+    iterations = 1000
+    
     # automatically set the max iteration
     num.grammar.expr = GrammarNumOfExpressions(grammarDef, max.depth, startSymb)
     iterations = round(min(num.grammar.expr / popSize * 2, iterations))
     
-    # change the popsize if using GA
+    # only use 1/5 for GA optimizer
     if (optimizer == "ga") {
-      popSize = round(popSize * 5)
       iterations = round(iterations / 5)
     }
   }
@@ -61,7 +70,6 @@ GrammaticalEvolution <-  function(grammarDef, evalFunc,
     } else {
       mutationChance <- 1 / (1 + chromosomeLen)
     }
-    
   }
   
   # determine the indicies for cutting chromosomes to N expressions

@@ -18,7 +18,8 @@ GrammaticalEvolution(grammarDef, evalFunc,
               optimizer = c("auto", "es", "ga"),
               popSize = 8, newPerGen = "auto", elitism = 2,
               mutationChance = NA,
-              iterations = 1000, terminationCost = NA, 
+              iterations = "auto",
+              terminationCost = NA,
               monitorFunc = NULL,
               plapply = lapply, ...)
 
@@ -73,7 +74,8 @@ GrammaticalEvolution(grammarDef, evalFunc,
 }
 
   \item{iterations}{
-    Number of maximum iterations in the evolutionary optimizer.
+    Number of maximum iterations in the evolutionary optimizer. By default, 1000 for \code{"es"}
+    optimizer and 200 for \code{"ga"}.
 }
   \item{terminationCost}{
     Target cost. If a sequence with this cost or less is found,

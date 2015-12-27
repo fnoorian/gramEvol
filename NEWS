@@ -1,5 +1,8 @@
 = News =
 
+2016-01-xx - Changes in version 2.1-3
+ * Fix iteration parameter auto-set overrides manual value
+
 2015-11-11 - Changes in version 2.1-2
  * Changed contact email
  * Added citation information
