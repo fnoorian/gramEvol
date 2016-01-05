@@ -6,7 +6,7 @@ GrammaticalEvolution <-  function(grammarDef, evalFunc,
                                   wrappings=3, 
                                   suggestions=NULL,
                                   optimizer = c("auto", "es", "ga"),
-                                  popSize=8, newPerGen = "auto", elitism = 2,
+                                  popSize = "auto", newPerGen = "auto", elitism = 2,
                                   mutationChance=NA,
                                   iterations="auto",
                                   terminationCost=NA,
@@ -22,19 +22,22 @@ GrammaticalEvolution <-  function(grammarDef, evalFunc,
   
   # determine the values that are not given
   optimizer <- match.arg(optimizer)
-
+  
   if (optimizer == "auto") {
     # set the optimiser
     if (numExpr > 1) {
       optimizer = "ga"
-      } else {
+    } else {
       optimizer = "es"
-      newPerGen = "auto"
     }
-    
-    # change the popsize if using GA
+  }
+
+  # automatically set the population size
+  if (popSize == "auto") {
     if (optimizer == "ga") {
-      popSize = round(popSize * 5)
+      popSize = 48
+    } else {
+      popSize = 8
     }
   }
   
@@ -46,9 +49,9 @@ GrammaticalEvolution <-  function(grammarDef, evalFunc,
     num.grammar.expr = GrammarNumOfExpressions(grammarDef, max.depth, startSymb)
     iterations = round(min(num.grammar.expr / popSize * 2, iterations))
     
-    # only use 1/5 for GA optimizer
+    # only use 1/6 for GA optimizer
     if (optimizer == "ga") {
-      iterations = round(iterations / 5)
+      iterations = round(iterations / 6)
     }
   }
 

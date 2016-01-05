@@ -16,7 +16,7 @@ GrammaticalEvolution(grammarDef, evalFunc,
               wrappings = 3, 
               suggestions = NULL,
               optimizer = c("auto", "es", "ga"),
-              popSize = 8, newPerGen = "auto", elitism = 2,
+              popSize = "auto", newPerGen = "auto", elitism = 2,
               mutationChance = NA,
               iterations = "auto",
               terminationCost = NA,
@@ -61,7 +61,7 @@ GrammaticalEvolution(grammarDef, evalFunc,
 	If \code{"auto"} is used, \code{popSize} and \code{iterations} are tweaked based on the grammar as well.
 }
   \item{popSize}{
-    Population size in the evolutionary optimizer.
+    Population size in the evolutionary optimizer. By default, 8 for ES and 48 for GA.
 }
   \item{newPerGen}{
     Number of randomly generated individuals in evolution strategy.
