@@ -11,8 +11,9 @@ GrammaticalEvolution <-  function(grammarDef, evalFunc,
                                   iterations="auto",
                                   terminationCost=NA,
                                   monitorFunc=NULL,
+                                  disable.warnings=FALSE,
                                   plapply=lapply, ...){
-    
+  
   if (numExpr < 1) {
     stop("Number of Expressions (numExpr) has to be at least 1.");
   }
@@ -66,7 +67,7 @@ GrammaticalEvolution <-  function(grammarDef, evalFunc,
       popSize = popSize - newPerGen
     }
   }
-
+  
   if (is.na(mutationChance)) {
     if (optimizer == "es") {
       mutationChance <- min(0.1, 5 / (1 + chromosomeLen))  
@@ -111,10 +112,16 @@ GrammaticalEvolution <-  function(grammarDef, evalFunc,
       return (Inf)  # return very high error if all data is non-terminal
     }
     
+    if (disable.warnings) {
+      eval.results = suppressWarnings(evalFunc(expr.list))
+    } else {
+      eval.results = evalFunc(expr.list)
+    }
+    
     # evaluate the expressions
-    return (evalFunc(expr.list))
+    return (eval.results)
   }
-
+  
   add.expression.to.results <- function(ga.result) {
     ga.result$best$expressions = chromToExprList(ga.result$best$genome)
     class(ga.result) <- "GrammaticalEvolution"
@@ -132,15 +139,15 @@ GrammaticalEvolution <-  function(grammarDef, evalFunc,
   
   if (optimizer == "ga") {
     result <- GeneticAlg.int(genomeLen=chromosomeLen, 
-                                 codonMin = 0, codonMax = GrammarMaxRuleSize(grammarDef) - 1,
-                                 evalFunc=ga.evalFunc,
-                                 suggestions=suggestions,
-                                 popSize=popSize, iterations=iterations, elitism=elitism, mutationChance=mutationChance,
-                                 geneCrossoverPoints = geneCrossoverPoints,
-                                 terminationCost=terminationCost,
-                                 monitorFunc=ga.monFunc,
-                                 allowrepeat = TRUE,
-                                 plapply=plapply, ...)
+                             codonMin = 0, codonMax = GrammarMaxRuleSize(grammarDef) - 1,
+                             evalFunc=ga.evalFunc,
+                             suggestions=suggestions,
+                             popSize=popSize, iterations=iterations, elitism=elitism, mutationChance=mutationChance,
+                             geneCrossoverPoints = geneCrossoverPoints,
+                             terminationCost=terminationCost,
+                             monitorFunc=ga.monFunc,
+                             allowrepeat = TRUE,
+                             plapply=plapply, ...)
   } else {
     result <- EvolutionStrategy.int(genomeLen=chromosomeLen, 
                                     codonMin = 0, codonMax = GrammarMaxRuleSize(grammarDef) - 1,
@@ -153,7 +160,8 @@ GrammaticalEvolution <-  function(grammarDef, evalFunc,
                                     allowrepeat = TRUE,
                                     plapply=plapply, ...)
   }
-
+  
   
   return (add.expression.to.results(result))
 }
+

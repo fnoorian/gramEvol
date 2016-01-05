@@ -21,6 +21,7 @@ GrammaticalEvolution(grammarDef, evalFunc,
               iterations = "auto",
               terminationCost = NA,
               monitorFunc = NULL,
+              disable.warnings=FALSE,
               plapply = lapply, ...)
 
 \method{print}{GrammaticalEvolution}(x, ..., show.genome = FALSE)
@@ -88,6 +89,10 @@ GrammaticalEvolution(grammarDef, evalFunc,
 }
  \item{monitorFunc}{
   A function that is called at each generation. It can be used to monitor evolution of population.
+}
+
+\item{disable.warnings}{
+  If \code{TRUE}, suppresses any warnings generated while evaulating \code{evalFunc}s.
 }
   \item{plapply}{
     \code{lapply} function used for mapping chromosomes to the cost function.
