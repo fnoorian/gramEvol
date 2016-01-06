@@ -36,23 +36,24 @@ GrammaticalEvolution <-  function(grammarDef, evalFunc,
   # automatically set the population size
   if (popSize == "auto") {
     if (optimizer == "ga") {
-      popSize = 48
+      popSize = 200
     } else {
       popSize = 8
     }
   }
   
-  # set number of iterations
+  # automatically set GA iterations (generations) number
   if (iterations == "auto") {
     iterations = 1000
-    
-    # automatically set the max iteration
+
+    # minimize number of iterations for smaller grammars
     num.grammar.expr = GrammarNumOfExpressions(grammarDef, max.depth, startSymb)
-    iterations = round(min(num.grammar.expr / popSize * 2, iterations))
-    
-    # only use 1/6 for GA optimizer
-    if (optimizer == "ga") {
-      iterations = round(iterations / 6)
+    iterations = round(min(num.grammar.expr / popSize * 2,
+                           iterations))
+
+    # as GA population is higher, reduce number of generations
+    if (optimizer == "ga") { 
+      iterations = round(iterations/5)
     }
   }
 
