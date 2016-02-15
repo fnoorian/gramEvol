@@ -76,7 +76,7 @@ GeneticAlg.int <- function(genomeLen, codonMin, codonMax,
   if (!is.null(suggestions)) {
     verbose("Adding suggestions to first population...\n");
     suggestionCount = nrow(suggestions)
-    population[1:suggestionCount,] = population[i,]
+    population[1:suggestionCount, ] <- suggestions
     verbose("Filling others with random values in the given domains...\n");
   } else {
     verbose("Starting with random values in the given domains...\n");
