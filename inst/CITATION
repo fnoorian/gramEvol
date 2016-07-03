@@ -1,12 +1,24 @@
-citHeader("To cite package 'gramEvol' in publications, please use:")
+bibentry(bibtype = "Article",
+  title        = "{gramEvol}: Grammatical Evolution in {R}",
+  author       = c(person(given = "Farzad",
+                          family = "Noorian",
+                          email = "farzad.noorian@sydney.edu.au"),
+                   person(given = c("Anthony", "M."),
+                          family = "de Silva"),
+                   person(given = c("Philip", "H.", "W."),
+                          family = "Leong")),
+  journal      = "Journal of Statistical Software",
+  year         = "2016",
+  volume       = "71",
+  number       = "1",
+  pages        = "1--26",
+  doi          = "10.18637/jss.v071.i01",
 
-citEntry(entry = "Article",
-  author = c(person("Farzad", "Noorian",  email = "farzad.noorian@sydney.edu.au"),
-             person("Anthony M.", "de Silva", email = "mihids@gmail.com"),
-             person("Philip H. W.", "Leong", email = "philip.leong@sydney.edu.au")),
-  title = "{gramEvol}: Grammatical Evolution in R",
-  journal = "Journal of Statistical Software",
-  year = "2016",
-  note = "In press, accepted 4 April 2015",
-  textVersion = "Farzad Noorian, Anthony M. de Silva, and Philip H.W. Leong. gramEvol: Grammatical Evolution in R. Journal of Statistical Software, 2016. In press, accepted 4 April 2015."
+  header       = "To cite gramEvol in publications use:",
+  textVersion  =
+  paste("Farzad Noorian, Anthony M. de Silva, Philip H. W. Leong (2016).",
+        "gramEvol: Grammatical Evolution in R.",
+        "Journal of Statistical Software, 71(1), 1-26.",
+        "doi:10.18637/jss.v071.i01")
 )
+
