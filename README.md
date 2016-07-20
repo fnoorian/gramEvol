@@ -33,6 +33,45 @@ A tutorial on implementing GE programs is included in the package's
 More information regarding GE and its application in parameter optimization is brought in
 [this paper in Journal of statistical Software](https://www.jstatsoft.org/article/view/v071i01).
 
+### Example
+
+This example implements the *Kepler equation rediscovery*.
+
+```R
+library("gramEvol")
+
+# grammar definition for generic symbolic regression
+grammarDef <- CreateGrammar(list(
+  expr  = grule(op(expr, expr), func(expr), var),
+  func  = grule(sin, cos, log, sqrt),
+  op    = grule(`+`, `-`, `*`), # define unary operators
+  var   = grule(distance, distance^n, n),
+  n     = gvrule(1:4) # this is shorthand for grule(1,2,3,4)
+))
+
+# cost function and data
+planets <- c("Venus", "Earth", "Mars", "Jupiter", "Saturn", "Uranus")
+distance <- c(0.72, 1.00, 1.52, 5.20, 9.53, 19.10)
+period <- c(0.61, 1.00, 1.84, 11.90, 29.40, 83.50)
+
+SymRegCostFunc <- function(expr) {
+     result <- eval(expr)
+  
+       if (any(is.nan(result)))
+           return(Inf)
+  
+       return (mean(log(1 + abs(period - result))))
+}
+
+# run GE
+ge <- GrammaticalEvolution(grammarDef, SymRegCostFunc, iterations = 50)
+
+print(ge)
+
+# the best expression
+print(ge$best$expressions)
+```
+
 ### Contact Information
  * Farzad Noorian <farzad.noorian@gmail.com> (Maintainer)
  * Anthony Mihirana de Silva <mihids@gmail.com>
