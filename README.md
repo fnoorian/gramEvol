@@ -12,8 +12,26 @@ context-free grammars (CFGs), random search, exhaustive search, and evolutionary
 optimization. Users are only required to define their program structure via a
 grammar, and a cost function to evaluate the fitness of each program.
 
-More information regarding the grammatical evolution is brought in the package's
-vignette.
+### Installation
+
+You can install this package from CRAN:
+```R
+install.packages("gramEvol")
+```
+
+You can install the latest version from Github:
+```R
+if (!require("devtools")) install.packages("devtools")
+devtools::install_github("fnoorian/gramEvol")
+```
+
+### Usage
+
+A tutorial on implementing GE programs is included in the package's
+[vignette](https://cran.r-project.org/web/packages/gramEvol/vignettes/ge-intro.pdf).
+
+More information regarding GE and its application in parameter optimization is brought in
+[this paper in Journal of statistical Software](https://www.jstatsoft.org/article/view/v071i01).
 
 ### Contact Information
  * Farzad Noorian <farzad.noorian@gmail.com> (Maintainer)
