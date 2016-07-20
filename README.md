@@ -1,3 +1,6 @@
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/gramEvol)](https://cran.r-project.org/package=gramEvol)
+[![Downloads](http://cranlogs.r-pkg.org/badges/gramEvol)](https://cran.r-project.org/package=gramEvol)
+
 gramEvol: Grammatical Evolution for R
 =====================================
 
@@ -25,7 +28,7 @@ if (!require("devtools")) install.packages("devtools")
 devtools::install_github("fnoorian/gramEvol")
 ```
 
-### Usage
+## Usage
 
 A tutorial on implementing GE programs is included in the package's
 [vignette](https://cran.r-project.org/web/packages/gramEvol/vignettes/ge-intro.pdf).
@@ -33,7 +36,7 @@ A tutorial on implementing GE programs is included in the package's
 More information regarding GE and its application in parameter optimization is brought in
 [this paper in Journal of statistical Software](https://www.jstatsoft.org/article/view/v071i01).
 
-### Example
+## Example
 
 This example implements the *Kepler equation rediscovery*.
 
@@ -72,15 +75,15 @@ print(ge)
 print(ge$best$expressions)
 ```
 
-### Contact Information
+## Contact Information
  * Farzad Noorian <farzad.noorian@gmail.com> (Maintainer)
  * Anthony Mihirana de Silva <mihids@gmail.com>
 
-### Release and Development
+## Release and Development
 The latest release and developmental versions of this package are available on:
 <https://github.com/fnoorian/gramEvol>
  
-### License
+## License
 All files in this package, including the documentation and vignettes,
 are distributed under GNU GPL v2.0 or later license.
 For full terms of this license visit <https://www.gnu.org/licenses/gpl-2.0.html>.
