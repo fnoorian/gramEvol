@@ -38,7 +38,8 @@ More information regarding GE and its application in parameter optimization is b
 
 ## Example
 
-This example implements the *Kepler equation rediscovery*.
+This example implements the *Kepler equation rediscovery*, discussed in section 3.1 of
+the [vignette](https://cran.r-project.org/web/packages/gramEvol/vignettes/ge-intro.pdf).
 
 ```R
 library("gramEvol")
@@ -68,11 +69,12 @@ SymRegCostFunc <- function(expr) {
 
 # run GE
 ge <- GrammaticalEvolution(grammarDef, SymRegCostFunc, iterations = 50)
-
 print(ge)
 
-# the best expression
+# use the best expression
+best.expression <- ge$best$expression
 print(ge$best$expressions)
+print(data.frame(distance, period, Kepler = sqrt(distance^3), GE = eval(best.expression)))
 ```
 
 ## Contact Information
