@@ -9,6 +9,7 @@ Description: A native R implementation of grammatical evolution (GE). GE facilit
 URL: https://github.com/fnoorian/gramEvol/
 BugReports: https://github.com/fnoorian/gramEvol/issues
 Depends:
-Suggests: rex
+Suggests: rex, knitr
 License: GPL (>= 2)
+VignetteBuilder: knitr
 

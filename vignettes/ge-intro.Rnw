@@ -41,6 +41,9 @@ set.seed(0)
 
 \begin{document}
 
+%\SweaveOpts{concordance=TRUE}
+%\VignetteEngine{knitr::knitr}
+
 \maketitle
 
 %\begin{abstract}
@@ -335,10 +338,10 @@ The first step for using \pkg{gramEvol} is loading the grammar:
 library("gramEvol")
 
 ruleDef <- list(expr  = grule(op(expr, expr), func(expr), var),
-                 func  = grule(sin, cos, log, sqrt),
-                 op    = grule(`+`, `-`, `*`),
-                 var   = grule(distance, distance^n, n),
-                 n     = grule(1, 2, 3, 4))
+                func  = grule(sin, cos, log, sqrt),
+                op    = grule(`+`, `-`, `*`),
+                var   = grule(distance, distance^n, n),
+                n     = grule(1, 2, 3, 4))
 
 grammarDef <- CreateGrammar(ruleDef)
 @
@@ -358,10 +361,10 @@ and \code{expr op expr} is not valid in \proglang{R}. As it is tedious to conver
 the package also provides \code{gsrule} (or grammar string rule), which accepts string with <>:
 <<>>=
 ruleDef <- list(expr  = gsrule("<expr><op><expr>", "<func>(<expr>)", "<var>"),
-                 func  = gsrule("sin", "cos", "log", "sqrt"),
-                 op    = gsrule("+", "-", "*"),
-                 var   = grule(distance, distance^n, n),
-                 n     = grule(1, 2, 3, 4))
+                func  = gsrule("sin", "cos", "log", "sqrt"),
+                op    = gsrule("+", "-", "*"),
+                var   = grule(distance, distance^n, n),
+                n     = grule(1, 2, 3, 4))
 
 CreateGrammar(ruleDef)
 @
@@ -559,17 +562,17 @@ offers a functional interface for creating REs in \proglang{R}.
 
 Consider matching a decimal real number in the form of $[\pm]nnn[.nnn]$,
 where [~] means optional and $nnn$ denotes one or more digits.
-The following table compares this notation with the syntax of \proglang{Perl}, POSIX, and \pkg{rex}:
+The following table compares this notation with the syntax of \proglang{Perl}, POSIX, and \pkg{rex}: \\
 
 \begin{tabular}{ l c c c c }
-	%		\toprule                  & Notation & \proglang{Perl}   & POSIX            & \pkg{rex}              \\ \hline
-	One  digit                   & $n$      & \textbackslash d  & [[:digit:]]      & \code{number}          \\
-	One or more digits           & $nnn$    & \textbackslash d+ & [[:digit:]]+     & \code{numbers}         \\
-	Optional presence of X       & [X]      & X?                & X?               & \code{maybe(}X\code{)} \\
-	alternate presence of X or Y & X|Y      & X|Y               & X|Y              & \code{or(}X, Y\code{)} \\
-	Plus sign                    & +        & \textbackslash +  & \textbackslash + & \code{"+"}             \\
-	Minus sign                   & -        & -                 & -                & \code{"-"}             \\
-	Dot                          & .        & \textbackslash .  & \textbackslash . & \code{"."}             \\ \bottomrule
+		\toprule                  & Notation & \proglang{Perl}   & POSIX            & \pkg{rex}              \\ \hline
+One  digit                   & $n$      & \textbackslash d  & [[:digit:]]      & \code{number}          \\
+One or more digits           & $nnn$    & \textbackslash d+ & [[:digit:]]+     & \code{numbers}         \\
+Optional presence of X       & [X]      & X?                & X?               & \code{maybe(}X\code{)} \\
+alternate presence of X or Y & X|Y      & X|Y               & X|Y              & \code{or(}X, Y\code{)} \\
+Plus sign                    & +        & \textbackslash +  & \textbackslash + & \code{"+"}             \\
+Minus sign                   & -        & -                 & -                & \code{"-"}             \\
+Dot                          & .        & \textbackslash .  & \textbackslash . & \code{"."}             \\ \bottomrule
 \end{tabular} 
 
 ~ \\
@@ -598,7 +601,7 @@ Some matching and non-matching examples are listed below:
 <<tidy=FALSE>>=
 matching <- c("1", "11.1", "1.11", "+11", "-11", "-11.1")
 non.matching <- c("a", "1.", "1..1", "-.1", "-", "1-", "1.-1", 
-                   ".-1", "1.-", "1.1.1", "", ".", "1.1-", "11-11")
+                  ".-1", "1.-", "1.1.1", "", ".", "1.1-", "11-11")
 @
 
 \subsubsection{Inferring a regular expression}
@@ -635,9 +638,9 @@ and is designed such that the search space is reduced:
 library("rex")
 library("gramEvol")
 grammarDef <- CreateGrammar(list(
-                re    = grule(rex(start, rules, end)),
-                rules = grule(rule, .(rule, rules)),
-                rule  = grule(numbers, ".", or("+", "-"), maybe(rules))))
+  re    = grule(rex(start, rules, end)),
+  rules = grule(rule, .(rule, rules)),
+  rule  = grule(numbers, ".", or("+", "-"), maybe(rules))))
 grammarDef
 @
 
@@ -676,7 +679,7 @@ The result, while correct, is different from what we expected: $[\pm][nnn.]nnn[n
 Furthermore, the search takes a considerable amount of time:
 <<eval=FALSE>>=
 system.time(GrammaticalExhaustiveSearch(grammarDef, fitfunc, 
-                                         max.depth = 7, terminationCost = 0))
+                                        max.depth = 7, terminationCost = 0))
 @
 \begin{verbatim}
    user  system elapsed 
@@ -695,10 +698,10 @@ In this section, some of the other functionalities of the \pkg{gramEvol} are int
 Here, all of the examples are demonstrated using the following grammar:
 <<tidy=FALSE>>=
 grammarDef <- CreateGrammar(list(
-                expr = gsrule("(<expr>)<op>(<expr>)", "<coef>*<var>"),
-                op   = gsrule("+", "-", "*", "/"),
-                coef = gsrule("c1", "c2"),
-                var  = gsrule("v1", "v2")))
+  expr = gsrule("(<expr>)<op>(<expr>)", "<coef>*<var>"),
+  op   = gsrule("+", "-", "*", "/"),
+  coef = gsrule("c1", "c2"),
+  var  = gsrule("v1", "v2")))
 
 grammarDef
 @
@@ -746,11 +749,11 @@ For grammars without recursion, the value returned by
 \code{GetGrammarDepth} is the actual depth of the tree:
 <<tidy=FALSE>>=
 grammarDef2 <- CreateGrammar(list(
-                    expr    = gsrule("(<subexpr>)<op>(<subexpr>)"),
-                    subexpr = gsrule("<coef>*<var>"),
-                    op      = gsrule("+", "-", "*", "/"),
-                    coef    = gsrule("c1", "c2"),
-                    var     = gsrule("v1", "v2")))
+  expr    = gsrule("(<subexpr>)<op>(<subexpr>)"),
+  subexpr = gsrule("<coef>*<var>"),
+  op      = gsrule("+", "-", "*", "/"),
+  coef    = gsrule("c1", "c2"),
+  var     = gsrule("v1", "v2")))
 
 GetGrammarDepth(grammarDef2)
 @
@@ -768,7 +771,7 @@ GetGrammarMaxRuleSize(grammarDef)
 @
 
 \code{GetGrammarNumOfExpressions} returns the number of possible expressions existing
-  in the grammar space.  
+in the grammar space.  
 This function also uses the optional argument \code{max.depth} to limit the number of recursions and 
 \code{startSymb} to set the starting symbol:
 <<tidy=FALSE>>=
@@ -794,7 +797,7 @@ GetGrammarMaxSequenceLen(grammarDef2, startSymb = "<subexpr>")
 
 \subsection{Grammatical evolution options}
 \code{GrammaticalEvolution} is defined as follows:
-\begin{verbatim}
+<<eval=FALSE>>=
 GrammaticalEvolution(grammarDef, evalFunc, 
                      numExpr = 1, 
                      max.depth = GrammarGetDepth(grammarDef),
@@ -809,7 +812,7 @@ GrammaticalEvolution(grammarDef, evalFunc,
                      monitorFunc = NULL,
                      plapply = lapply, ...)
 
-\end{verbatim}
+@
 
 \code{max.depth} and \code{startSymb} determine recursive grammar limitations, similar to 
 what was explained in the previous section.  
@@ -878,7 +881,7 @@ The following code optimises \code{evalFunc} on 4 cores:
 library("parallel")
 options(mc.cores = 4)
 ge <- GrammaticalEvolution(grammarDef, evalFunc, 
-                            plapply = mclapply)
+                           plapply = mclapply)
 @
 
 To run \pkg{gramEvol} on a cluster,
@@ -891,13 +894,13 @@ example demonstrates a four-process cluster running on the local machine:
 <<eval=FALSE>>=
 library("parallel")
 cl <- makeCluster(type = "PSOCK", c("127.0.0.1",
-                                     "127.0.0.1",
-                                     "127.0.0.1",
-                                     "127.0.0.1"))
+                                    "127.0.0.1",
+                                    "127.0.0.1",
+                                    "127.0.0.1"))
 clusterEvalQ(cl, library("gramEvol"))
 clusterExport(cl, c("evalFunc"))
 ge <- GrammaticalEvolution(grammarDef, evalFunc, 
-   plapply = function(...) parLapply(cl, ...))
+                           plapply = function(...) parLapply(cl, ...))
 stopCluster(cl)
 @
 
@@ -919,9 +922,9 @@ and evaluates a GE expression object along
 with a string:
 <<tidy=FALSE>>=
 df <- data.frame(c1 = c(1, 2),
-                  c2 = c(2, 3),
-                  v1 = c(3, 4),
-                  v2 = c(4, 5))
+                 c2 = c(2, 3),
+                 v1 = c(3, 4),
+                 v2 = c(4, 5))
 
 quad.expr <- expression(c1 * v1, c1 * v2, c2 * v1, c2 * v2)
 EvalExpressions(quad.expr, envir = df)
@@ -961,12 +964,12 @@ For example, the consider the following rules:
 Their definition using \pkg{gramEvol} is as follows:
 <<>>=
 CreateGrammar(list(assignment = gsrule("A = B", "A = C"),
-                    comma      = gsrule("A, B", "B, C")))
+                   comma      = gsrule("A, B", "B, C")))
 @
 or
 <<>>=
 CreateGrammar(list(assignment = grule(.(A = B), .(A = C)),
-                    comma      = grule(.(A, B), .(B, C))))
+                   comma      = grule(.(A, B), .(B, C))))
 @
 
 \section{Conclusion}
