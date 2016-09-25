@@ -1,5 +1,0 @@
-expr ::= <expr><op><expr> | <coef>*<var>
-op ::= + | - | * | /
-coef ::= c1 | c2
-var ::= v1 | v2
-
