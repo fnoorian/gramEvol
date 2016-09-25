@@ -1,11 +1,14 @@
 # News
 
+## 2016-XX-XX - Changes in version 2.1-X
+ * Update vignette with new grammar rules
+
 ## 2016-07-04 - Changes in version 2.1-3
 
  * Add a supress warnings option to `GrammaticalEvolution` optimizer
  * Update citation with the information from Journal of Statistical Software
  * Fix iteration parameter auto-set overriding manual value bug
- * Fix suggested initial chromosome bug (Thanks to danklotz)
+ * Fix suggested initial chromosome bug (Thanks to Daniel Klotz <https://github.com/danklotz>)
 
 ## 2015-11-11 - Changes in version 2.1-2
 

@@ -33,8 +33,8 @@ devtools::install_github("fnoorian/gramEvol")
 A tutorial on implementing GE programs is included in the package's
 [vignette](https://cran.r-project.org/web/packages/gramEvol/vignettes/ge-intro.pdf).
 
-More information regarding GE and its application in parameter optimization is brought in
-[this paper in Journal of statistical Software](https://www.jstatsoft.org/article/view/v071i01).
+More information regarding GE and its application in parameter optimization can be found in
+[this paper in the Journal of Statistical Software](https://www.jstatsoft.org/article/view/v071i01).
 
 ## Example
 
