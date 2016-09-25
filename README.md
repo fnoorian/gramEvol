@@ -31,7 +31,7 @@ devtools::install_github("fnoorian/gramEvol")
 ## Usage
 
 A tutorial on implementing GE programs is included in the package's
-[vignette](https://cran.r-project.org/web/packages/gramEvol/vignettes/ge-intro.pdf).
+[vignette](https://fnoorian.github.io/gramEvol/inst/doc/ge-intro.pdf).
 
 More information regarding GE and its application in parameter optimization can be found in
 [this paper in the Journal of Statistical Software](https://www.jstatsoft.org/article/view/v071i01).
@@ -39,7 +39,7 @@ More information regarding GE and its application in parameter optimization can 
 ## Example
 
 This example implements the *Kepler equation rediscovery*, discussed in section 3.1 of
-the [vignette](https://cran.r-project.org/web/packages/gramEvol/vignettes/ge-intro.pdf).
+the [vignette](https://fnoorian.github.io/gramEvol/inst/doc/ge-intro.pdf).
 
 ```R
 library("gramEvol")
