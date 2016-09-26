@@ -1,6 +1,7 @@
 # News
 
 ## 2016-XX-XX - Changes in version 2.1-X
+ * Add ReplaceInExpression helper function
  * Update vignette with new grammar rules
 
 ## 2016-07-04 - Changes in version 2.1-3

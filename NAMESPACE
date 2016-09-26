@@ -41,7 +41,8 @@ export(
     "GrammarGetFirstSequence",
     "GrammarGetNextSequence",
     "GrammaticalExhaustiveSearch",
-    "GrammaticalRandomSearch"
+    "GrammaticalRandomSearch",
+    "ReplaceInExpression"
     )
 
 S3method(c, GERule)
