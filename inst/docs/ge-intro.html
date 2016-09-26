@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Farzad Noorian, Anthony M. de Silva, Philip H.W. Leong" />
+
+
+<title>Grammatical evolution: A tutorial using gramEvol</title>
+
+<script src="libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<link rel="stylesheet"
+      href="libs/highlight/default.css"
+      type="text/css" />
+<script src="libs/highlight/highlight.js"></script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script src="libs/navigation-1.1/tabsets.js"></script>
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Grammatical evolution: A tutorial using gramEvol</h1>
+<h4 class="author"><em>Farzad Noorian, Anthony M. de Silva, Philip H.W. Leong</em></h4>
+
+</div>
+
+<div id="TOC">
+<ul>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#grammatical-evolution">Grammatical Evolution</a><ul>
+<li><a href="#grammar">Grammar</a><ul>
+<li><a href="#informal-introduction-to-context-free-grammars">Informal introduction to context-free grammars</a></li>
+<li><a href="#formal-definition-of-a-context-free-grammar">Formal definition of a context-free grammar</a></li>
+<li><a href="#from-grammar-to-an-expression">From grammar to an expression</a></li>
+</ul></li>
+<li><a href="#evolutionary-optimisation">Evolutionary optimisation</a><ul>
+<li><a href="#optimising-a-program-by-evolution">Optimising a program by evolution</a></li>
+</ul></li>
+<li><a href="#applications-of-grammatical-evolution">Applications of grammatical evolution</a></li>
+</ul></li>
+<li><a href="#gramevol-package">gramEvol Package</a><ul>
+<li><a href="#rediscovery-of-keplers-law-by-symbolic-regression">Rediscovery of Kepler’s law by symbolic regression</a><ul>
+<li><a href="#defining-a-grammar">Defining a grammar</a></li>
+<li><a href="#defining-a-cost-function">Defining a cost function</a></li>
+</ul></li>
+<li><a href="#evolving-the-grammar">Evolving the grammar</a><ul>
+<li><a href="#monitoring-evolution">Monitoring evolution</a></li>
+</ul></li>
+<li><a href="#discovering-regular-expressions">Discovering Regular Expressions</a><ul>
+<li><a href="#regular-expression-in-r">Regular expression in R</a></li>
+<li><a href="#matching-a-decimal-real-number">Matching a decimal real number</a></li>
+<li><a href="#inferring-a-regular-expression">Inferring a regular expression</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#other-gramevol-functionality">Other gramEvol functionality</a><ul>
+<li><a href="#manual-mapping">Manual mapping</a></li>
+<li><a href="#examining-a-grammar">Examining a grammar</a></li>
+<li><a href="#grammatical-evolution-options">Grammatical evolution options</a></li>
+<li><a href="#parallel-processing-option">Parallel processing option</a></li>
+<li><a href="#generating-more-than-one-expression">Generating more than one expression</a></li>
+<li><a href="#alternative-optimisation-algorithms">Alternative optimisation algorithms</a></li>
+<li><a href="#using-vectors-as-rules">Using vectors as rules</a></li>
+<li><a href="#using-commas-and-assignments-in-rules">Using commas and assignments in rules</a></li>
+</ul></li>
+<li><a href="#conclusion">Conclusion</a></li>
+<li><a href="#references">References</a></li>
+</ul>
+</div>
+
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<p>Grammatical evolution (GE) is an evolutionary search algorithm, similar to genetic programming (GP). It is typically used to generate programs with syntax defined through a grammar. <a href="http://www.grammatical-evolution.org/" class="uri">http://www.grammatical-evolution.org/</a> by GE’s inventer, Michael O’Neill, is a good resource for a formal introduction to this technique</p>
+<p>This document serves as a quick and informal tutorial on GE, with examples implemented using gramEvol package in R.</p>
+</div>
+<div id="grammatical-evolution" class="section level1">
+<h1>Grammatical Evolution</h1>
+<p>The goal of using GE is to automatically generate a program that minimises a cost function:</p>
+<ol style="list-style-type: decimal">
+<li>A <em>grammar</em> is defined to describe the syntax of the programs.</li>
+<li>A <em>cost function</em> is defined to assess the quality (the <em>cost</em> or <em>fitness</em>) of a program.</li>
+<li>An <em>evolutionary algorithm</em>, such as GA, is used to search within the space of all programs definable by the grammar, in order to find the program with the lowest cost.</li>
+</ol>
+<p>Notice that by a <em>program</em>, we refer to any sequence of instructions that perform a specific task. This ranges from a single expression (e.g., <code>sin(x)</code>), to several statements with function declarations, assignments, and control flow.</p>
+<p>The rest of this section will describe each component in more details.</p>
+<div id="grammar" class="section level2">
+<h2>Grammar</h2>
+<p>A grammar is a set of rules that describe the syntax of sentences and expressions in a language. While grammars were originally invented for studying natural languages, they are extensively used in computer science for describing programming languages.</p>
+<div id="informal-introduction-to-context-free-grammars" class="section level3">
+<h3>Informal introduction to context-free grammars</h3>
+<p>GE uses a <em>context-free grammar</em> to describe the syntax of programs.</p>
+<p>A grammar in which the rules are not sensitive to the sentence’s context is called a <em>context-free grammar</em> (CFG), and is defined using a collection of <em>terminal</em> symbols, <em>non-terminal</em> symbols, <em>production rules</em>, and a <em>start</em> symbol:</p>
+<ul>
+<li>Terminal symbols are the lexicon of the language.</li>
+<li>Non-terminal symbols are used to describe the class of words in the language, or <em>variables</em> that can take different values. For example, a <code>&lt;subject&gt;</code>, a <code>&lt;verb&gt;,</code> or an <code>&lt;object&gt;</code>.</li>
+<li>A production rule defines what symbols replace a non-terminal. For example, each of the four following lines is a production rule:</li>
+</ul>
+<pre><code>&lt;sentence&gt; ::= &lt;subject&gt; &lt;verb&gt; &lt;object&gt;. | &lt;subject&gt; &lt;verb&gt;.           (1.a), (1.b)
+&lt;subject&gt;  ::= I | You | They                                           (2.a), (2.b), (2.c)
+&lt;verb&gt;     ::= read | write | check                                     (3.a), (3.b), (3.c)
+&lt;object&gt;   ::= books | stories | academic papers                        (4.a), (4.b), (4.c)</code></pre>
+<p>In each rule, the “|” symbol separates different replacement possibilities; such as <code>&lt;subject&gt;</code>, that can be replaced with “I”, “You” or “They”. One must note that a non-terminal symbol can be replaced with other non-terminals as well as terminal symbols, such as in the example’s <code>&lt;sentence&gt;</code>.</p>
+<p>This style of notation, including the use of angle brackets (&lt; and &gt;) is known as the <a href="https://en.wikipedia.org/wiki/Backus%E2%80%93Naur_Form">Backus-Naur Form (BNF)</a>.</p>
+<p>In BNF, a <em>start</em> symbol determines a non-terminal where the generation of the expression starts. For example:</p>
+<ul>
+<li>Start: <code>&lt;sentence&gt;</code></li>
+</ul>
+<p>Informally, only the start symbol and the production rules are required to define a grammar.</p>
+</div>
+<div id="formal-definition-of-a-context-free-grammar" class="section level3">
+<h3>Formal definition of a context-free grammar</h3>
+<p>In formal language theory, a context-free grammar is a <em>formal grammar</em> where every production rule, formalized by the pair <span class="math inline">\((n, V)\)</span>, is in form of <span class="math inline">\(n \rightarrow V\)</span>. The CFG is defined by the 4-tuple <span class="math inline">\((\mathcal{T}, \mathcal{N}, \mathcal{R}, \mathcal{S})\)</span>, where <span class="math inline">\(\mathcal{T}\)</span> is the finite set of terminal symbols, <span class="math inline">\(\mathcal{N}\)</span> is the finite set of non-terminal symbols, <span class="math inline">\(\mathcal{R}\)</span> is the production rule set, <span class="math inline">\(\mathcal{S} \in \mathcal{N}\)</span> is the start symbol.</p>
+<p>A production rule <span class="math inline">\(n \rightarrow V\)</span> is realized by replacing the non-terminal symbol <span class="math inline">\(n \in \mathcal{N}\)</span> with the symbol <span class="math inline">\(v \in V\)</span>, where <span class="math inline">\(V \in (\mathcal{T} \cup \mathcal{N})^*\)</span> is a sequence of terminal and/or non-terminal symbols.</p>
+<p>For more details on CFGs, their relation to context-free languages, parsing, compilers and other related topics refer to <span class="citation">(Aho, Sethi, and Ullman 1986)</span> or <a href="https://en.wikipedia.org/wiki/Context-free_grammar">Wikipedia</a>.</p>
+</div>
+<div id="from-grammar-to-an-expression" class="section level3">
+<h3>From grammar to an expression</h3>
+<p>Notice that each rule in the example grammar were numbered. Using these numbers, one can precisely refer to a certain expression. This is performed by replacing the first non-terminal symbol with the <span class="math inline">\(n\)</span>th rule of that non-terminal, starting with the start symbol.</p>
+<p>For example, the sequence <code>[2, 3, 1]</code> selects rules (1.b), (2.c) and (3.a) in the following four-step sequence:</p>
+<table>
+<thead>
+<tr class="header">
+<th align="center">Step</th>
+<th align="center">Sequence</th>
+<th align="center">Rule</th>
+<th align="center">Current state</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">0</td>
+<td align="center"></td>
+<td align="center">Start</td>
+<td align="center"><code>&lt;sentence&gt;</code>.</td>
+</tr>
+<tr class="even">
+<td align="center">1</td>
+<td align="center">2</td>
+<td align="center">(1.b)</td>
+<td align="center"><code>&lt;subject&gt; &lt;verb&gt;</code>.</td>
+</tr>
+<tr class="odd">
+<td align="center">2</td>
+<td align="center">3</td>
+<td align="center">(2.c)</td>
+<td align="center">They <code>&lt;verb</code>&gt;.</td>
+</tr>
+<tr class="even">
+<td align="center">3</td>
+<td align="center">1</td>
+<td align="center">(3.a)</td>
+<td align="center">They read.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="evolutionary-optimisation" class="section level2">
+<h2>Evolutionary optimisation</h2>
+<p>Evolutionary optimisation algorithms are a class of optimisation techniques inspired by natural evolution. They are used in cases where:</p>
+<ul>
+<li>The solution to the problem can be represented by a certain structure. For example, the solution is an array of binary variables, or integer numbers.
+<ul>
+<li>Typically the array size is fixed and each unique value arrangement is considered a candidate solution.</li>
+<li>Using biological terminology, this structure is referred to as the <em>chromosome</em> or <em>genotype</em>.</li>
+</ul></li>
+<li>There exist a cost function which can quickly return the <em>cost</em> or <em>fitness</em> of any candidate solution.</li>
+<li>Solving the problem using gradient descent techniques is hard or impossible, because the cost function is non-smooth, or has multiple local optimas, or is simply discrete, such as the <a href="https://en.wikipedia.org/wiki/Travelling_salesman_problem">travelling salesman problem</a> (or in hindsight, a program generated by grammars).</li>
+</ul>
+<p>It most be noted that the stochastic nature of evolutionary algorithms does not guarantee the optimal solution, since most practical problems involve very large search spaces, and it is often not computationally feasible to search the whole space.</p>
+<p>The oldest and simplest of these algorithms is the <a href="https://en.wikipedia.org/wiki/Genetic_algorithm">genetic algorithm (GA)</a>, which optimises a vector of binary variables. In this vignette, when referring to GA, we refer to an extended GA which handles integers numbers.</p>
+<p>For an in depth introduction, readers are referred to <a href="https://en.wikipedia.org/wiki/Evolutionary_algorithm">Wikipedia</a></p>
+<div id="optimising-a-program-by-evolution" class="section level3">
+<h3>Optimising a program by evolution</h3>
+<p>GA only optimises numeric arrays. By <em>mapping</em> an integer array to a program using a grammar, GA can be readily applied to evolve programs:</p>
+<ol style="list-style-type: decimal">
+<li>The solution is represented by an array of integers.</li>
+<li>The array is mapped to a program through the grammar using the technique explained in <a href="#from-grammar-to-an-expression">the last section</a>.
+<ul>
+<li>Using biological terminology, the program is called a <em>phenotype</em>, and the mapping is referred to as <a href="https://en.wikipedia.org/wiki/Genotype-phenotype_distinction">genotype to phenotype mapping</a>.</li>
+</ul></li>
+<li>The cost function measures the fitness of the program.</li>
+<li>Any evolutionary optimisation technique is applied on the integer array.</li>
+</ol>
+</div>
+</div>
+<div id="applications-of-grammatical-evolution" class="section level2">
+<h2>Applications of grammatical evolution</h2>
+<p>Any application which needs a program definable by grammar, is creatable in GE. Using a grammar allows integration of domain knowledge and a custom program syntax, which adds flexibility and precision to GE compared to other techniques such as GP.</p>
+<p>Applications of GE include computational finance, music, and robotic control, among others. See <a href="http://www.grammatical-evolution.org/pubs.html" class="uri">http://www.grammatical-evolution.org/pubs.html</a> for a collection of publications in this area.</p>
+</div>
+</div>
+<div id="gramevol-package" class="section level1">
+<h1>gramEvol Package</h1>
+<p>The package gramEvol simplifies defining a grammar and offers a GA implementation. gramEvol hides many details, including the grammar mapping and GA parameters, and the only things the user has to do is to:</p>
+<ol style="list-style-type: decimal">
+<li>Define a grammar using <code>CreateGrammar</code>.</li>
+<li>Define a cost function. It should accept one (or more) R <code>expression</code>(s) and return a numeric value.</li>
+<li>Call <code>GrammaticalEvolution</code>.</li>
+</ol>
+<p>In this section, examples are used to demonstrate its usage.</p>
+<div id="rediscovery-of-keplers-law-by-symbolic-regression" class="section level2">
+<h2>Rediscovery of Kepler’s law by symbolic regression</h2>
+<p><a href="https://en.wikipedia.org/wiki/Symbolic_regression">Symbolic regression</a> is the process of discovering a function, in symbolic form, which fits a given set of data. Evolutionary algorithms such as GP and GE are commonly used to solve Symbolic Regression problems. For more information, visit <a href="http://www.symbolicregression.com/" class="uri">http://www.symbolicregression.com/</a>.</p>
+<p>Rediscovery of Kepler’s law has been used as a benchmark for symbolic regression <span class="citation">(Koza 1992; Ferreira 2006; Langley, Simon, and Bradshaw 1987)</span>. Here, the goal is to find a relationship between orbital periods and distances of solar system planets from the sun. The distance and period data, normalised to Earth, are as follows:</p>
+<table>
+<thead>
+<tr class="header">
+<th align="center">Planet</th>
+<th align="right">Distance</th>
+<th align="right">Period</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">Venus</td>
+<td align="right">0.72</td>
+<td align="right">0.61</td>
+</tr>
+<tr class="even">
+<td align="center">Earth</td>
+<td align="right">1.00</td>
+<td align="right">1.00</td>
+</tr>
+<tr class="odd">
+<td align="center">Mars</td>
+<td align="right">1.52</td>
+<td align="right">1.84</td>
+</tr>
+<tr class="even">
+<td align="center">Jupiter</td>
+<td align="right">5.20</td>
+<td align="right">11.90</td>
+</tr>
+<tr class="odd">
+<td align="center">Saturn</td>
+<td align="right">9.53</td>
+<td align="right">29.40</td>
+</tr>
+<tr class="even">
+<td align="center">Uranus</td>
+<td align="right">19.10</td>
+<td align="right">83.50</td>
+</tr>
+</tbody>
+</table>
+<p>Kepler’s third law states: <span class="math inline">\(period^2 = constant \times distance^3\)</span></p>
+<div id="defining-a-grammar" class="section level3">
+<h3>Defining a grammar</h3>
+<p>To use grammatical evolution to find this relationship from the data, we define the following context-free grammar. Here <span class="math inline">\(\mathcal{S}\)</span> denotes the starting symbol and <span class="math inline">\(\mathcal{R}\)</span> is the collection of production rules:</p>
+<p><span class="math inline">\(\mathcal{S}\)</span> = <code>&lt;expr&gt;</code></p>
+<p>Production rules : <span class="math inline">\(\mathcal{R} =\)</span></p>
+<pre><code>&lt;expr&gt;     ::= &lt;expr&gt;&lt;op&gt;&lt;expr&gt; | &lt;sub-expr&gt;                         (1.a), (1.b)
+&lt;sub-expr&gt; ::= &lt;func&gt;(&lt;var&gt;) | &lt;var&gt; | &lt;var&gt;^&lt;n&gt;                     (2.a), (2.b), (2.c)
+&lt;func&gt;     ::= log | sqrt | sin | cos                                (3.a), (3.b), (3.c), (3.d)
+&lt;op&gt;       ::= + | - | x                                             (4.a), (4.b), (4.c)
+&lt;var&gt;      ::= distance | distance^&lt;n&gt; | &lt;n&gt;                         (5.a), (5.b), (5.c)
+&lt;n&gt;        ::= 1 | 2 | 3 | 4                                         (6.a), (6.b), (6.c), (6.d)</code></pre>
+<p>This is a general purpose grammar, and it can create different expressions corresponding to different formulas which can explain and model the data.</p>
+<p>The first step for using gramEvol is loading the grammar:</p>
+<pre class="r"><code>library(&quot;gramEvol&quot;)
+
+ruleDef &lt;- list(expr  = grule(op(expr, expr), func(expr), var),
+                func  = grule(sin, cos, log, sqrt),
+                op    = grule(`+`, `-`, `*`),
+                var   = grule(distance, distance^n, n),
+                n     = grule(1, 2, 3, 4))
+
+grammarDef &lt;- CreateGrammar(ruleDef)</code></pre>
+<p>Here, the BNF notation is implemented in R:</p>
+<ul>
+<li>Rules are defined as a <code>list</code>.</li>
+<li>Each rule is defined using <code>non.terminal.name = grule(replacement1, replacement2, ...)</code> format.</li>
+<li><code>CreateGrammar</code> is used to load the list and create the grammar object</li>
+</ul>
+<p>The print function reproduces the grammar in BNF format:</p>
+<pre class="r"><code>print(grammarDef)</code></pre>
+<pre><code>## &lt;expr&gt; ::= &lt;op&gt;(&lt;expr&gt;, &lt;expr&gt;) | &lt;func&gt;(&lt;expr&gt;) | &lt;var&gt;
+## &lt;func&gt; ::= `sin` | `cos` | `log` | `sqrt`
+## &lt;op&gt;   ::= `+` | `-` | `*`
+## &lt;var&gt;  ::= distance | distance^&lt;n&gt; | &lt;n&gt;
+## &lt;n&gt;    ::= 1 | 2 | 3 | 4</code></pre>
+<p>Note that <code>`+`</code> and <code>op(expr, expr)</code> are used in the code above because <code>grule</code> expects R expressions, and <code>expr op expr</code> is not valid in R. As it is tedious to convert between the functional form and the operator form, the package also provides <code>gsrule</code> (or grammar string rule), which accepts strings with <code>&lt;&gt;</code>:</p>
+<pre class="r"><code>ruleDef &lt;- list(expr  = gsrule(&quot;&lt;expr&gt;&lt;op&gt;&lt;expr&gt;&quot;, &quot;&lt;func&gt;(&lt;expr&gt;)&quot;, &quot;&lt;var&gt;&quot;),
+                func  = gsrule(&quot;sin&quot;, &quot;cos&quot;, &quot;log&quot;, &quot;sqrt&quot;),
+                op    = gsrule(&quot;+&quot;, &quot;-&quot;, &quot;*&quot;),
+                var   = grule(distance, distance^n, n),
+                n     = grule(1, 2, 3, 4))
+
+CreateGrammar(ruleDef)</code></pre>
+<pre><code>## &lt;expr&gt; ::= &lt;expr&gt;&lt;op&gt;&lt;expr&gt; | &lt;func&gt;(&lt;expr&gt;) | &lt;var&gt;
+## &lt;func&gt; ::= sin | cos | log | sqrt
+## &lt;op&gt;   ::= + | - | *
+## &lt;var&gt;  ::= distance | distance^&lt;n&gt; | &lt;n&gt;
+## &lt;n&gt;    ::= 1 | 2 | 3 | 4</code></pre>
+<p>Note that <code>gsrule</code> and <code>grule</code> can be mixed, as in the example above.</p>
+</div>
+<div id="defining-a-cost-function" class="section level3">
+<h3>Defining a cost function</h3>
+<p>We use the following equation to normalise the error, adjusting its impact on small values (e.g., Venus) versus large values (e.g., Uranus):</p>
+<p><span class="math inline">\(e = \frac{1}{N} \sum{ log(1 + |p-\hat{p}|)}\)</span></p>
+<p>where <span class="math inline">\(e\)</span> is the normalised error, <span class="math inline">\(N\)</span> is the number of samples, <span class="math inline">\(p\)</span> is the orbital period and <span class="math inline">\(\hat{p}\)</span> is the result of symbolical regression.</p>
+<p>We implement this as the fitness function <code>SymRegFitFunc</code>:</p>
+<pre class="r"><code>planets &lt;- c(&quot;Venus&quot;, &quot;Earth&quot;, &quot;Mars&quot;, &quot;Jupiter&quot;, &quot;Saturn&quot;, &quot;Uranus&quot;)
+distance &lt;- c(0.72, 1.00, 1.52, 5.20, 9.53, 19.10)
+period &lt;- c(0.61, 1.00, 1.84, 11.90, 29.40, 83.50)
+
+SymRegFitFunc &lt;- function(expr) {
+  result &lt;- eval(expr)
+
+  if (any(is.nan(result)))
+    return(Inf)
+
+  return (mean(log(1 + abs(period - result))))
+}</code></pre>
+<p>Here, the <code>SymRegFitFunc</code> receives an R <code>expression</code> and evaluates it. It is assumed that the <code>expression</code> uses <code>distance</code> to estimate the <code>period</code>. Invalid expressions are handled by returning a very high cost (infinite error). Valid results are compared with the actual period according to the error function to compute the expression’s fitness.</p>
+</div>
+</div>
+<div id="evolving-the-grammar" class="section level2">
+<h2>Evolving the grammar</h2>
+<p><code>GrammaticalEvolution</code> can now be run. All of the parameters are determined automatically. To avoid wasting time, and as the best possible outcome and its error are known (because we know the answer), a <code>terminationCost</code> is computed and set to terminate GE when the Kepler’s equation is found.</p>
+<pre class="r"><code>ge &lt;- GrammaticalEvolution(grammarDef, SymRegFitFunc,
+                           terminationCost = 0.021)
+ge</code></pre>
+<pre><code>## Grammatical Evolution Search Results:
+##   No. Generations:  11 
+##   Best Expression:  sqrt(distance^3) 
+##   Best Cost:        0.0201895728693592</code></pre>
+<p>Now that the result is found, it can be used in production. Here we only use it in a simple comparison:</p>
+<pre class="r"><code>best.expression &lt;- ge$best$expression
+
+data.frame(distance, period, Kepler = sqrt(distance^3),
+           GE = eval(best.expression))</code></pre>
+<pre><code>##   distance period     Kepler         GE
+## 1     0.72   0.61  0.6109403  0.6109403
+## 2     1.00   1.00  1.0000000  1.0000000
+## 3     1.52   1.84  1.8739819  1.8739819
+## 4     5.20  11.90 11.8578244 11.8578244
+## 5     9.53  29.40 29.4197753 29.4197753
+## 6    19.10  83.50 83.4737743 83.4737743</code></pre>
+<div id="monitoring-evolution" class="section level3">
+<h3>Monitoring evolution</h3>
+<p>As a real-world optimisation may take a long time, a feedback of the state of optimisation is desirable. <code>GrammaticalEvolution</code> allows monitoring this status using a callback function. This function, if provided to the parameter <code>monitorFunc</code>, receives an object similar to the return value of <code>GrammaticalEvolution</code>. For example, the following function prints the current generation, the best individual’s expression and its error:</p>
+<pre class="r"><code>customMonitorFunc &lt;- function(results){
+  cat(&quot;-------------------\n&quot;)
+  print(results)
+}
+
+ge &lt;- GrammaticalEvolution(grammarDef, SymRegFitFunc,
+                           terminationCost = 0.021,
+                           monitorFunc = customMonitorFunc)</code></pre>
+<p>or even using the <code>print</code> function directly:</p>
+<pre class="r"><code>ge &lt;- GrammaticalEvolution(grammarDef, SymRegFitFunc,
+                           terminationCost = 0.021,
+                           monitorFunc = print)</code></pre>
+<p>which prints:</p>
+<pre><code>## Grammatical Evolution Search Results:
+## No. Generations:  1
+## Best Expression:  distance
+## Best Cost:        1.60700784338907
+## Grammatical Evolution Search Results:
+## No. Generations:  2
+## Best Expression:  distance
+## Best Cost:        1.60700784338907</code></pre>
+<p>… until:</p>
+<pre><code>## Grammatical Evolution Search Results:
+## No. Generations:  9
+## Best Expression:  distance + distance
+## Best Cost:        1.54428158317392
+## Grammatical Evolution Search Results:
+## No. Generations:  10
+## Best Expression:  1 - distance + (cos(distance) - 1) * sin(distance^2) + distance + (log(distance) + distance + (cos(distance) - 1) * sin(distance^2) + distance)
+## Best Cost:        1.4186428597461
+## Grammatical Evolution Search Results:
+## No. Generations:  11
+## Best Expression:  sqrt(distance^3)
+## Best Cost:        0.0201895728693592</code></pre>
+</div>
+</div>
+<div id="discovering-regular-expressions" class="section level2">
+<h2>Discovering Regular Expressions</h2>
+<p>A <a href="https://en.wikipedia.org/wiki/Regular_expression">regular expressions (RE)</a> is a string that determines a character pattern. REs are more expressive and precise in determining sub-string matches compared to wildcards, and are widely used in many string pattern matching tasks, such as searching through log files or parsing a program’s output.</p>
+<p>Creating a regular expressions requires careful assembly of symbols and operators to match the desired pattern. While this is usually performed by an expert programmer, it is possible to use evolutionary optimisation techniques to infer a RE from examples <span class="citation">(Bartoli et al. 2012)</span>.</p>
+<p>In this example, we demonstrate how gramEvol can be used to learn REs.</p>
+<div id="regular-expression-in-r" class="section level3">
+<h3>Regular expression in R</h3>
+<p>In formal language theory, a regular expression is a sequence of symbols and operators that describes a character pattern. REs are translated by RE processors into a non-deterministic finite automaton (NFA) and subsequently into a deterministic finite automaton (DFA). The DFA can then be executed on any character string to recognize sub-strings that match the regular expression. For a theoretical introduction to REs, including their relationship with context-free grammars, readers are referred to <span class="citation">(Aho, Sethi, and Ullman 1986)</span>.</p>
+<p>R supports standard regular expression with both the POSIX and the Perl syntax. In addition, the <a href="https://github.com/kevinushey/rex">rex</a> Package offers a functional interface for creating REs in R.</p>
+</div>
+<div id="matching-a-decimal-real-number" class="section level3">
+<h3>Matching a decimal real number</h3>
+<p>Consider matching a decimal real number in the form of <span class="math inline">\([\pm]nnn[.nnn]\)</span>, where <code>[ ]</code> means optional and <span class="math inline">\(nnn\)</span> denotes one or more digits. The following table compares this notation with the syntax of Perl, POSIX, and rex:</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Rule</th>
+<th align="center">Notation</th>
+<th align="center">Perl</th>
+<th align="center">POSIX</th>
+<th align="center">rex</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">One digit</td>
+<td align="center"><span class="math inline">\(n\)</span></td>
+<td align="center"><code>\d</code></td>
+<td align="center"><code>[[:digit:]]</code></td>
+<td align="center"><code>number</code></td>
+</tr>
+<tr class="even">
+<td align="left">One or more digits</td>
+<td align="center"><span class="math inline">\(nnn\)</span></td>
+<td align="center"><code>\d+</code></td>
+<td align="center"><code>[[:digit:]]+</code></td>
+<td align="center"><code>numbers</code></td>
+</tr>
+<tr class="odd">
+<td align="left">Optional presence of X</td>
+<td align="center">[X]</td>
+<td align="center"><code>X?</code></td>
+<td align="center"><code>X?</code></td>
+<td align="center"><code>maybe(X)</code></td>
+</tr>
+<tr class="even">
+<td align="left">alternate presence of X or Y</td>
+<td align="center">X|Y</td>
+<td align="center"><code>X|Y</code></td>
+<td align="center"><code>X|Y</code></td>
+<td align="center"><code>or(X, Y)</code></td>
+</tr>
+<tr class="odd">
+<td align="left">Plus sign</td>
+<td align="center">+</td>
+<td align="center"><code>\+</code></td>
+<td align="center"><code>\+</code></td>
+<td align="center"><code>&quot;+&quot;</code></td>
+</tr>
+<tr class="even">
+<td align="left">Minus sign</td>
+<td align="center">-</td>
+<td align="center"><code>-</code></td>
+<td align="center"><code>-</code></td>
+<td align="center"><code>&quot;-&quot;</code></td>
+</tr>
+<tr class="odd">
+<td align="left">Dot (decimal point)</td>
+<td align="center">.</td>
+<td align="center"><code>\.</code></td>
+<td align="center"><code>\.</code></td>
+<td align="center"><code>&quot;.&quot;</code></td>
+</tr>
+</tbody>
+</table>
+<p>Using the above table, <span class="math inline">\([\pm]nnn[.nnn]\)</span> is translated to:</p>
+<ul>
+<li>Perl: <code>(\+|-)?\d+(\.\d+)?</code></li>
+<li>POSIX: <code>(\+|-)?[[:digit:]]+(\.[[:digit:]]+)?</code></li>
+<li>rex: <code>maybe(or(&quot;+&quot;, &quot;-&quot;)), numbers, maybe(&quot;.&quot;, numbers)</code></li>
+</ul>
+<p>To use a RE, the expression has to be wrapped in a start and stop symbol (<code>\^...\$</code> in POSIX and Perl, and <code>rex(start, ..., end)</code> for rex):</p>
+<pre class="r"><code>re &lt;- &quot;^(\\+|-)?[[:digit:]]+(\\.[[:digit:]]+)?$&quot;</code></pre>
+<p><code>grepl</code> can be used to check if a string matches the RE pattern or not:</p>
+<pre class="r"><code>grepl(re, &quot;+1.1&quot;)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<pre class="r"><code>grepl(re, &quot;1+1&quot;)</code></pre>
+<pre><code>## [1] FALSE</code></pre>
+<p>Some matching and non-matching examples are listed below:</p>
+<pre class="r"><code>matching &lt;- c(&quot;1&quot;, &quot;11.1&quot;, &quot;1.11&quot;, &quot;+11&quot;, &quot;-11&quot;, &quot;-11.1&quot;)
+non.matching &lt;- c(&quot;a&quot;, &quot;1.&quot;, &quot;1..1&quot;, &quot;-.1&quot;, &quot;-&quot;, &quot;1-&quot;, &quot;1.-1&quot;,
+                  &quot;.-1&quot;, &quot;1.-&quot;, &quot;1.1.1&quot;, &quot;&quot;, &quot;.&quot;, &quot;1.1-&quot;, &quot;11-11&quot;)</code></pre>
+</div>
+<div id="inferring-a-regular-expression" class="section level3">
+<h3>Inferring a regular expression</h3>
+<p>In this section, we use gramEvol to learn a RE that matches a decimal real number, as explained in the previous section.</p>
+<div id="defining-a-cost-function-1" class="section level4">
+<h4>Defining a cost function:</h4>
+<p>The objective is to infer a RE that matches the decimal numbers in the vector <code>matching</code>, but not in the <code>non.matching</code>. Consequently, the score of any RE is determined by counting the number of matches and non-matches:</p>
+<pre class="r"><code>re.score &lt;- function(re) {
+  score &lt;- sum(sapply(matching, function(x) grepl(re, x))) +
+           sum(sapply(non.matching, function(x)  !grepl(re, x)))
+  return (length(matching) + length(non.matching) - score)
+}</code></pre>
+<p>The fitness function in gramEvol receives an R <code>expression</code>, which has to be evaluated before being passed to <code>re.score</code>:</p>
+<pre class="r"><code>fitfunc &lt;- function(expr) re.score(eval(expr))</code></pre>
+</div>
+<div id="defining-a-grammar-1" class="section level4">
+<h4>Defining a grammar:</h4>
+<p>We use <a href="https://cran.r-project.org/package=rex">rex</a> RE functions to create a grammar. The grammar only includes the functions explored in Section , and is designed such that the search space is reduced:</p>
+<pre class="r"><code>library(&quot;rex&quot;)
+library(&quot;gramEvol&quot;)
+grammarDef &lt;- CreateGrammar(list(
+  re    = grule(rex(start, rules, end)),
+  rules = grule(rule, .(rule, rules)),
+  rule  = grule(numbers, &quot;.&quot;, or(&quot;+&quot;, &quot;-&quot;), maybe(rules))))
+grammarDef</code></pre>
+<pre><code>## &lt;re&gt;    ::= rex(start, &lt;rules&gt;, end)
+## &lt;rules&gt; ::= &lt;rule&gt; | &lt;rule&gt;, &lt;rules&gt;
+## &lt;rule&gt;  ::= numbers | &quot;.&quot; | or(&quot;+&quot;, &quot;-&quot;) | maybe(&lt;rules&gt;)</code></pre>
+<ul>
+<li>The first rule, <code>&lt;re&gt;</code>, creates a valid rex command that uses <code>&lt;rules&gt;</code> for pattern matching.</li>
+<li>The second element, <code>&lt;rules&gt;</code>, is <em>recursive</em> and can create a collection of rules by repeating itself, e.g., <code>&lt;rule&gt;</code>, <code>&lt;rule&gt;</code>, <code>&lt;rule&gt;</code>. The <code>.()</code> allows using a comma inside a <code>grule</code> definition, where otherwise it would have been interpreted as another replacement rule in the list.</li>
+<li>The last element, <code>&lt;rule&gt;</code>, expands to a RE function or character pattern. These include <code>numbers</code> and <code>maybe</code> from rex, a decimal point, and + or –.</li>
+</ul>
+</div>
+<div id="evolving-the-grammar-1" class="section level4">
+<h4>Evolving the grammar:</h4>
+<p>The last step is to perform a search for a regular expression that minimises the score function. Here the minimum <code>terminationCost</code> is known (i.e., zero error), and <code>max.depth</code> is increased to allow for more expansion of the recursive <code>&lt;rules&gt;</code>. We use <code>GrammaticalExhaustiveSearch</code> to exhaustively search for the answer among all possible combinations of the grammar: % this takes some time to run, use “monitorFunc = print” for more convenience</p>
+<pre class="r"><code>GrammaticalExhaustiveSearch(grammarDef, fitfunc, max.depth = 7, terminationCost = 0)</code></pre>
+<pre><code>## GE Search Results:
+## Expressions Tested: 6577
+## Best Chromosome:    0 1 3 0 2 1 3 1 0 0 1 1 0 0 3 0 0
+## Best Expression:    rex(start, maybe(or(&quot;+&quot;, &quot;-&quot;)), maybe(numbers, &quot;.&quot;), numbers, maybe(numbers), end)
+## Best Cost:          0</code></pre>
+<p>The result, while correct, is different from what we expected: <span class="math inline">\([\pm][nnn.]nnn[nnn]\)</span>, which is true for any real number. Furthermore, the search takes a considerable amount of time:</p>
+<pre class="r"><code>system.time(GrammaticalExhaustiveSearch(grammarDef, fitfunc,
+                                        max.depth = 7, terminationCost = 0))</code></pre>
+<pre><code>##    user  system elapsed
+## 380.469  17.022 392.637</code></pre>
+<p>which was measured a 3.40 GHz Intel Core i7-2600 CPU.</p>
+<p>In conclusion, one might find it easier to design REs by hand in real-world scenarios, rather than using evolutionary optimisation techniques.</p>
+</div>
+</div>
+</div>
+</div>
+<div id="other-gramevol-functionality" class="section level1">
+<h1>Other gramEvol functionality</h1>
+<p>In this section, some of the other functionalities of the gramEvol are introduced. Here, all of the examples are demonstrated using the following grammar:</p>
+<pre class="r"><code>grammarDef &lt;- CreateGrammar(list(
+  expr = gsrule(&quot;(&lt;expr&gt;)&lt;op&gt;(&lt;expr&gt;)&quot;, &quot;&lt;coef&gt;*&lt;var&gt;&quot;),
+  op   = gsrule(&quot;+&quot;, &quot;-&quot;, &quot;*&quot;, &quot;/&quot;),
+  coef = gsrule(&quot;c1&quot;, &quot;c2&quot;),
+  var  = gsrule(&quot;v1&quot;, &quot;v2&quot;)))
+
+grammarDef</code></pre>
+<pre><code>## &lt;expr&gt; ::= (&lt;expr&gt;)&lt;op&gt;(&lt;expr&gt;) | &lt;coef&gt;*&lt;var&gt;
+## &lt;op&gt;   ::= + | - | * | /
+## &lt;coef&gt; ::= c1 | c2
+## &lt;var&gt;  ::= v1 | v2</code></pre>
+<div id="manual-mapping" class="section level2">
+<h2>Manual mapping</h2>
+<p>To <em>map</em> a numeric sequence to an expression manually, use <code>GrammarMap</code>:</p>
+<pre class="r"><code>GrammarMap(c(0, 1, 0, 0, 1, 1, 0, 0), grammarDef)</code></pre>
+<pre><code>## (c1 * v1) - (c1 * v1)</code></pre>
+<p>The sequence is zero-indexed (the first rule is zero). To see the step by step mapping, use the <code>verbose</code> parameter option:</p>
+<pre class="r"><code>GrammarMap(c(0, 1, 0, 0, 1, 1, 0, 0), grammarDef, verbose = TRUE)</code></pre>
+<pre><code>##  Step Codon Symbol Rule                 Result                    
+##  0                 starting:            &lt;expr&gt;                    
+##  1    0     &lt;expr&gt; (&lt;expr&gt;)&lt;op&gt;(&lt;expr&gt;) (&lt;expr&gt;)&lt;op&gt;(&lt;expr&gt;)      
+##  2    1     &lt;expr&gt; &lt;coef&gt;*&lt;var&gt;         (&lt;coef&gt;*&lt;var&gt;)&lt;op&gt;(&lt;expr&gt;)
+##  3    0     &lt;coef&gt; c1                   (c1*&lt;var&gt;)&lt;op&gt;(&lt;expr&gt;)    
+##  4    0     &lt;var&gt;  v1                   (c1*v1)&lt;op&gt;(&lt;expr&gt;)       
+##  5    1     &lt;op&gt;   -                    (c1*v1)-(&lt;expr&gt;)          
+##  6    1     &lt;expr&gt; &lt;coef&gt;*&lt;var&gt;         (c1*v1)-(&lt;coef&gt;*&lt;var&gt;)    
+##  7    0     &lt;coef&gt; c1                   (c1*v1)-(c1*&lt;var&gt;)        
+##  8    0     &lt;var&gt;  v1                   (c1*v1)-(c1*v1)           
+## Valid Expression Found</code></pre>
+<pre><code>## (c1 * v1) - (c1 * v1)</code></pre>
+<p>If the length of a sequence is insufficient for the mapping process, such that a few non-terminal elements still remain in the resulting expression, a wrapping of up to <code>wrappings</code> is performed. For example:</p>
+<pre class="r"><code>GrammarMap(c(0, 1, 0, 0, 1, 1), grammarDef, verbose = TRUE)</code></pre>
+<pre><code>##  Step Codon Symbol Rule                 Result                    
+##  0                 starting:            &lt;expr&gt;                    
+##  1    0     &lt;expr&gt; (&lt;expr&gt;)&lt;op&gt;(&lt;expr&gt;) (&lt;expr&gt;)&lt;op&gt;(&lt;expr&gt;)      
+##  2    1     &lt;expr&gt; &lt;coef&gt;*&lt;var&gt;         (&lt;coef&gt;*&lt;var&gt;)&lt;op&gt;(&lt;expr&gt;)
+##  3    0     &lt;coef&gt; c1                   (c1*&lt;var&gt;)&lt;op&gt;(&lt;expr&gt;)    
+##  4    0     &lt;var&gt;  v1                   (c1*v1)&lt;op&gt;(&lt;expr&gt;)       
+##  5    1     &lt;op&gt;   -                    (c1*v1)-(&lt;expr&gt;)          
+##  6    1     &lt;expr&gt; &lt;coef&gt;*&lt;var&gt;         (c1*v1)-(&lt;coef&gt;*&lt;var&gt;)    
+## Non-terminal expression
+## Wrapping string to position 0
+##  Step Codon Symbol Rule Result            
+##  7    0     &lt;coef&gt; c1   (c1*v1)-(c1*&lt;var&gt;)
+##  8    1     &lt;var&gt;  v2   (c1*v1)-(c1*v2)   
+##  9    0     &lt;var&gt;  v2   (c1*v1)-(c1*v2)   
+## Valid Expression Found</code></pre>
+<pre><code>## (c1 * v1) - (c1 * v2)</code></pre>
+</div>
+<div id="examining-a-grammar" class="section level2">
+<h2>Examining a grammar</h2>
+<p>gramEvol offers several functions to examine grammar definitions.</p>
+<p><code>summary</code> reports a summary of what grammar presents:</p>
+<pre class="r"><code>summary(grammarDef)</code></pre>
+<pre><code>## Start Symbol:                &lt;expr&gt; 
+## Is Recursive:                TRUE 
+## Tree Depth:                  Limited to 4 
+## Maximum Rule Choices:        4 
+## Maximum Sequence Length:     18 
+## Maximum Sequence Variation:  2 2 2 2 4 4 2 2 2 4 2 2 2 2 4 2 2 2 
+## No. of Unique Expressions:   18500</code></pre>
+<p>Many of these properties are available through individual functions:</p>
+<p><code>GetGrammarDepth</code> computes the depth of grammar tree. The parameter <code>max.depth</code> is used to limit recursion in <em>cyclic</em> grammars. For example, this grammar is cyclic because of rule <code>&lt;expr&gt; ::= &lt;expr&gt;&lt;op&gt;&lt;expr&gt;</code>, i.e., replacing a <code>&lt;expr&gt;</code> with other <code>&lt;expr&gt;</code>s. By default <code>GetGrammarDepth</code> limits recursion to the number of symbols defined in the grammar:</p>
+<pre class="r"><code>GetGrammarDepth(grammarDef)</code></pre>
+<pre><code>## [1] 4</code></pre>
+<pre class="r"><code>GetGrammarDepth(grammarDef, max.depth = 10)</code></pre>
+<pre><code>## [1] 10</code></pre>
+<p>For grammars without recursion, the value returned by <code>GetGrammarDepth</code> is the actual depth of the tree:</p>
+<pre class="r"><code>grammarDef2 &lt;- CreateGrammar(list(
+  expr    = gsrule(&quot;(&lt;subexpr&gt;)&lt;op&gt;(&lt;subexpr&gt;)&quot;),
+  subexpr = gsrule(&quot;&lt;coef&gt;*&lt;var&gt;&quot;),
+  op      = gsrule(&quot;+&quot;, &quot;-&quot;, &quot;*&quot;, &quot;/&quot;),
+  coef    = gsrule(&quot;c1&quot;, &quot;c2&quot;),
+  var     = gsrule(&quot;v1&quot;, &quot;v2&quot;)))
+
+GetGrammarDepth(grammarDef2)</code></pre>
+<pre><code>## [1] 3</code></pre>
+<p><code>GetGrammarDepth</code> also supports computing the depth from any symbol:</p>
+<pre class="r"><code>GetGrammarDepth(grammarDef2, startSymb = &quot;&lt;subexpr&gt;&quot;)</code></pre>
+<pre><code>## [1] 2</code></pre>
+<pre class="r"><code>GetGrammarDepth(grammarDef2, startSymb = &quot;&lt;coef&gt;&quot;)</code></pre>
+<pre><code>## [1] 1</code></pre>
+<p><code>GetGrammarMaxRuleSize</code> returns the maximum number of production rules per symbol. Here, <code>&lt;op&gt;</code> has the highest number of production rules:</p>
+<pre class="r"><code>GetGrammarMaxRuleSize(grammarDef)</code></pre>
+<pre><code>## [1] 4</code></pre>
+<p><code>GetGrammarNumOfExpressions</code> returns the number of possible expressions existing in the grammar space. This function also uses the optional argument <code>max.depth</code> to limit the number of recursions and <code>startSymb</code> to set the starting symbol:</p>
+<pre class="r"><code>GetGrammarNumOfExpressions(grammarDef)</code></pre>
+<pre><code>## [1] 18500</code></pre>
+<pre class="r"><code>GetGrammarNumOfExpressions(grammarDef, max.depth = 2)</code></pre>
+<pre><code>## [1] 4</code></pre>
+<pre class="r"><code>GetGrammarNumOfExpressions(grammarDef, startSymb = &quot;&lt;coef&gt;&quot;)</code></pre>
+<pre><code>## [1] 2</code></pre>
+<p>Here, the only expressions with depth of 2 or less are constructed if rule (<span class="math inline">\(\times\)</span>) is applied first, creating 4 expressions (i.e., <span class="math inline">\(c_1 \times v_1\)</span>, <span class="math inline">\(c_1 \times v_2\)</span>, <span class="math inline">\(c_2 \times v_1\)</span> and <span class="math inline">\(c_2 \times v_2\)</span>). Also if  is chosen as the starting symbol, the expressions are limited to <span class="math inline">\(c_1\)</span> and <span class="math inline">\(c_2\)</span>.</p>
+<p><code>GetGrammarMaxSequenceLen</code> computes the length of integer sequence required for iterating through the grammar space without wrapping. As with the previous functions, <code>max.depth</code> is set to the number of symbols defined in the grammar.</p>
+<pre class="r"><code>GetGrammarMaxSequenceLen(grammarDef)</code></pre>
+<pre><code>## [1] 18</code></pre>
+<pre class="r"><code>GetGrammarMaxSequenceLen(grammarDef, max.depth = 3)</code></pre>
+<pre><code>## [1] 8</code></pre>
+<pre class="r"><code>GetGrammarMaxSequenceLen(grammarDef2, startSymb = &quot;&lt;subexpr&gt;&quot;)</code></pre>
+<pre><code>## [1] 3</code></pre>
+</div>
+<div id="grammatical-evolution-options" class="section level2">
+<h2>Grammatical evolution options</h2>
+<p><code>GrammaticalEvolution</code> is defined as follows:</p>
+<pre class="r"><code>GrammaticalEvolution(grammarDef, evalFunc,
+                     numExpr = 1,
+                     max.depth = GrammarGetDepth(grammarDef),
+                     startSymb = GrammarStartSymbol(grammarDef),
+                     seqLen = GrammarMaxSequenceLen(grammarDef, max.depth, startSymb),
+                     wrappings = 3,
+                     suggestions = NULL,
+                     optimizer = c(&quot;auto&quot;, &quot;es&quot;, &quot;ga&quot;),
+                     popSize = 8, newPerGen = &quot;auto&quot;, elitism = 2,
+                     mutationChance = NA,
+                     iterations = 1000, terminationCost = NA,
+                     monitorFunc = NULL,
+                     plapply = lapply, ...)</code></pre>
+<p><code>max.depth</code> and <code>startSymb</code> determine recursive grammar limitations, similar to what was explained in the previous section.</p>
+<p>The rest of the parameters are the evolutionary optimisation options:</p>
+<ul>
+<li><code>GrammaticalEvolution</code> evolves a population of <code>popSize</code> chromosomes for a number of <code>iterations</code>.</li>
+<li>if <code>optimizer</code> is set to “auto”, using the information obtained about the grammar (e.g., number of possibles expressions and maximum sequence length), <code>GrammaticalEvolution</code> uses a heuristic algorithm based on the work by <span class="citation">Deb and Agrawal (1999)</span> to automatically determine a suitable value for <code>popSize</code> (i.e., the population size) <code>iterations</code> (i.e., the number of iterations) parameters.</li>
+<li>The ordinary cross-over operator of GA is considered destructive when homologous production rules are not aligned, such as for cyclic grammars <span class="citation">(O’Neill et al. 2003)</span>. Consequently, <code>GrammaticalEvolution</code> automatically changes cross-over parameters depending on the grammar to improve optimisation results. A user can turn this off by manually setting the <code>optimizer</code>.</li>
+<li>The first generation is made from the <code>suggestions</code> in form of integer chromosomes, and randomly generated individuals.</li>
+<li>Each integer chromosome is mapped using the grammar, and its fitness is assessed by calling <code>evalFunc</code>.</li>
+<li>For each generation, the top <span class="math inline">\(n\)</span> scoring chromosomes where <span class="math inline">\(n =\)</span><code>elitism</code> are directly added to the next generation’s population. The rest of the population is created using cross-over of chromosomes selected with roulette selection operator.</li>
+<li>Each chromosome may mutate by a probability of <code>mutationChance</code>.</li>
+<li>After reaching a termination criteria, e.g., the maximum number of <code>iterations</code> or the desired <code>terminationCost</code>, the algorithm stops and returns the best expression found so far.</li>
+<li><code>GrammaticalEvolution</code> supports multi-gene operations, generating more than one expression per chromosome using the <code>numExpr</code> parameter.</li>
+<li>The number of integer codons in the chromosome is determined by <code>seqLen</code> times <code>numExpr</code> (i.e., the sequence length per expression, times the number of expressions).</li>
+<li><code>monitorFunc</code> is then called with information and statistics about the current status of the population.</li>
+<li><code>plapply</code> is used for parallel processing.</li>
+<li><code>GrammaticalEvolution</code> automatically filters non-terminal expressions (i.e., expressions that don’t yield a terminal expression even after times of <code>wrappings</code>). Therefore the end-user does not need to worry about them while using gramEvol.</li>
+</ul>
+</div>
+<div id="parallel-processing-option" class="section level2">
+<h2>Parallel processing option</h2>
+<p>Processing expressions and computing their fitness is often computationally expensive. The gramEvol package can utilise parallel processing facilities in R to improve its performance. This is done through the <code>plapply</code> argument of <code>GrammaticalEvolution</code> function. By default, <code>lapply</code> function is used to evaluate all individuals in the population.</p>
+<p>Multi-core systems simply benefit from using <code>mclapply</code> from package <code>parallel</code>, which is a drop-in replacement for <code>lapply</code> on POSIX compatible systems. The following code optimises <code>evalFunc</code> on 4 cores:</p>
+<pre class="r"><code>library(&quot;parallel&quot;)
+options(mc.cores = 4)
+ge &lt;- GrammaticalEvolution(grammarDef, evalFunc,
+                           plapply = mclapply)</code></pre>
+<p>To run gramEvol on a cluster, <code>clusterapply</code> functions can be used instead. The gramEvol package must be first installed on all machines and the fitness function and its data dependencies exported before GE is called. The following example demonstrates a four-process cluster running on the local machine:</p>
+<pre class="r"><code>library(&quot;parallel&quot;)
+cl &lt;- makeCluster(type = &quot;PSOCK&quot;, c(&quot;127.0.0.1&quot;,
+                                    &quot;127.0.0.1&quot;,
+                                    &quot;127.0.0.1&quot;,
+                                    &quot;127.0.0.1&quot;))
+clusterEvalQ(cl, library(&quot;gramEvol&quot;))
+clusterExport(cl, c(&quot;evalFunc&quot;))
+ge &lt;- GrammaticalEvolution(grammarDef, evalFunc,
+                           plapply = function(...) parLapply(cl, ...))
+stopCluster(cl)</code></pre>
+<p>It must be noticed that in any problem, the speed-up achieved depends on the overhead of communication compared with the fitness functions’ computational complexity.</p>
+</div>
+<div id="generating-more-than-one-expression" class="section level2">
+<h2>Generating more than one expression</h2>
+<p>gramEvol supports generation and evaluation of multiple expressions:</p>
+<ul>
+<li><code>numExpr</code> in <code>GrammaticalEvolution</code> is used to pass a list of more than one R <code>expression</code></li>
+<li><code>EvalExpressions</code> offers a simpler interface for evaluating multiple expressions.</li>
+</ul>
+<p>The following example show cases <code>EvalExpressions</code>: It uses a dataset for variables defined in the grammar, and evaluates a GE expression object along with a string:</p>
+<pre class="r"><code>df &lt;- data.frame(c1 = c(1, 2),
+                 c2 = c(2, 3),
+                 v1 = c(3, 4),
+                 v2 = c(4, 5))
+
+quad.expr &lt;- expression(c1 * v1, c1 * v2, c2 * v1, c2 * v2)
+EvalExpressions(quad.expr, envir = df)</code></pre>
+<pre><code>##   expr1 expr2 expr3 expr4
+## 1     3     4     6     8
+## 2     8    10    12    15</code></pre>
+<p>This is useful in applications when more than one expression is required, or the collective power of several simple expressions outperform a single complex program. For example <a href="http://ieeexplore.ieee.org/document/6786110/?arnumber=6786110">de Silva et al.</a> <span class="citation">(2013)</span> <a href="http://www.ee.usyd.edu.au/people/philip.leong/UserFiles/File/papers/fs_icmla13.pdf">(PDF)</a> used GE for electricity load forecasting; instead of using a complex machine learning algorithm, pools of string expressions were generated in a guided manner and were used as features in a simpler machine learning algorithm to obtain better results.</p>
+<p>The idea of generating  using GE is further explored in gramEvol’s paper in the <a href="https://www.jstatsoft.org/index.php/jss/article/view/v071i01">Journal of Statistical Software</a> <span class="citation">(2016)</span>.</p>
+</div>
+<div id="alternative-optimisation-algorithms" class="section level2">
+<h2>Alternative optimisation algorithms</h2>
+<p>gramEvol also provides a random search and an exhaustive search. Their syntax is similar to the <code>GrammaticalEvolution</code>:</p>
+<pre class="r"><code>result1 &lt;- GrammaticalExhaustiveSearch(grammarDef, evalFunc)
+result2 &lt;- GrammaticalRandomSearch(grammarDef, evalFunc)</code></pre>
+</div>
+<div id="using-vectors-as-rules" class="section level2">
+<h2>Using vectors as rules</h2>
+<p><code>gvrule</code> allows members of a vector to be used as individual rules. For example,</p>
+<pre class="r"><code>gvrule(1:5)</code></pre>
+<pre><code>## Rule 0: 1L
+## Rule 1: 2L
+## Rule 2: 3L
+## Rule 3: 4L
+## Rule 4: 5L</code></pre>
+<p>which is equal to</p>
+<pre class="r"><code>grule(1,2,3,4,5)</code></pre>
+<pre><code>## Rule 0: 1
+## Rule 1: 2
+## Rule 2: 3
+## Rule 3: 4
+## Rule 4: 5</code></pre>
+<p>Without <code>gvrule</code>, <code>1:5</code> would have been interpreted as a single rule:</p>
+<pre class="r"><code>grule(1:5)</code></pre>
+<pre><code>## Rule 0: 1:5</code></pre>
+</div>
+<div id="using-commas-and-assignments-in-rules" class="section level2">
+<h2>Using commas and assignments in rules</h2>
+<p>There are two ways to use commas and assignments in gramEvol rules:</p>
+<ol style="list-style-type: decimal">
+<li>Rules are defined in character string form using <code>gsrule</code>.</li>
+<li>Rules are wrapped in <code>.()</code> and defined using <code>grule</code>.</li>
+</ol>
+<p>For example, consider the following rules:</p>
+<pre><code>&lt;assignment&gt; ::= A = B | A = C
+&lt;comma&gt;      ::= A, B  | B, C</code></pre>
+<p>Their definition using gramEvol is as follows:</p>
+<pre class="r"><code>CreateGrammar(list(assignment = gsrule(&quot;A = B&quot;, &quot;A = C&quot;),
+                   comma      = gsrule(&quot;A, B&quot;, &quot;B, C&quot;)))</code></pre>
+<pre><code>## &lt;assignment&gt; ::= A = B | A = C
+## &lt;comma&gt;      ::= A, B | B, C</code></pre>
+<p>or</p>
+<pre class="r"><code>CreateGrammar(list(assignment = grule(.(A = B), .(A = C)),
+                   comma      = grule(.(A, B), .(B, C))))</code></pre>
+<pre><code>## &lt;assignment&gt; ::= A = B | A = C
+## &lt;comma&gt;      ::= A, B | B, C</code></pre>
+</div>
+</div>
+<div id="conclusion" class="section level1">
+<h1>Conclusion</h1>
+<p>GE offers a flexible yet powerful framework for automatic program generation. The syntax and the structure of the programs are described using a context-free grammar, and their objective is determined by a cost function. An evolutionary search is performed on the grammar to find the program that minimises the cost function.</p>
+<p>gramEvol implements GE in R. It allows a grammar to be defined using R expressions, as well as in custom string formats. A GE program generator using gramEvol only requires a grammar definition and a cost function, and other steps including the evolutionary search and selecting its optimal parameters are handled automatically by the package. It also supports parallel computing, and includes facilities for exhaustive and random search.</p>
+<p>In this vignette, some of the functionalities of gramEvol were explored. Furthermore, two examples were used to demonstrate the flexibility of GE and gramEvol.</p>
+</div>
+<div id="references" class="section level1 unnumbered">
+<h1>References</h1>
+<div id="refs" class="references">
+<div id="ref-Sethi1986Compiler">
+<p>Aho, Alfred V., Ravi Sethi, and Jeffrey D. Ullman. 1986. <em>Compilers: Principles, Techniques, and Tools</em>. Boston, MA, USA: Addison-Wesley Longman Publishing Co., Inc.</p>
+</div>
+<div id="ref-bartoli2012automatic">
+<p>Bartoli, Alberto, Giorgio Davanzo, Andrea De Lorenzo, Marco Mauri, Eric Medvet, and Enrico Sorio. 2012. “Automatic Generation of Regular Expressions from Examples with Genetic Programming.” In <em>Proceedings of the Fourteenth International Conference on Genetic and Evolutionary Computation Conference Companion</em>, 1477–8. ACM. <a href="https://www.lri.fr/~hansen/proceedings/2012/GECCO/companion/p1477.pdf" class="uri">https://www.lri.fr/~hansen/proceedings/2012/GECCO/companion/p1477.pdf</a>.</p>
+</div>
+<div id="ref-MNDL_13">
+<p>de Silva, Anthony Mihirana, Farzad Noorian, Richard I. A. Davis, and Philip H. W. Leong. 2013. “A Hybrid Feature Selection and Generation Algorithm for Electricity Load Prediction using Grammatical Evolution.” <a href="http://www.ee.usyd.edu.au/people/philip.leong/UserFiles/File/papers/fs\_icmla13.pdf" class="uri">http://www.ee.usyd.edu.au/people/philip.leong/UserFiles/File/papers/fs\_icmla13.pdf</a>.</p>
+</div>
+<div id="ref-deb1999understanding">
+<p>Deb, Kalyanmoy, and Samir Agrawal. 1999. “Understanding Interactions among Genetic Algorithm Parameters.” <em>Foundations of Genetic Algorithms</em>. Morgan Kaufmann Publishers, 265–86.</p>
+</div>
+<div id="ref-Ferreira2006Chapter6">
+<p>Ferreira, Candida. 2006. “Kepler’s Third Law.” In <em>Gene Expression Programming: Mathematical Modeling by an Artificial Intelligence</em>, 2nd ed., 253–57. Springer.</p>
+</div>
+<div id="ref-koza1992chapter10">
+<p>Koza, John R. 1992. “Symbolic Regression - Error-Driven Evolution.” In <em>Genetic Programming: On the Programming of Computers by Means of Natural Selection</em>, 1:237–88. MIT press.</p>
+</div>
+<div id="ref-langley1987heuristics">
+<p>Langley, Pat, Herbert A Simon, and Gary L Bradshaw. 1987. “Heuristics for Empirical Discovery.” In <em>Computational Models of Learning</em>, 21–54. Springer-Verlag Berlin.</p>
+</div>
+<div id="ref-noorian16gramEvol">
+<p>Noorian, Farzad, Anthony M. de Silva, and Philip H. W. Leong. 2016. “gramEvol: Grammatical Evolution in R.” <em>Journal of Statistical Software</em> 71 (1): 1–26. doi:<a href="https://doi.org/10.18637/jss.v071.i01">10.18637/jss.v071.i01</a>.</p>
+</div>
+<div id="ref-oneill2003crossover">
+<p>O’Neill, Michael, Conor Ryan, Maarten Keijzer, and Mike Cattolico. 2003. “Crossover in Grammatical Evolution.” <em>Genetic Programming and Evolvable Machines</em> 4 (1). Springer-Verlag: 67–93.</p>
+</div>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
