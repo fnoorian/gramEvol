@@ -75,6 +75,16 @@ GeneticAlg.int <- function(genomeLen, codonMin, codonMax,
   
   if (!is.null(suggestions)) {
     verbose("Adding suggestions to first population...\n");
+    
+    if ("list" %in% class(suggestions)) {
+      verbose("Suggestions given as a list.\n");
+      suggestions = do.call(rbind, suggestions)
+    }
+  
+    if (ncol(suggestions) != genomeLen) {
+      stop("suggestions must be a list of chromosomes or a matrix of 'nrow=numSuggestions X ncol=genomeLen'")
+    }
+  
     suggestionCount = nrow(suggestions)
     population[1:suggestionCount, ] <- suggestions
     verbose("Filling others with random values in the given domains...\n");

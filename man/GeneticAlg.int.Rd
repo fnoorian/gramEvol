@@ -41,6 +41,7 @@ GeneticAlg.int(genomeLen, codonMin, codonMax,
 }
   \item{suggestions}{
   A list of suggested chromosomes to be used in the initial population.
+  Alternatively, an m-by-n matrix, where m is the number of suggestions and n is the chromosome length.
 }
   \item{popSize}{
   Size of the population.

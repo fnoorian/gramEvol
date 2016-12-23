@@ -1,7 +1,8 @@
 # News
 
-## 2016-XX-XX - Changes in version 2.1-X
+## 2017-XX-XX - Changes in version 2.1-4
  * Add ReplaceInExpression helper function
+ * Update GeneticAlg.int to accept suggestions as a list (Thanks to Rafael Klaic)
  * Update vignette with new grammar rules
 
 ## 2016-07-04 - Changes in version 2.1-3
