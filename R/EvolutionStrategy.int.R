@@ -82,7 +82,7 @@ EvolutionStrategy.int <- function(genomeLen, codonMin, codonMax,
     
     ############################################################################
     # Mutation
-    if (mutationChance > 0 & popSize > 0) {
+    if (mutationChance > 0 & popSize > 1) {
       verbose("  applying mutations... ");
       mutationCount = 0;
       for (object in 2:popSize) { # don't mutate the parent
