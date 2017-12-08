@@ -32,10 +32,13 @@ EvolutionStrategy.int <- function(genomeLen, codonMin, codonMax,
     stop("The vectors genomeMin and genomeMax must be of equal length.");
   }
   if (iterations < 1) {
-    stop("The number of iterations must be at least 1.");
+    stop("The number of iterations must be at least 1.")
   }
   if ((mutationChance < 0) | (mutationChance  > 1)) {
-    stop("mutationChance must be between 0 and 1.");
+    stop("mutationChance must be between 0 and 1.")
+  }
+  if ((popSize + newPerGen) < 1) {
+    stop("Total new generation (popSize + newPerGen) must be at least 1")
   }
   
   if (showSettings) {
@@ -82,16 +85,16 @@ EvolutionStrategy.int <- function(genomeLen, codonMin, codonMax,
     
     ############################################################################
     # Mutation
-    if (mutationChance > 0 & popSize > 1) {
+    if (mutationChance > 0 & popSize > 0) {
       verbose("  applying mutations... ");
       mutationCount = 0;
-      for (object in 2:popSize) { # don't mutate the parent
+      for (object in 2:(1 + popSize)) { # don't mutate the parent
         
-        dempeningFactor = 1#(iterations-iter)/iterations
+        dampeningFactor = 1#(iterations-iter)/iterations
 
         mutResult <- ga.mutation(population[object,], mutationChance, genomeLen, 
                                  genomeMin, genomeMax, allowrepeat,
-                                 dempeningFactor)
+                                 dampeningFactor)
         
         # apply new results
         population[object,] = mutResult$newGenome
