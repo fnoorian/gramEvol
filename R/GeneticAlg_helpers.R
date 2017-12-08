@@ -1,6 +1,6 @@
 ga.mutation <- function(genome, mutationChance, genomeLen = length(genome), 
                         genomeMin, genomeMax, allowrepeat,
-                        dempeningFactor = 1) {
+                        dampeningFactor = 1) {
   
   mut_genomeLoc = runif(genomeLen) < mutationChance # do mutation for some of variables by chance
   num_muts = sum(mut_genomeLoc)
@@ -14,7 +14,7 @@ ga.mutation <- function(genome, mutationChance, genomeLen = length(genome),
   # mutate around solution
   direction       = runif(num_muts) - 0.5 # [-0.5 -> 0.5]
   mutationRange   = genomeMax[mut_genomeLoc]-genomeMin[mut_genomeLoc]
-  mutation = round(genome[mut_genomeLoc] +  direction*mutationRange*dempeningFactor)
+  mutation = round(genome[mut_genomeLoc] +  direction*mutationRange*dampeningFactor)
   # check if it is in domain. if not, then take random
   bad_mutations = which( (mutation < genomeMin[mut_genomeLoc]) | (mutation > genomeMax[mut_genomeLoc]) )
   for (b in bad_mutations) {

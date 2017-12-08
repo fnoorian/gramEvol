@@ -232,11 +232,11 @@ GeneticAlg.int <- function(genomeLen, codonMin, codonMax,
       mutationCount = 0;
       for (object in (elitism+1):popSize) { # don't mutate the best
         
-        dempeningFactor = (iterations-iter)/iterations
+        dampeningFactor = (iterations-iter)/iterations
         
         mutResult <- ga.mutation(population[object,], mutationChance, genomeLen, 
                                  genomeMin, genomeMax, allowrepeat,
-                                 dempeningFactor)
+                                 dampeningFactor)
         
         population[object, ] = mutResult$newGenome;
         evalVals[object] = NA;

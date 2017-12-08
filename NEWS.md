@@ -4,6 +4,8 @@
  * Add ReplaceInExpression helper function
  * Update GeneticAlg.int to accept suggestions as a list (Thanks to Rafael Klaic)
  * Update vignette with new grammar rules
+ * Fix bug in Evolutionary strategy when popsize = 1 (Thanks to Daniel Klotz <https://github.com/danklotz>)
+ * Change ga.mutation parameter to fix its typo (Thanks to Daniel Klotz <https://github.com/danklotz>)
 
 ## 2016-07-04 - Changes in version 2.1-3
 
