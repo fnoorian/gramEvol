@@ -2,7 +2,7 @@ GrammarRandomExpression <- function(grammar,
                                     numExpr = 1,
                                     max.depth = length(grammar$def), 
                                     startSymb = GrammarStartSymbol(grammar),
-                                    max.string = GrammarMaxSequenceRange(grammar, max.depth, startSymb),
+                                    max.string = GrammarMaxSequenceRange(grammar, max.depth, startSymb, approximate=TRUE),
                                     wrappings = 3,
                                     retries = 100) {
   n = length(max.string) # size of chromosome

@@ -6,7 +6,7 @@ GrammaticalRandomSearch <- function(grammar, evalFunc,
                                 monitorFunc = NULL) {
   
   # determine depth of search
-  upper = GrammarMaxSequenceRange(grammar, max.depth, startSymb)
+  upper = GrammarMaxSequenceRange(grammar, max.depth, startSymb, approximate=TRUE)
   n = length(upper) # size of chromosome
   
   # the list of chromosomes

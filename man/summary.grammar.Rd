@@ -34,7 +34,7 @@ GrammarMaxSequenceLen(grammar, max.depth = GetGrammarDepth(grammar),
 GrammarMaxRuleSize(grammar)
 
 GrammarMaxSequenceRange(grammar, max.depth = GrammarGetDepth(grammar), 
-    startSymb = GrammarStartSymbol(grammar), ...) 
+    startSymb = GrammarStartSymbol(grammar), approximate = FALSE, ...) 
 
 GrammarNumOfExpressions(grammar, max.depth = GrammarGetDepth(grammar), 
     startSymb = GrammarStartSymbol(grammar), ...)
@@ -51,6 +51,9 @@ GrammarNumOfExpressions(grammar, max.depth = GrammarGetDepth(grammar),
   }
   \item{startSymb}{
     The symbol where the generation of a new expression should start.
+  }
+  \item{approximate}{
+    If True, results are approximated. Useful for recursive grammars, where number of valid expressions prohibits an accurate measurement.
   }
   \item{...}{
     unused inputs.
