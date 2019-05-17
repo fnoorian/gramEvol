@@ -53,7 +53,8 @@ GrammaticalEvolution(grammarDef, evalFunc,
     Number of wrappings in case the length of chromosome is not enough for conversion to an expression.
 }
   \item{suggestions}{
-    List of the suggested chromosomes to be added to the initial population pool.
+    Suggested chromosomes to be added to the initial population pool. if \code{optimizer} parameter is set to \code{"es"}, 
+	  only a single chromosome (as a numeric vector) is acceptable. For \code{"ga"} mode, a list of numeric vectors.
 }
   \item{optimizer}{
     The evolutionary optimizer. \code{"es"} uses evolution strategy as in \code{\link{EvolutionStrategy.int}}
