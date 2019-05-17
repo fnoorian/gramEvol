@@ -64,8 +64,8 @@ EvolutionStrategy.int <- function(genomeLen, codonMin, codonMax,
     suggestionCount = 0
     
     parent = ga.new.chromosome(genomeLen, genomeMin, genomeMax, allowrepeat)
-    parentEval = NA
   }
+  parentEval = NA  # We don't know about the parent yet
   
   ############################################################################
   # do iterations
