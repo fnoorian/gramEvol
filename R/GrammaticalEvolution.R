@@ -92,11 +92,12 @@ GrammaticalEvolution <-  function(grammarDef, evalFunc,
     expr.list = c()
     for (i in 1:numExpr) {
       ch <- chromosome[ind.cut == i]
-      expr <- GrammarMap(ch, grammarDef, wrappings = wrappings)
-      
-      if (expr$type == "T") {
-        expr.list <- c(expr.list, as.expression(expr))
-      }
+      tryCatch({  # use try-catch to catch failed parses
+        expr <- GrammarMap(ch, grammarDef, wrappings = wrappings)
+        if (expr$type == "T") {
+          expr.list <- c(expr.list, as.expression(expr))
+        }
+      }, warning = function(w) print(w), error = function(e) print(e))
     }
     
     return(expr.list)
