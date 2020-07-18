@@ -1,5 +1,5 @@
-[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/gramEvol)](https://cran.r-project.org/package=gramEvol)
-[![Downloads](http://cranlogs.r-pkg.org/badges/gramEvol)](https://cran.r-project.org/package=gramEvol)
+[![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/gramEvol)](https://cran.r-project.org/package=gramEvol)
+[![Downloads](https://cranlogs.r-pkg.org/badges/gramEvol)](https://cran.r-project.org/package=gramEvol)
 
 gramEvol: Grammatical Evolution for R
 =====================================
