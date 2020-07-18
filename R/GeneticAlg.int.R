@@ -20,7 +20,7 @@ GeneticAlg.int <- function(genomeLen, codonMin, codonMax,
   # geneCrossoverPoints = An array determining the genes to be swapped in crossover
   #
   # Partially based on "R Based Genetic Algorithm (genalg package)""
-  # http://cran.r-project.org/web/packages/genalg/
+  # https://cran.r-project.org/web/packages/genalg/
   
   is.verbose = verbose
   verbose = function(...) { if (is.verbose) cat(...)}
