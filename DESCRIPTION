@@ -2,7 +2,7 @@ Package: gramEvol
 Type: Package
 Title: Grammatical Evolution for R
 Version: 2.1-4
-Date: 2017-12-08
+Date: 2020-07-18
 Author: Farzad Noorian, Anthony Mihirana de Silva
 Maintainer: Farzad Noorian <farzad.noorian@gmail.com>
 Description: A native R implementation of grammatical evolution (GE).
