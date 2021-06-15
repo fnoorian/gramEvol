@@ -18,7 +18,7 @@ ga.mutation <- function(genome, mutationChance, genomeLen = length(genome),
   # check if it is in domain. if not, then take random
   bad_mutations = which( (mutation < genomeMin[mut_genomeLoc]) | (mutation > genomeMax[mut_genomeLoc]) )
   for (b in bad_mutations) {
-    mutation[bad_mutations] = ga.rand.int(n=1, 
+    mutation[b] = ga.rand.int(n=1, 
                                           genomeMin[mut_genomeLoc][b],
                                           genomeMax[mut_genomeLoc][b])
   }
