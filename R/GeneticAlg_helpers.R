@@ -33,7 +33,7 @@ ga.mutation <- function(genome, mutationChance, genomeLen = length(genome),
 }
 
 ga.new.chromosome <- function(genomeLen, genomeMin, genomeMax, allowrepeat) {
-  chromosome = round(runif(genomeLen) * (genomeMax - genomeMin) + genomeMin)
+  chromosome = floor(runif(genomeLen) * (genomeMax - (genomeMin - 1)) + genomeMin)
   
   if (!allowrepeat) {
     chromosome = ga.unique.maker(chromosome, genomeMin, genomeMax)
