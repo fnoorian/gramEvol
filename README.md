@@ -35,7 +35,7 @@ A tutorial on implementing GE programs is included in the package's
 ([PDF version](https://fnoorian.github.io/gramEvol/inst/doc/ge-intro.pdf)).
 
 More information regarding GE and its application in parameter optimization can be found in
-[this paper in the Journal of Statistical Software](https://www.jstatsoft.org/article/view/v071i01).
+[this paper in the Journal of Statistical Software](https://doi.org/10.18637/jss.v071.i01).
 
 ## Example
 
