@@ -81,7 +81,7 @@ print(data.frame(distance, period, Kepler = sqrt(distance^3), GE = eval(best.exp
 ## Other resources
 [Modern Optimization with R, 2nd edition](https://pcortez.dsi.uminho.pt/mor-book) by Pauolo Cortez introduces grammatical evolution is Chapter 5 "Population Based Search", more specifically Section 5.11 "Grammatical Evolution". Examples implemented via `gramEvol` are [available for download](https://drive.google.com/file/d/1GtGc2j5Ki8LjOxItTRIbC4Zymeokjj0H/view?usp=sharing).
 
-The book itself ([Springer link](https://link.springer.com/book/10.1007/978-3-030-72819-9)) gathers in a single document the most relevant concepts related to metaheuristics (e.g., simulated annealing; genetic algorithms), showing how such concepts and methods can be addressed using the open source R tool. The new edition integrates the latest R packages through text and code examples. It also discusses new topics, such as: usage of parallel computing and more modern optimization algorithms (e.g., grammatical evolution).
+The book itself (available from [Springer](https://link.springer.com/book/10.1007/978-3-030-72819-9) and [Amazon](https://www.amazon.com/Modern-Optimization-R-Use-dp-3030728188/dp/3030728188)) gathers in a single document the most relevant concepts related to metaheuristics (e.g., simulated annealing; genetic algorithms), showing how such concepts and methods can be addressed using the open source R tool. The new edition integrates the latest R packages through text and code examples. It also discusses new topics, such as: usage of parallel computing and more modern optimization algorithms (e.g., grammatical evolution).
 
 ## Contact Information
  * Farzad Noorian <farzad.noorian@gmail.com> (Maintainer)
