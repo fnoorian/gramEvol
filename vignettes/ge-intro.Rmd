@@ -757,7 +757,7 @@ instead of using a complex machine learning algorithm, pools of string expressio
 in a guided manner and were used as features in a simpler machine learning algorithm to obtain better results.
 
 The idea of generating \emph{features} using GE is further explored in 
-gramEvol's paper in the [Journal of Statistical Software](https://www.jstatsoft.org/index.php/jss/article/view/v071i01) [-@noorian16gramEvol].
+gramEvol's paper in the [Journal of Statistical Software](https://doi.org/10.18637/jss.v071.i01) [-@noorian16gramEvol].
 
 ## Alternative optimisation algorithms
 
