@@ -240,7 +240,7 @@ GeneticAlg.int <- function(genomeLen, codonMin, codonMax,
         
         population[object, ] = mutResult$newGenome;
         evalVals[object] = NA;
-        mutationCount = mutationCount + 1;
+        mutationCount = mutationCount + mutResult$numMutations;
       }
       verbose(paste(mutationCount, "mutations applied\n"));
     }
