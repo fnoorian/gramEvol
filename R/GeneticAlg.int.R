@@ -230,6 +230,7 @@ GeneticAlg.int <- function(genomeLen, codonMin, codonMax,
     if (mutationChance > 0) {
       verbose("  applying mutations... ");
       mutationCount = 0;
+      mutatedChromosomes = 0;
       for (object in (elitism+1):popSize) { # don't mutate the best
         
         dampeningFactor = (iterations-iter)/iterations
@@ -241,8 +242,9 @@ GeneticAlg.int <- function(genomeLen, codonMin, codonMax,
         population[object, ] = mutResult$newGenome;
         evalVals[object] = NA;
         mutationCount = mutationCount + mutResult$numMutations;
+        mutatedChromosomes = mutatedChromosomes + 1;
       }
-      verbose(paste(mutationCount, "mutations applied\n"));
+      verbose(paste(mutationCount, "mutations applied (chromosomes mutated: ", mutatedChromosomes, ")\n"));
     }
   }
   
